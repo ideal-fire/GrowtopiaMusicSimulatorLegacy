@@ -1,0 +1,14 @@
+﻿<Properties StartupItem="GrowtopiaMusicSimulatorReborn\GrowtopiaMusicSimulatorReborn.csproj">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" ActiveRuntime="MS.NET" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="GrowtopiaMusicSimulatorReborn\MainForm.cs">
+    <Files>
+      <File FileName="GrowtopiaMusicSimulatorReborn\MainForm.cs" Line="65" Column="28" />
+      <File FileName="GrowtopiaMusicSimulatorReborn\SetSounds.cs" Line="117" Column="36" />
+      <File FileName="GrowtopiaMusicSimulatorReborn\MainForm.BigMethods.cs" Line="54" Column="20" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>
