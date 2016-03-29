@@ -56,15 +56,28 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MainForm.cs" />
+    <Compile Include="PopBPM.cs" />
+    <Compile Include="PopBPM.Designer.cs">
+      <DependentUpon>PopBPM.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PianoSounds.cs" />
     <Compile Include="SetSounds.cs" />
     <Compile Include="MainForm.BigMethods.cs" />
     <Compile Include="BassSounds.cs" />
+    <Compile Include="OptionHolder.cs" />
+    <Compile Include="TitleScreen.cs" />
+    <Compile Include="RealMain.cs" />
+    <Compile Include="DrumSounds.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="PopBPM.resx">
+      <DependentUpon>PopBPM.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

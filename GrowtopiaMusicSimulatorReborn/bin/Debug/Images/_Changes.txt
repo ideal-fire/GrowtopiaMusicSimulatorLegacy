@@ -1,0 +1,17 @@
+Added features:
+Growtopia Music Simulator 2.0+ changelog
+
+
+2.0
+---
+Added features:
+Uh...
+Better sound playing method
+=============================
+Removed features:
+* Title screen
+* Multiple themes at once
+* Import from gms android
+* Move da buttons
+* Custom theme downloader
+* Linux and Mac Os X support (Until I can get IrrKlang to work with them.)

@@ -12,6 +12,7 @@ using System.IO;
 using System.Threading;
 using System.Diagnostics;
 using IrrKlang;
+using System.Net;
 
 namespace GrowtopiaMusicSimulatorReborn
 {
@@ -63,6 +64,8 @@ namespace GrowtopiaMusicSimulatorReborn
 		Bitmap rightButtonImage;
 		Bitmap leftButtonImage;
 		Bitmap gridImage;
+		Bitmap bpmButtonImage;
+		Bitmap yellowPlayButtonImage;
 
 		// Misc stuffz
 		// True = Draw big bg. False = draw lots of tiny grid images.
@@ -70,10 +73,21 @@ namespace GrowtopiaMusicSimulatorReborn
 		byte pageNumber=0;
 		bool clicking=false;
 		bool playing=false;
+		// Two variables so we don't try to rapidly place where we've already placed.
+		byte lastPlaceX=255;
+		byte lastPlaceY=255;
 
 
 		// Options
 		const bool showConfirmation=true;
+		const byte redrawWait = 20;
+
+		// For text
+		System.Drawing.Brush textBrush = new SolidBrush(System.Drawing.Color.Black);
+		Font textFont = new Font("Arial",14);
+
+
+		const short gmsVersion=2;
 
 		public MainForm()
 		{
@@ -104,6 +118,7 @@ namespace GrowtopiaMusicSimulatorReborn
 			this.MouseDown += mousedown;
 			this.MouseUp += mouseup;
 			this.MouseMove += mouseMove;
+			this.MouseWheel += changeNoteWheel;
 			Application.ApplicationExit += new EventHandler(this.closeStuff);
 
 			// Load misc images
@@ -113,7 +128,8 @@ namespace GrowtopiaMusicSimulatorReborn
 			loadButtonImage = new Bitmap ((Directory.GetCurrentDirectory()+"/Images/loadButton.png"));
 			leftButtonImage = new Bitmap ((Directory.GetCurrentDirectory()+"/Images/leftButton.png"));
 			rightButtonImage = new Bitmap ((Directory.GetCurrentDirectory()+"/Images/rightButton.png"));
-
+			bpmButtonImage = new Bitmap ((Directory.GetCurrentDirectory()+"/Images/bpmButton.png"));
+			yellowPlayButtonImage = new Bitmap ((Directory.GetCurrentDirectory()+"/Images/yellowPlayButton.png"));
 			// Set up sound engine thing
 			soundEngine = new ISoundEngine ();
 
@@ -129,7 +145,7 @@ namespace GrowtopiaMusicSimulatorReborn
 
 
 			// Set the strings that can be used as argument to play sounds
-			SetSounds.setSoundArray(ref pianoSounds,ref pianoSharpSounds,ref pianoFlatSounds, ref drumSounds, ref bassSounds,ref bassSounds,ref bassFlatSounds);
+			SetSounds.setSoundArray(ref pianoSounds,ref pianoSharpSounds,ref pianoFlatSounds, ref drumSounds, ref bassSounds,ref bassSharpSounds,ref bassFlatSounds);
 			noteArrays [0] = pianoSounds;
 			noteArrays [1] = pianoSharpSounds;
 			noteArrays [2] = pianoFlatSounds;
@@ -147,8 +163,33 @@ namespace GrowtopiaMusicSimulatorReborn
 				bigBG = new Bitmap ((Directory.GetCurrentDirectory () + "/Images/BigBG.png"));
 			}
 
+			try{
+			WebClient client = new WebClient();
+			String downloadedString = client.DownloadString("http://pastebin.com/raw/VNLxD23j");
+			if (Int32.Parse (downloadedString) > gmsVersion) {
+				MessageBox.Show ("Yo, there's a new version out.\nRemember to get it if you have the time.");
+			}
+			}
+			catch{
+				Debug.Print ("Couldn't connect.");
+			}
+		}
 
-
+		void changeNoteWheel(object sender, MouseEventArgs e){
+			if (e.Delta < 0) {
+				if (noteValue == 0) {
+					noteValue = 7;
+				} else {
+					noteValue--;
+				}
+			} else {
+				if (noteValue == 7) {
+					noteValue = 0;
+				} else {
+					noteValue++;
+				}
+			}
+			needRedraw = true;
 		}
 
 		void mainLop(){
@@ -158,7 +199,7 @@ namespace GrowtopiaMusicSimulatorReborn
 					needRedraw = false;
 					this.Invalidate ();
 				}
-				Thread.Sleep (20);
+				Thread.Sleep (redrawWait);
 			}
 		}
 
@@ -166,27 +207,45 @@ namespace GrowtopiaMusicSimulatorReborn
 			// We need to close all these threads to make sure that the program fully closes.
 			// Don't want any noobs thinking that they've got a virus just because the program's still running after they thought they closed.
 			mainThread.Abort ();
-			playThread.Abort ();
-
+			if (playing) {
+				playThread.Abort ();
+			}
 		}
 
-		void playMusic(){
-			for (int x = 0; x < 25; x++) {
+		void playMusic(object startX){
+			for (int x = Convert.ToInt32(startX); x < 400; x++) {
 				for (int y = 0; y < 14; y++) {
 					if (songPlace.maparray[0][x,y]!=0){
 						soundEngine.Play2D(noteArrays[(songPlace.maparray[0][x,y])-1][y]);
 					}
 				}
-				Thread.Sleep (150);
+				Thread.Sleep (OptionHolder.noteWait);
 			}
+			playing = false;
+			needRedraw = true;
 
 		}
 
+		void playNote(byte noteId, byte yLevel){
+			if (noteValue > 0) {
+				soundEngine.Play2D (noteArrays [noteId - 1] [yLevel]);
+			}
+		}
 
 		void place(MouseEventArgs e){
-			if (e.X < 800 && e.Y < 448) {
+			if (e.X < 800 && e.Y < 448 && e.Y>0 && e.X>0 && (lastPlaceX!=(int)e.X / 32 || lastPlaceY!=(int)e.Y / 32)) {
+				if (e.Button == MouseButtons.Right) {
+					songPlace.maparray [0] [e.X / 32+(pageNumber*25), e.Y / 32] = 0;
+					needRedraw = true;
+					return;
+				}
+				if (OptionHolder.playNoteOnPlace) {
+					playNote ((byte)noteValue, Convert.ToByte(e.Y / 32));
+				}
 				songPlace.maparray [0] [e.X / 32+(pageNumber*25), e.Y / 32] = noteValue;
 				needRedraw = true;
+				lastPlaceX = (byte)(e.X / 32);
+				lastPlaceY = (byte)(e.Y / 32);
 			}
 		}
 
@@ -201,7 +260,6 @@ namespace GrowtopiaMusicSimulatorReborn
 		}
 
 		void mouseup(object sender, MouseEventArgs e){
-			Debug.Print ("unclick");
 			clicking = false;
 		}
 
@@ -231,6 +289,9 @@ namespace GrowtopiaMusicSimulatorReborn
 			} else {
 				g.DrawImage (playButtonImage, 0, 448);
 			}
+			g.DrawImage (bpmButtonImage, 800, 448);
+			g.DrawImage (yellowPlayButtonImage, 192, 448);
+			g.DrawString ("Page:" + (pageNumber + 1).ToString () + "/16",textFont,textBrush,300,448);
 		}
 
 		void paint_stuff(object sender, PaintEventArgs e){

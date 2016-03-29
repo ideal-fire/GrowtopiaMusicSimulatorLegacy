@@ -68,20 +68,20 @@ public class SetSounds{
 			drumSounds[13]="drum_6";
 
 
-			bassSounds[0]="bassSounds_high_b";
-			bassSounds[1]="bassSounds_a";
-			bassSounds[2]="bassSounds_g";
-			bassSounds[3]="bassSounds_f";
-			bassSounds[4]="bassSounds_e";
-			bassSounds[5]="bassSounds_d";
-			bassSounds[6]="bassSounds_c";
-			bassSounds[7]="bassSounds_b";
-			bassSounds[8]="bassSounds_low_a";
-			bassSounds[9]="bassSounds_low_g";
-			bassSounds[10]="bassSounds_low_f";
-			bassSounds[11]="bassSounds_low_e";
-			bassSounds[12]="bassSounds_low_d";
-			bassSounds[13]="bassSounds_low_c";	
+			bassSounds[0]="bass_high_b";
+			bassSounds[1]="bass_a";
+			bassSounds[2]="bass_g";
+			bassSounds[3]="bass_f";
+			bassSounds[4]="bass_e";
+			bassSounds[5]="bass_d";
+			bassSounds[6]="bass_c";
+			bassSounds[7]="bass_b";
+			bassSounds[8]="bass_low_a";
+			bassSounds[9]="bass_low_g";
+			bassSounds[10]="bass_low_f";
+			bassSounds[11]="bass_low_e";
+			bassSounds[12]="bass_low_d";
+			bassSounds[13]="bass_low_c";	
 
 
 			bassSharpSounds[0]="bass_high_c";
@@ -176,6 +176,14 @@ public class SetSounds{
 			engine.AddSoundSourceFromMemory(BassSounds.bass_low_f, "bass_low_f");
 			engine.AddSoundSourceFromMemory(BassSounds.bass_low_g, "bass_low_g");
 			engine.AddSoundSourceFromMemory(BassSounds.bass_low_g_flat_f_sharp, "bass_low_g_flat_f_sharp");
+
+			engine.AddSoundSourceFromMemory(DrumSounds.drum_1, "drum_1");
+			engine.AddSoundSourceFromMemory(DrumSounds.drum_0, "drum_0");
+			engine.AddSoundSourceFromMemory(DrumSounds.drum_2, "drum_2");
+			engine.AddSoundSourceFromMemory(DrumSounds.drum_3, "drum_3");
+			engine.AddSoundSourceFromMemory(DrumSounds.drum_4, "drum_4");
+			engine.AddSoundSourceFromMemory(DrumSounds.drum_5, "drum_5");
+			engine.AddSoundSourceFromMemory(DrumSounds.drum_6, "drum_6");
 			return engine;
 		}
 	

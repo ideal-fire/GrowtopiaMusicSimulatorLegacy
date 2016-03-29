@@ -6,3 +6,5 @@ C:\Users\admin\NewNathansFolder\GrowtopiaMusicSimulatorReborn\GrowtopiaMusicSimu
 C:\Users\admin\NewNathansFolder\GrowtopiaMusicSimulatorReborn\GrowtopiaMusicSimulatorReborn\obj\Debug\GrowtopiaMusicSimulatorReborn.pdb
 C:\Users\admin\NewNathansFolder\GrowtopiaMusicSimulatorReborn\GrowtopiaMusicSimulatorReborn\bin\Debug\MapLibrary.dll
 C:\Users\admin\NewNathansFolder\GrowtopiaMusicSimulatorReborn\GrowtopiaMusicSimulatorReborn\bin\Debug\irrKlang.NET4.dll
+C:\Users\admin\NewNathansFolder\GrowtopiaMusicSimulatorReborn\GrowtopiaMusicSimulatorReborn\obj\Debug\GrowtopiaMusicSimulatorReborn.PopBPM.resources
+C:\Users\admin\NewNathansFolder\GrowtopiaMusicSimulatorReborn\GrowtopiaMusicSimulatorReborn\obj\Debug\GrowtopiaMusicSimulatorReborn.csproj.GenerateResource.Cache

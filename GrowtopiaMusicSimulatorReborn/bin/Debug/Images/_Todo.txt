@@ -1,2 +1,0 @@
-Make it so you can stop the song mid playing
-	Do playing on a thread
