@@ -5,8 +5,8 @@ Growtopia Music Simulator 2.0+ changelog
 2.0
 ---
 Added features:
-Uh...
 Better sound playing method
+Correct BPM formula by y3ll0.
 =============================
 Removed features:
 * Title screen

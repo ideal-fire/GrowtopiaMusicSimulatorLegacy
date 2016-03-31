@@ -2,7 +2,8 @@
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" ActiveRuntime="MS.NET" />
   <MonoDevelop.Ide.Workbench ActiveDocument="GrowtopiaMusicSimulatorReborn\MainForm.cs">
     <Files>
-      <File FileName="GrowtopiaMusicSimulatorReborn\MainForm.cs" Line="17" Column="9" />
+      <File FileName="GrowtopiaMusicSimulatorReborn\MainForm.cs" Line="309" Column="40" />
+      <File FileName="GrowtopiaMusicSimulatorReborn\MainForm.BigMethods.cs" Line="70" Column="21" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

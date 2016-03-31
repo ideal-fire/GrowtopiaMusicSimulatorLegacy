@@ -66,6 +66,7 @@ namespace GrowtopiaMusicSimulatorReborn
 		Bitmap gridImage;
 		Bitmap bpmButtonImage;
 		Bitmap yellowPlayButtonImage;
+		Bitmap creditsButtonImage;
 
 		// Misc stuffz
 		// True = Draw big bg. False = draw lots of tiny grid images.
@@ -85,9 +86,12 @@ namespace GrowtopiaMusicSimulatorReborn
 		// For text
 		System.Drawing.Brush textBrush = new SolidBrush(System.Drawing.Color.Black);
 		Font textFont = new Font("Arial",14);
-
+		Brush grayBrush = new SolidBrush (Color.FromArgb (100, 128, 128, 128));
 
 		const short gmsVersion=2;
+
+		// Bar position displaying variable of doom
+		byte barX=0;
 
 		public MainForm()
 		{
@@ -98,6 +102,7 @@ namespace GrowtopiaMusicSimulatorReborn
 				Environment.Exit (721);
 			}
 
+			//TODO check for cerdits button image.
 
 			this.Text = "GrowtopiaMusicSimulatorReborn";
 			this.Name = "Growtopia Music Simulator Re;born";
@@ -130,6 +135,7 @@ namespace GrowtopiaMusicSimulatorReborn
 			rightButtonImage = new Bitmap ((Directory.GetCurrentDirectory()+"/Images/rightButton.png"));
 			bpmButtonImage = new Bitmap ((Directory.GetCurrentDirectory()+"/Images/bpmButton.png"));
 			yellowPlayButtonImage = new Bitmap ((Directory.GetCurrentDirectory()+"/Images/yellowPlayButton.png"));
+			creditsButtonImage = new Bitmap ((Directory.GetCurrentDirectory()+"/Images/creditsButton.png"));
 			// Set up sound engine thing
 			soundEngine = new ISoundEngine ();
 
@@ -213,17 +219,25 @@ namespace GrowtopiaMusicSimulatorReborn
 		}
 
 		void playMusic(object startX){
+			barX = 0;
 			for (int x = Convert.ToInt32(startX); x < 400; x++) {
+				needRedraw = true;
 				for (int y = 0; y < 14; y++) {
 					if (songPlace.maparray[0][x,y]!=0){
 						soundEngine.Play2D(noteArrays[(songPlace.maparray[0][x,y])-1][y]);
 					}
 				}
+
 				Thread.Sleep (OptionHolder.noteWait);
+				if ((barX+1) % 25 == 0) {
+					barX = 0;
+					pageNumber++;
+				} else {
+					barX++;
+				}
 			}
 			playing = false;
 			needRedraw = true;
-
 		}
 
 		void playNote(byte noteId, byte yLevel){
@@ -292,6 +306,7 @@ namespace GrowtopiaMusicSimulatorReborn
 			g.DrawImage (bpmButtonImage, 800, 448);
 			g.DrawImage (yellowPlayButtonImage, 192, 448);
 			g.DrawString ("Page:" + (pageNumber + 1).ToString () + "/16",textFont,textBrush,300,448);
+			g.DrawImage (creditsButtonImage, 448, 448);
 		}
 
 		void paint_stuff(object sender, PaintEventArgs e){
@@ -303,6 +318,10 @@ namespace GrowtopiaMusicSimulatorReborn
 				songPlace.drawLayer (e.Graphics, 24, 13, pageNumber*25, 0, 0, 0, noteImages,0);
 			}
 			drawUI (e.Graphics);
+			if (playing) {
+				e.Graphics.DrawImage (bpmButtonImage, 800, 448);
+				e.Graphics.FillRectangle (grayBrush, barX*32, 0, 32, 448);
+			}
 		}
 
 

@@ -67,7 +67,9 @@ namespace GrowtopiaMusicSimulatorReborn
 			if (e.X<32){
 				// When you press play button.
 				if (!playing) {
+					pageNumber = 0;
 					playing = true;
+					needRedraw = true;
 					playThread = new Thread (new ParameterizedThreadStart(playMusic));
 					playThread.Start (0);
 				} else {
@@ -103,19 +105,23 @@ namespace GrowtopiaMusicSimulatorReborn
 					} else if (e.X < 160) {
 						// Left button
 						// Gotta protect morons from themselves.
-						if (pageNumber == 0) {
-							return;
+						if (!playing) {
+							if (pageNumber == 0) {
+								return;
+							}
+							pageNumber--;
+							needRedraw = true;
 						}
-						pageNumber--;
-						needRedraw = true;
 					} else if (e.X < 192) {
-						// right button
-						// Morons...must protect...
-						if (pageNumber == 15) {
-							return;
+						if (!playing) {
+							// right button
+							// Morons...must protect...
+							if (pageNumber == 15) {
+								return;
+							}
+							pageNumber++;
+							needRedraw = true;
 						}
-						pageNumber++;
-						needRedraw = true;
 					} else if (e.X<224) {
 						if (!playing) {
 							playing = true;
