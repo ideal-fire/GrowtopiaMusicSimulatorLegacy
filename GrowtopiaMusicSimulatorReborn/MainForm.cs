@@ -109,7 +109,6 @@ namespace GrowtopiaMusicSimulatorReborn
 			// Load options
 			loadOptionsFile(ref OptionHolder.playNoteOnPlace,ref OptionHolder.showConfirmation,ref OptionHolder.byteEX);
 			Icon = new Icon((Directory.GetCurrentDirectory () + "/Images/icon.ico"));
-			// TODO fix this?
 			this.Text = "GrowtopiaMusicSimulatorReborn";
 			this.Name = "Growtopia Music Simulator Re;born";
 			// True size is 832x480		
@@ -129,7 +128,6 @@ namespace GrowtopiaMusicSimulatorReborn
 			noteImages [5] = new Bitmap ((Directory.GetCurrentDirectory()+"/Images/bassSharp.png"));
 			noteImages [6] = new Bitmap ((Directory.GetCurrentDirectory()+"/Images/bassFlat.png"));
 			noteImages [7] = new Bitmap ((Directory.GetCurrentDirectory()+"/Images/drum.png"));
-			// TODO Sharp develop no le gusta este.
 			this.DoubleBuffered = true;
 			this.MouseDown += mousedown;
 			this.MouseUp += mouseup;

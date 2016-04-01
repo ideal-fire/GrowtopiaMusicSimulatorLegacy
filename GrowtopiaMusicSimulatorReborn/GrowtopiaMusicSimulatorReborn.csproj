@@ -13,6 +13,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <StartupObject>GrowtopiaMusicSimulatorReborn.Program</StartupObject>
     <ApplicationIcon>..\iconPNG.ico</ApplicationIcon>
+    <ReleaseVersion>1</ReleaseVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Platform)' == 'AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -36,9 +37,11 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <WarningLevel>4</WarningLevel>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <WarningLevel>4</WarningLevel>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
