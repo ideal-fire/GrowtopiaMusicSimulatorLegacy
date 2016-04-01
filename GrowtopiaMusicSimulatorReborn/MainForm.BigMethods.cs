@@ -1,7 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Windows.Forms;
-using System.Collections.Generic;
 using System.Threading;
 using System.Diagnostics;
 using System.Windows.Forms;
@@ -11,51 +9,118 @@ namespace GrowtopiaMusicSimulatorReborn
 	public partial class MainForm : Form
 	{
 
+		void easySaveOptions(){
+		saveOptionsFile(OptionHolder.playNoteOnPlace,OptionHolder.showConfirmation,OptionHolder.byteEX);
+		}
 
 
+		public static void loadOptionsFile(ref bool _playOnPlace, ref bool _showConfirmation, ref bool _byteEX){
+			FileStream file = new FileStream((Directory.GetCurrentDirectory () + "/Images/Options.txt"),FileMode.Open);
+			BinaryReader br = new BinaryReader(file);
+			byte optionsFormat = br.ReadByte();
+			if (optionsFormat>OptionHolder.maxOptionsFormat){
+				MessageBox.Show("The options file format is newer than this version of Growtopia Music Simulator Re;born can load.\nA new options file will be created with the default settings.");
+				br.Dispose();
+				file.Dispose();
+				saveOptionsFile(true,true,OptionHolder.byteEX);
+				return;
+			}
+			_byteEX = br.ReadBoolean();
+			_playOnPlace = br.ReadBoolean();
+			_showConfirmation = br.ReadBoolean();
+		}
+		
+		public static void saveOptionsFile(bool _playOnPlace, bool _showConfirmation, bool _byteEX){
+		FileStream file = new FileStream((Directory.GetCurrentDirectory () + "/Images/Options.txt"),FileMode.Create);
+		BinaryWriter bw = new BinaryWriter(file);
+		// Options file version
+		bw.Write((byte)1);
+		// byteEX
+		bw.Write(_byteEX);
+		// play on place?
+		bw.Write(_playOnPlace);
+		// show confirmation?
+		bw.Write(_showConfirmation);
+		
+		// Close files
+		bw.Dispose();
+		file.Dispose();
+		}
+		
+		
 		public static bool checkFileExistance(){
 			bool gone = false;
+			if (!File.Exists ((Directory.GetCurrentDirectory () + "/Images/Options.txt"))) {
+				MessageBox.Show ("Options file not found.\nWill create new one.");
+				saveOptionsFile(true,true,OptionHolder.byteEX);
+			}
+			if (!File.Exists ((Directory.GetCurrentDirectory () + "/Images/BigBG.png"))) {
+				gone = true;
+				MessageBox.Show ("BigBG.png is missing.");
+			}
+			if (!File.Exists ((Directory.GetCurrentDirectory () + "/Images/icon.ico"))) {
+				gone = true;
+				MessageBox.Show ("icon.ico gone.");
+			}
+			if (!File.Exists ((Directory.GetCurrentDirectory () + "/Images/creditsButton.png"))) {
+				gone = true;
+				MessageBox.Show ("creditsButton.png gone.");
+			}
 			if (!File.Exists ((Directory.GetCurrentDirectory () + "/Images/playButton.png"))) {
 				gone = true;
+				MessageBox.Show ("playButton.png gone.");
 			}
 			if (!File.Exists ((Directory.GetCurrentDirectory () + "/Images/stopButton.png"))) {
 				gone = true;
+				MessageBox.Show ("stopButton.png gone.");
 			}
 			if (!File.Exists ((Directory.GetCurrentDirectory () + "/Images/Grid.bmp"))) {
 				gone = true;
+				MessageBox.Show ("Grid.bmp gone.");
 			}
 			if (!File.Exists ((Directory.GetCurrentDirectory () + "/Images/piano.png"))) {
 				gone = true;
+				MessageBox.Show ("piano.png gone.");
 			}
 			if (!File.Exists ((Directory.GetCurrentDirectory () + "/Images/pianoFlat.png"))) {
 				gone = true;
+				MessageBox.Show ("pianoFlat.png gone.");
 			}
 			if (!File.Exists ((Directory.GetCurrentDirectory () + "/Images/pianoSharp.png"))) {
 				gone = true;
+				MessageBox.Show ("pianoSharp.png gone.");
 			}
 			if (!File.Exists ((Directory.GetCurrentDirectory () + "/Images/bass.png"))) {
 				gone = true;
+				MessageBox.Show ("bass.png gone.");
 			}
 			if (!File.Exists ((Directory.GetCurrentDirectory () + "/Images/bassFlat.png"))) {
 				gone = true;
+				MessageBox.Show ("bassFlat.png gone.");
 			}
 			if (!File.Exists ((Directory.GetCurrentDirectory () + "/Images/bassSharp.png"))) {
 				gone = true;
+				MessageBox.Show ("bassSharp.png gone.");
 			}
 			if (!File.Exists ((Directory.GetCurrentDirectory () + "/Images/drum.png"))) {
 				gone = true;
+				MessageBox.Show ("drum.png gone.");
 			}
 			if (!File.Exists ((Directory.GetCurrentDirectory () + "/Images/loadButton.png"))) {
 				gone = true;
+				MessageBox.Show ("loadButton.png gone.");
 			}
 			if (!File.Exists ((Directory.GetCurrentDirectory () + "/Images/saveButton.png"))) {
 				gone = true;
+				MessageBox.Show ("saveButton.png gone.");
 			}
 			if (!File.Exists ((Directory.GetCurrentDirectory () + "/Images/yellowPlayButton.png"))) {
 				gone = true;
+				MessageBox.Show ("yellowPlayButton.png gone.");
 			}
 			if (!File.Exists ((Directory.GetCurrentDirectory () + "/Images/_credits.txt"))) {
 				MessageBox.Show ("I don't appreciate you not appreciating.\nSomehow, I doubt you moved the credits file to your desktop so you can look\nat it everyday.");
+				MessageBox.Show ("_Credits.txt gone.");
 				gone = true;
 			}
 			return gone;
@@ -99,7 +164,7 @@ namespace GrowtopiaMusicSimulatorReborn
 						songPlace.maparray = customLoadMapFromFile (ref fs).Item4;
 						fs.Dispose ();
 						needRedraw = true;
-						if (showConfirmation) {
+						if (OptionHolder.showConfirmation) {
 							MessageBox.Show ("Loadedededed.");
 						}
 					} else if (e.X < 160) {
@@ -132,10 +197,22 @@ namespace GrowtopiaMusicSimulatorReborn
 							playing = false;
 						}
 						needRedraw = true;
-					}else if (e.X<768){
-						MessageBox.Show ("Programming - MyLegGuy\nOriginal theme - SumRndmDde\nBPM formula - y3ll0\nMatching sounds to notes - HonestyCow\n\nThis couldn't be possible\nwithout these people.");
+					}else if (e.X<256){
+						OptionHolder.playNoteOnPlace=!OptionHolder.playNoteOnPlace;
+						easySaveOptions();
+						MessageBox.Show("Play note on place is now:"+OptionHolder.playNoteOnPlace.ToString()+"\nOptions file saved.");
+						needRedraw=true;
+					}else if (e.X<288){
+						OptionHolder.showConfirmation=!OptionHolder.showConfirmation;
+						easySaveOptions();
+						MessageBox.Show("Showing confirmations for saving and whatnot is now:"+OptionHolder.showConfirmation+"\nOptions file saved.");
+						needRedraw=true;
+					}
+					else if (e.X<768){
+						MessageBox.Show ("Programming - MyLegGuy\nOriginal theme - SumRndmDde\nBPM formula - y3ll0\nMatching sounds to notes - HonestyCow\n\nThis couldn't be possible without these people.");
 					}else if (e.X>800){
 						PopBPM pbpm = new PopBPM(reverseBPMformula(OptionHolder.noteWait));
+						pbpm.StartPosition = FormStartPosition.CenterScreen;
 						pbpm.ShowDialog();
 						if (pbpm.numericUpDown1.Value < 20 || pbpm.numericUpDown1.Value > 200) {
 							MessageBox.Show ("Yo son.\nGrowtopia don't support dat BPM.\nBut you can still use it here.");
@@ -147,18 +224,19 @@ namespace GrowtopiaMusicSimulatorReborn
 			}
 		}
 
-		public int bpmFormula(int re){
+		public static int bpmFormula(int re){
 			return 60000 / (4 * re);
 		}
 
-		public int reverseBPMformula(int re){
+		public static int reverseBPMformula(int re){
 			return 15000/re;
 		}
 
 		// It came back to haunt me. Making it so I can have a maximum of 255x255 map. I had to write this custom method now.
-
-		public static Tuple<int,int,int,int[][,]> customLoadMapFromFile(ref FileStream file){
+		public static Tuple<int,int,int,int[][,]> customLoadMapFromFile(ref FileStream filea){
+			BinaryReader file = new BinaryReader(filea);
 			int mapversion=file.ReadByte();
+			OptionHolder.noteWait = (short)bpmFormula((int)file.ReadInt16());
 			int mapWidth=file.ReadByte();
 			mapWidth = 400;
 			int mapHeight=file.ReadByte();
@@ -226,6 +304,8 @@ namespace GrowtopiaMusicSimulatorReborn
 			}
 			file.Close ();
 			file.Dispose ();
+			filea.Close();
+			filea.Dispose();
 			return Tuple.Create (mapWidth, mapHeight,layers, workMap);
 		}
 
@@ -255,15 +335,17 @@ namespace GrowtopiaMusicSimulatorReborn
 			int finishNumero = -80;
 			byte past=254;
 			byte present=255;
-			// Map format versiom
+			// Groowtopia Music Simulator map format
 			br.Write (Convert.ToByte(3));
+			// Write bpm
+			br.Write ((short)reverseBPMformula(OptionHolder.noteWait));
 			// THESE VALUES DONT MATTER FOR THE CUSTOM LOADING FUNCTION. WRITE DUMMY VALUES.
 			// Width
 			br.Write (Convert.ToByte(1));
 			// Height
-			br.Write (Convert.ToByte(1));
+			br.Write (Convert.ToByte(2));
 			// Layers?
-			br.Write (Convert.ToByte(1));
+			br.Write (Convert.ToByte(3));
 				currentRun=255;
 				doingRun = false;
 				runNumber = 0;
@@ -311,7 +393,6 @@ namespace GrowtopiaMusicSimulatorReborn
 					}
 				}
 			if (doingRun) {
-				Debug.Print ("a:" + runNumber.ToString ());
 				past = present;
 				present= Convert.ToByte ((runNumber));
 				br.Write (present);	
@@ -322,7 +403,7 @@ namespace GrowtopiaMusicSimulatorReborn
 			}
 			br.Close();
 
-			if (showConfirmation) {
+			if (OptionHolder.showConfirmation) {
 				MessageBox.Show ("Savedededed.");
 			}
 
@@ -339,8 +420,7 @@ namespace GrowtopiaMusicSimulatorReborn
 
 
 
-
-
+// That's all.
 
 	}
 }

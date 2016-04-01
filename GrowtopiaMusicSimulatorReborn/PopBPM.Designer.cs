@@ -36,6 +36,7 @@ namespace GrowtopiaMusicSimulatorReborn
 			this.button1 = new System.Windows.Forms.Button();
 			this.label1 = new System.Windows.Forms.Label();
 			this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
+			this.label2 = new System.Windows.Forms.Label();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
 			this.SuspendLayout();
 			// 
@@ -64,16 +65,25 @@ namespace GrowtopiaMusicSimulatorReborn
 			this.numericUpDown1.Size = new System.Drawing.Size(92, 20);
 			this.numericUpDown1.TabIndex = 3;
 			this.numericUpDown1.Value = new decimal(new int[] {
-									100,
-									0,
-									0,
-									0});
+			100,
+			0,
+			0,
+			0});
+			// 
+			// label2
+			// 
+			this.label2.Location = new System.Drawing.Point(4, 84);
+			this.label2.Name = "label2";
+			this.label2.Size = new System.Drawing.Size(169, 23);
+			this.label2.TabIndex = 4;
+			this.label2.Text = "Decimals are friends, not numbers.";
 			// 
 			// PopBPM
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(170, 71);
+			this.Controls.Add(this.label2);
 			this.Controls.Add(this.numericUpDown1);
 			this.Controls.Add(this.label1);
 			this.Controls.Add(this.button1);
@@ -81,9 +91,11 @@ namespace GrowtopiaMusicSimulatorReborn
 			this.Text = "Set BPM";
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
 			this.ResumeLayout(false);
+
 		}
 		public System.Windows.Forms.NumericUpDown numericUpDown1;
 		private System.Windows.Forms.Label label1;
 		private System.Windows.Forms.Button button1;
+		private System.Windows.Forms.Label label2;
 	}
 }
