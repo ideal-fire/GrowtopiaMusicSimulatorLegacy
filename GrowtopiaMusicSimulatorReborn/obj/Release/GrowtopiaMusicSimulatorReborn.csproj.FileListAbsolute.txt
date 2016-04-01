@@ -1,0 +1,7 @@
+C:\Users\admin\NewNathansFolder\GrowtopiaMusicSimulatorReborn\GrowtopiaMusicSimulatorReborn\bin\Release\GrowtopiaMusicSimulatorReborn.exe.config
+C:\Users\admin\NewNathansFolder\GrowtopiaMusicSimulatorReborn\GrowtopiaMusicSimulatorReborn\bin\Release\GrowtopiaMusicSimulatorReborn.exe
+C:\Users\admin\NewNathansFolder\GrowtopiaMusicSimulatorReborn\GrowtopiaMusicSimulatorReborn\bin\Release\irrKlang.NET4.dll
+C:\Users\admin\NewNathansFolder\GrowtopiaMusicSimulatorReborn\GrowtopiaMusicSimulatorReborn\bin\Release\MapLibrary.dll
+C:\Users\admin\NewNathansFolder\GrowtopiaMusicSimulatorReborn\GrowtopiaMusicSimulatorReborn\obj\Release\GrowtopiaMusicSimulatorReborn.PopBPM.resources
+C:\Users\admin\NewNathansFolder\GrowtopiaMusicSimulatorReborn\GrowtopiaMusicSimulatorReborn\obj\Release\GrowtopiaMusicSimulatorReborn.csproj.GenerateResource.Cache
+C:\Users\admin\NewNathansFolder\GrowtopiaMusicSimulatorReborn\GrowtopiaMusicSimulatorReborn\obj\Release\GrowtopiaMusicSimulatorReborn.exe

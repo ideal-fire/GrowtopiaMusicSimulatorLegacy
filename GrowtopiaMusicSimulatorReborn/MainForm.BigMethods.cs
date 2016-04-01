@@ -50,6 +50,10 @@ namespace GrowtopiaMusicSimulatorReborn
 		
 		public static bool checkFileExistance(){
 			bool gone = false;
+			if (!Directory.Exists((Directory.GetCurrentDirectory () + "/Images/"))){
+				MessageBox.Show ("There should be a folder called Images in the same directory as the executable file.\nPlease redownload that stuff.");
+				return true;
+			}
 			if (!File.Exists ((Directory.GetCurrentDirectory () + "/Images/Options.txt"))) {
 				MessageBox.Show ("Options file not found.\nWill create new one.");
 				saveOptionsFile(true,true,OptionHolder.byteEX);
