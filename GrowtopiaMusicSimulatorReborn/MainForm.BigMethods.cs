@@ -234,6 +234,7 @@ namespace GrowtopiaMusicSimulatorReborn
 						easySaveOptions ();
 						MessageBox.Show ("Showing confirmations for saving and whatnot is now:" + OptionHolder.showConfirmation + "\nOptions file saved.");
 						needRedraw = true;
+					} else if (e.X < 736) {
 					// Load old gms file.
 						loadOld();
 					}
