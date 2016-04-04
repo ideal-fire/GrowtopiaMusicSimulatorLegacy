@@ -18,3 +18,13 @@ X:\Growtopia Music Simulator Reborn\GrowtopiaMusicSimulatorReborn\obj\Debug\Grow
 X:\Growtopia Music Simulator Reborn\GrowtopiaMusicSimulatorReborn\obj\Debug\GrowtopiaMusicSimulatorReborn.csproj.GenerateResource.Cache
 X:\Growtopia Music Simulator Reborn\GrowtopiaMusicSimulatorReborn\obj\Debug\GrowtopiaMusicSimulatorReborn.exe
 X:\Growtopia Music Simulator Reborn\GrowtopiaMusicSimulatorReborn\obj\Debug\GrowtopiaMusicSimulatorReborn.pdb
+C:\Users\admin\NewNathansFolder\Programing\C#\GrowtopiaMusicSimulatorReborn\GrowtopiaMusicSimulatorReborn\obj\Debug\GrowtopiaMusicSimulatorReborn.csprojResolveAssemblyReference.cache
+C:\Users\admin\NewNathansFolder\Programing\C#\GrowtopiaMusicSimulatorReborn\GrowtopiaMusicSimulatorReborn\obj\Debug\GrowtopiaMusicSimulatorReborn.PopBPM.resources
+C:\Users\admin\NewNathansFolder\Programing\C#\GrowtopiaMusicSimulatorReborn\GrowtopiaMusicSimulatorReborn\obj\Debug\GrowtopiaMusicSimulatorReborn.csproj.GenerateResource.Cache
+C:\Users\admin\NewNathansFolder\Programing\C#\GrowtopiaMusicSimulatorReborn\GrowtopiaMusicSimulatorReborn\obj\Debug\GrowtopiaMusicSimulatorReborn.exe
+C:\Users\admin\NewNathansFolder\Programing\C#\GrowtopiaMusicSimulatorReborn\GrowtopiaMusicSimulatorReborn\obj\Debug\GrowtopiaMusicSimulatorReborn.pdb
+C:\Users\admin\NewNathansFolder\Programing\C#\GrowtopiaMusicSimulatorReborn\GrowtopiaMusicSimulatorReborn\bin\Debug\GrowtopiaMusicSimulatorReborn.exe.config
+C:\Users\admin\NewNathansFolder\Programing\C#\GrowtopiaMusicSimulatorReborn\GrowtopiaMusicSimulatorReborn\bin\Debug\GrowtopiaMusicSimulatorReborn.exe
+C:\Users\admin\NewNathansFolder\Programing\C#\GrowtopiaMusicSimulatorReborn\GrowtopiaMusicSimulatorReborn\bin\Debug\GrowtopiaMusicSimulatorReborn.pdb
+C:\Users\admin\NewNathansFolder\Programing\C#\GrowtopiaMusicSimulatorReborn\GrowtopiaMusicSimulatorReborn\bin\Debug\irrKlang.NET4.dll
+C:\Users\admin\NewNathansFolder\Programing\C#\GrowtopiaMusicSimulatorReborn\GrowtopiaMusicSimulatorReborn\bin\Debug\MapLibrary.dll

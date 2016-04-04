@@ -1,6 +1,11 @@
 Added features:
 Growtopia Music Simulator 2.0+ changelog
 
+2.1
+----
+* Import from old Growtopia Music Simulator
+* Catch errors on saving and loading
+* Blank note (unplaceable, and useless.)
 
 2.0
 ---

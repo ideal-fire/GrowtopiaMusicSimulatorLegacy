@@ -122,6 +122,14 @@ namespace GrowtopiaMusicSimulatorReborn
 				gone = true;
 				MessageBox.Show ("yellowPlayButton.png gone.");
 			}
+			if (!File.Exists ((Directory.GetCurrentDirectory () + "/Images/loadOld.png"))) {
+				gone = true;
+				MessageBox.Show ("loadOld.png gone. 1.2");
+			}
+			if (!File.Exists ((Directory.GetCurrentDirectory () + "/Images/blankNote.png"))) {
+				gone = true;
+				MessageBox.Show ("blankNote.png gone. 1.2");
+			}
 			if (!File.Exists ((Directory.GetCurrentDirectory () + "/Images/_credits.txt"))) {
 				MessageBox.Show ("I don't appreciate you not appreciating.\nSomehow, I doubt you moved the credits file to your desktop so you can look\nat it everyday.");
 				MessageBox.Show ("_Credits.txt gone.");
@@ -159,14 +167,28 @@ namespace GrowtopiaMusicSimulatorReborn
 				} else {
 					// When you press save button
 					if (e.X < 96) {
+						try{
 						save ();
+						}
+						catch(Exception ex){
+							MessageBox.Show ("Could not save file.\n"+ex.ToString());
+							return;
+						}
 					} else if (e.X < 128) {
 						// When you press load button
 						OpenFileDialog ofd = new OpenFileDialog ();
 						ofd.ShowDialog ();
-						FileStream fs = new FileStream (ofd.FileName, FileMode.Open);
+						FileStream fs;
+						try{
+						fs = new FileStream (ofd.FileName, FileMode.Open);
+						}
+						catch(Exception ex){
+							MessageBox.Show ("Could not open file.\nDid you select nothing?\n"+ex.ToString());
+							return;
+						}
 						songPlace.maparray = customLoadMapFromFile (ref fs).Item4;
 						fs.Dispose ();
+
 						needRedraw = true;
 						if (OptionHolder.showConfirmation) {
 							MessageBox.Show ("Loadedededed.");
@@ -191,26 +213,29 @@ namespace GrowtopiaMusicSimulatorReborn
 							pageNumber++;
 							needRedraw = true;
 						}
-					} else if (e.X<224) {
+					} else if (e.X < 224) {
 						if (!playing) {
 							playing = true;
-							playThread = new Thread (new ParameterizedThreadStart(playMusic));
-							playThread.Start (pageNumber*25);
+							playThread = new Thread (new ParameterizedThreadStart (playMusic));
+							playThread.Start (pageNumber * 25);
 						} else {
 							playThread.Abort ();
 							playing = false;
 						}
 						needRedraw = true;
-					}else if (e.X<256){
-						OptionHolder.playNoteOnPlace=!OptionHolder.playNoteOnPlace;
-						easySaveOptions();
-						MessageBox.Show("Play note on place is now:"+OptionHolder.playNoteOnPlace.ToString()+"\nOptions file saved.");
-						needRedraw=true;
-					}else if (e.X<288){
-						OptionHolder.showConfirmation=!OptionHolder.showConfirmation;
-						easySaveOptions();
-						MessageBox.Show("Showing confirmations for saving and whatnot is now:"+OptionHolder.showConfirmation+"\nOptions file saved.");
-						needRedraw=true;
+					} else if (e.X < 256) {
+					// Play note on place
+						OptionHolder.playNoteOnPlace = !OptionHolder.playNoteOnPlace;
+						easySaveOptions ();
+						MessageBox.Show ("Play note on place is now:" + OptionHolder.playNoteOnPlace.ToString () + "\nOptions file saved.");
+						needRedraw = true;
+					} else if (e.X < 288) {
+						OptionHolder.showConfirmation = !OptionHolder.showConfirmation;
+						easySaveOptions ();
+						MessageBox.Show ("Showing confirmations for saving and whatnot is now:" + OptionHolder.showConfirmation + "\nOptions file saved.");
+						needRedraw = true;
+					// Load old gms file.
+						loadOld();
 					}
 					else if (e.X<768){
 						MessageBox.Show ("Programming - MyLegGuy\nOriginal theme - SumRndmDde\nBPM formula - y3ll0\nMatching sounds to notes - HonestyCow\n\nThis couldn't be possible without these people.");
@@ -235,6 +260,40 @@ namespace GrowtopiaMusicSimulatorReborn
 		public static int reverseBPMformula(int re){
 			return 15000/re;
 		}
+
+
+		void loadOld(){
+			OpenFileDialog ofd = new OpenFileDialog ();
+			ofd.ShowDialog ();
+			FileStream fs;
+			try{
+				fs = new FileStream (ofd.FileName, FileMode.Open);
+			}
+			catch (Exception ex){
+				MessageBox.Show ("Couldn't open file.\n" + ex.ToString ());
+				return;
+			}
+			int tempByte;
+			tempByte = fs.ReadByte ();
+			tempByte = fs.ReadByte ();
+			tempByte = fs.ReadByte ();
+			tempByte = 0;
+			for (int y = 0; y < 14; y++) {
+				for (int x = 0; x < 400; x++) {
+					songPlace.maparray[0][x, y] = (byte)Int32.Parse((Convert.ToChar (fs.ReadByte())).ToString());
+					if (songPlace.maparray [0] [x, y] != 0 && songPlace.maparray [0] [x, y] != 1) {
+					}
+					//Debug.Print (songPlace.maparray [0] [x, y].ToString ());
+				}
+			}
+			//fs.ReadByte
+			fs.Dispose ();
+			needRedraw = true;
+			if (OptionHolder.showConfirmation) {
+				MessageBox.Show ("Loadedededed old Growtopia MUsic simulator file.\nNote that this can be saved to the new format by using the normal save button.");
+			}
+		}
+
 
 		// It came back to haunt me. Making it so I can have a maximum of 255x255 map. I had to write this custom method now.
 		public static Tuple<int,int,int,int[][,]> customLoadMapFromFile(ref FileStream filea){
