@@ -29,6 +29,7 @@ namespace GrowtopiaMusicSimulatorReborn
 			try{
 			file = new FileStream((Directory.GetCurrentDirectory () + "/Images/Options.txt"),FileMode.Open);
 			}catch{
+				MessageBox.Show ("Options file not found.\nWill create a new one.");
 				easySaveOptions ();
 				return;
 			}
