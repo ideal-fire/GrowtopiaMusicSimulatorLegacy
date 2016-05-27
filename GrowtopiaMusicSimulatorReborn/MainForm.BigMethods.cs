@@ -10,7 +10,7 @@ namespace GrowtopiaMusicSimulatorReborn
 	public partial class MainForm : Form
 	{
 
-		void easySaveOptions(){
+		static void easySaveOptions(){
 		saveOptionsFile(OptionHolder.playNoteOnPlace,OptionHolder.showConfirmation,OptionHolder.byteEX);
 		}
 
@@ -25,7 +25,13 @@ namespace GrowtopiaMusicSimulatorReborn
 
 
 		public static void loadOptionsFile(ref bool _playOnPlace, ref bool _showConfirmation, ref bool _byteEX){
-			FileStream file = new FileStream((Directory.GetCurrentDirectory () + "/Images/Options.txt"),FileMode.Open);
+			FileStream file;
+			try{
+			file = new FileStream((Directory.GetCurrentDirectory () + "/Images/Options.txt"),FileMode.Open);
+			}catch{
+				easySaveOptions ();
+				return;
+			}
 			BinaryReader br = new BinaryReader(file);
 			byte optionsFormat = br.ReadByte();
 			if (optionsFormat>OptionHolder.maxOptionsFormat){
