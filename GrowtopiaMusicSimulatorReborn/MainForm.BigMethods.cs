@@ -3,6 +3,7 @@ using System.IO;
 using System.Threading;
 using System.Diagnostics;
 using System.Windows.Forms;
+using System.Drawing;
 
 namespace GrowtopiaMusicSimulatorReborn
 {
@@ -11,6 +12,15 @@ namespace GrowtopiaMusicSimulatorReborn
 
 		void easySaveOptions(){
 		saveOptionsFile(OptionHolder.playNoteOnPlace,OptionHolder.showConfirmation,OptionHolder.byteEX);
+		}
+
+		Bitmap loadBitmap(string _filePath){
+			try{
+				return new Bitmap(_filePath);
+			}catch(Exception ex){
+				MessageBox.Show("Error loading\n"+_filePath+"\nThe file probrably doesn't exist. Here's the error:\n"+ex.ToString());
+				return null;
+			}
 		}
 
 
@@ -46,99 +56,6 @@ namespace GrowtopiaMusicSimulatorReborn
 		bw.Dispose();
 		file.Dispose();
 		}
-		
-		
-		public static bool checkFileExistance(){
-			bool gone = false;
-			if (!Directory.Exists((Directory.GetCurrentDirectory () + "/Images/"))){
-				MessageBox.Show ("There should be a folder called Images in the same directory as the executable file.\nPlease redownload that stuff.");
-				return true;
-			}
-			if (!File.Exists ((Directory.GetCurrentDirectory () + "/Images/Options.txt"))) {
-				MessageBox.Show ("Options file not found.\nWill create new one.");
-				saveOptionsFile(true,true,OptionHolder.byteEX);
-			}
-			if (!File.Exists ((Directory.GetCurrentDirectory () + "/Images/BigBG.png"))) {
-				gone = true;
-				MessageBox.Show ("BigBG.png is missing.");
-			}
-			if (!File.Exists ((Directory.GetCurrentDirectory () + "/Images/icon.ico"))) {
-				gone = true;
-				MessageBox.Show ("icon.ico gone.");
-			}
-			if (!File.Exists ((Directory.GetCurrentDirectory () + "/Images/creditsButton.png"))) {
-				gone = true;
-				MessageBox.Show ("creditsButton.png gone.");
-			}
-			if (!File.Exists ((Directory.GetCurrentDirectory () + "/Images/playButton.png"))) {
-				gone = true;
-				MessageBox.Show ("playButton.png gone.");
-			}
-			if (!File.Exists ((Directory.GetCurrentDirectory () + "/Images/stopButton.png"))) {
-				gone = true;
-				MessageBox.Show ("stopButton.png gone.");
-			}
-			if (!File.Exists ((Directory.GetCurrentDirectory () + "/Images/Grid.bmp"))) {
-				gone = true;
-				MessageBox.Show ("Grid.bmp gone.");
-			}
-			if (!File.Exists ((Directory.GetCurrentDirectory () + "/Images/piano.png"))) {
-				gone = true;
-				MessageBox.Show ("piano.png gone.");
-			}
-			if (!File.Exists ((Directory.GetCurrentDirectory () + "/Images/pianoFlat.png"))) {
-				gone = true;
-				MessageBox.Show ("pianoFlat.png gone.");
-			}
-			if (!File.Exists ((Directory.GetCurrentDirectory () + "/Images/pianoSharp.png"))) {
-				gone = true;
-				MessageBox.Show ("pianoSharp.png gone.");
-			}
-			if (!File.Exists ((Directory.GetCurrentDirectory () + "/Images/bass.png"))) {
-				gone = true;
-				MessageBox.Show ("bass.png gone.");
-			}
-			if (!File.Exists ((Directory.GetCurrentDirectory () + "/Images/bassFlat.png"))) {
-				gone = true;
-				MessageBox.Show ("bassFlat.png gone.");
-			}
-			if (!File.Exists ((Directory.GetCurrentDirectory () + "/Images/bassSharp.png"))) {
-				gone = true;
-				MessageBox.Show ("bassSharp.png gone.");
-			}
-			if (!File.Exists ((Directory.GetCurrentDirectory () + "/Images/drum.png"))) {
-				gone = true;
-				MessageBox.Show ("drum.png gone.");
-			}
-			if (!File.Exists ((Directory.GetCurrentDirectory () + "/Images/loadButton.png"))) {
-				gone = true;
-				MessageBox.Show ("loadButton.png gone.");
-			}
-			if (!File.Exists ((Directory.GetCurrentDirectory () + "/Images/saveButton.png"))) {
-				gone = true;
-				MessageBox.Show ("saveButton.png gone.");
-			}
-			if (!File.Exists ((Directory.GetCurrentDirectory () + "/Images/yellowPlayButton.png"))) {
-				gone = true;
-				MessageBox.Show ("yellowPlayButton.png gone.");
-			}
-			if (!File.Exists ((Directory.GetCurrentDirectory () + "/Images/loadOld.png"))) {
-				gone = true;
-				MessageBox.Show ("loadOld.png gone. 1.2");
-			}
-			if (!File.Exists ((Directory.GetCurrentDirectory () + "/Images/blankNote.png"))) {
-				gone = true;
-				MessageBox.Show ("blankNote.png gone. 1.2");
-			}
-			if (!File.Exists ((Directory.GetCurrentDirectory () + "/Images/_credits.txt"))) {
-				MessageBox.Show ("I don't appreciate you not appreciating.\nSomehow, I doubt you moved the credits file to your desktop so you can look\nat it everyday.");
-				MessageBox.Show ("_Credits.txt gone.");
-				gone = true;
-			}
-			return gone;
-		}
-
-
 
 		void checkUI(MouseEventArgs e){
 			if (e.X<32){
@@ -234,11 +151,11 @@ namespace GrowtopiaMusicSimulatorReborn
 						easySaveOptions ();
 						MessageBox.Show ("Showing confirmations for saving and whatnot is now:" + OptionHolder.showConfirmation + "\nOptions file saved.");
 						needRedraw = true;
-					} else if (e.X < 736) {
+					} else if (e.X < 448) {
 					// Load old gms file.
 						loadOld();
 					}
-					else if (e.X<768){
+					else if (e.X<480){
 						MessageBox.Show ("Programming - MyLegGuy\nOriginal theme - SumRndmDde\nBPM formula - y3ll0\nMatching sounds to notes - HonestyCow\n\nThis couldn't be possible without these people.");
 					}else if (e.X>800){
 						PopBPM pbpm = new PopBPM(reverseBPMformula(OptionHolder.noteWait));

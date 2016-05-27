@@ -13,7 +13,6 @@
     <SchemaVersion>2.0</SchemaVersion>
     <StartupObject>GrowtopiaMusicSimulatorReborn.Program</StartupObject>
     <ApplicationIcon>..\iconPNG.ico</ApplicationIcon>
-    <ReleaseVersion>1</ReleaseVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Platform)' == 'AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -75,6 +74,7 @@
     <Compile Include="TitleScreen.cs" />
     <Compile Include="RealMain.cs" />
     <Compile Include="DrumSounds.cs" />
+    <Compile Include="TickTimer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

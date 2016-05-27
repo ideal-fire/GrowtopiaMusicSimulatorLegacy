@@ -13,3 +13,11 @@ C:\Users\admin\NewNathansFolder\Programing\C#\GrowtopiaMusicSimulatorReborn\Grow
 C:\Users\admin\NewNathansFolder\Programing\C#\GrowtopiaMusicSimulatorReborn\GrowtopiaMusicSimulatorReborn\obj\Release\GrowtopiaMusicSimulatorReborn.PopBPM.resources
 C:\Users\admin\NewNathansFolder\Programing\C#\GrowtopiaMusicSimulatorReborn\GrowtopiaMusicSimulatorReborn\obj\Release\GrowtopiaMusicSimulatorReborn.csproj.GenerateResource.Cache
 C:\Users\admin\NewNathansFolder\Programing\C#\GrowtopiaMusicSimulatorReborn\GrowtopiaMusicSimulatorReborn\obj\Release\GrowtopiaMusicSimulatorReborn.exe
+C:\Users\admin\NewNathansFolder\Programing\C#\GrowtopiaMusicSimulatorRe-born\GrowtopiaMusicSimulatorReborn\bin\Release\GrowtopiaMusicSimulatorReborn.exe.config
+C:\Users\admin\NewNathansFolder\Programing\C#\GrowtopiaMusicSimulatorRe-born\GrowtopiaMusicSimulatorReborn\bin\Release\GrowtopiaMusicSimulatorReborn.exe
+C:\Users\admin\NewNathansFolder\Programing\C#\GrowtopiaMusicSimulatorRe-born\GrowtopiaMusicSimulatorReborn\bin\Release\irrKlang.NET4.dll
+C:\Users\admin\NewNathansFolder\Programing\C#\GrowtopiaMusicSimulatorRe-born\GrowtopiaMusicSimulatorReborn\bin\Release\MapLibrary.dll
+C:\Users\admin\NewNathansFolder\Programing\C#\GrowtopiaMusicSimulatorRe-born\GrowtopiaMusicSimulatorReborn\obj\Release\GrowtopiaMusicSimulatorReborn.csprojResolveAssemblyReference.cache
+C:\Users\admin\NewNathansFolder\Programing\C#\GrowtopiaMusicSimulatorRe-born\GrowtopiaMusicSimulatorReborn\obj\Release\GrowtopiaMusicSimulatorReborn.PopBPM.resources
+C:\Users\admin\NewNathansFolder\Programing\C#\GrowtopiaMusicSimulatorRe-born\GrowtopiaMusicSimulatorReborn\obj\Release\GrowtopiaMusicSimulatorReborn.csproj.GenerateResource.Cache
+C:\Users\admin\NewNathansFolder\Programing\C#\GrowtopiaMusicSimulatorRe-born\GrowtopiaMusicSimulatorReborn\obj\Release\GrowtopiaMusicSimulatorReborn.exe

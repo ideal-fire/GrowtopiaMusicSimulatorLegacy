@@ -94,18 +94,26 @@ namespace GrowtopiaMusicSimulatorReborn
 		// Spice it up a bit with SpringGreen instead of green.
 		Brush greenBrush = new SolidBrush(Color.SpringGreen);
 		
-		const short gmsVersion=2;
+		const short gmsVersion=3;
 
 		// Bar position displaying variable of doom
 		byte barX=0;
 
+		/// <summary>
+		/// For timign the space in between notes.
+		/// </summary>
+		TickTimer playingTimer = new TickTimer();
+
 		public MainForm()
 		{
-			// Make sure there's no missing images.
-			if (checkFileExistance() == true) {
-				MessageBox.Show ("At least one file is missing.\nMake sure you have a folder called Images in the same place as this executable is in along with\nTODO Insert file names here\nin there.");
-			// 721 error code. Why not?
-				Environment.Exit (721);
+			// Check for the credits file.
+			if (!File.Exists ((Directory.GetCurrentDirectory () + "/Images/_credits.txt"))) {
+				MessageBox.Show ("I don't appreciate you not appreciating.\nSomehow, I doubt you moved the credits file to your desktop so you can look\nat it everyday.");
+				MessageBox.Show ("_Credits.txt gone.");
+				Application.Exit ();
+			}
+			if (File.Exists (Directory.GetCurrentDirectory () + "/Images/_useOld.nathan")) {
+				OptionHolder.timerMode = true;
 			}
 			// Load options
 			loadOptionsFile(ref OptionHolder.playNoteOnPlace,ref OptionHolder.showConfirmation,ref OptionHolder.byteEX);
@@ -121,15 +129,15 @@ namespace GrowtopiaMusicSimulatorReborn
 			this.Paint += normalPaint;
 			// Load note images.
 			noteImages = new Bitmap[9];
-			gridImage = new Bitmap ((Directory.GetCurrentDirectory()+"/Images/Grid.bmp"));
-			noteImages [1] = new Bitmap ((Directory.GetCurrentDirectory()+"/Images/piano.png"));
-			noteImages [2] = new Bitmap ((Directory.GetCurrentDirectory()+"/Images/pianoSharp.png"));
-			noteImages [3] = new Bitmap ((Directory.GetCurrentDirectory()+"/Images/pianoFlat.png"));
-			noteImages [4] = new Bitmap ((Directory.GetCurrentDirectory()+"/Images/bass.png"));
-			noteImages [5] = new Bitmap ((Directory.GetCurrentDirectory()+"/Images/bassSharp.png"));
-			noteImages [6] = new Bitmap ((Directory.GetCurrentDirectory()+"/Images/bassFlat.png"));
-			noteImages [7] = new Bitmap ((Directory.GetCurrentDirectory()+"/Images/drum.png"));
-			noteImages [8] = new Bitmap ((Directory.GetCurrentDirectory()+"/Images/blankNote.png"));
+			gridImage = loadBitmap ((Directory.GetCurrentDirectory()+"/Images/Grid.bmp"));
+			noteImages [1] = loadBitmap ((Directory.GetCurrentDirectory()+"/Images/piano.png"));
+			noteImages [2] = loadBitmap ((Directory.GetCurrentDirectory()+"/Images/pianoSharp.png"));
+			noteImages [3] = loadBitmap ((Directory.GetCurrentDirectory()+"/Images/pianoFlat.png"));
+			noteImages [4] = loadBitmap ((Directory.GetCurrentDirectory()+"/Images/bass.png"));
+			noteImages [5] = loadBitmap ((Directory.GetCurrentDirectory()+"/Images/bassSharp.png"));
+			noteImages [6] = loadBitmap ((Directory.GetCurrentDirectory()+"/Images/bassFlat.png"));
+			noteImages [7] = loadBitmap ((Directory.GetCurrentDirectory()+"/Images/drum.png"));
+			noteImages [8] = loadBitmap ((Directory.GetCurrentDirectory()+"/Images/blankNote.png"));
 			this.DoubleBuffered = true;
 			this.MouseDown += mousedown;
 			this.MouseUp += mouseup;
@@ -138,16 +146,16 @@ namespace GrowtopiaMusicSimulatorReborn
 			Application.ApplicationExit += new EventHandler(this.closeStuff);
 
 			// Load misc images
-			playButtonImage = new Bitmap ((Directory.GetCurrentDirectory()+"/Images/playButton.png"));
-			stopButtonImage = new Bitmap ((Directory.GetCurrentDirectory()+"/Images/stopButton.png"));
-			saveButtonImage = new Bitmap ((Directory.GetCurrentDirectory()+"/Images/saveButton.png"));
-			loadButtonImage = new Bitmap ((Directory.GetCurrentDirectory()+"/Images/loadButton.png"));
-			leftButtonImage = new Bitmap ((Directory.GetCurrentDirectory()+"/Images/leftButton.png"));
-			rightButtonImage = new Bitmap ((Directory.GetCurrentDirectory()+"/Images/rightButton.png"));
-			bpmButtonImage = new Bitmap ((Directory.GetCurrentDirectory()+"/Images/bpmButton.png"));
-			yellowPlayButtonImage = new Bitmap ((Directory.GetCurrentDirectory()+"/Images/yellowPlayButton.png"));
-			creditsButtonImage = new Bitmap ((Directory.GetCurrentDirectory()+"/Images/creditsButton.png"));
-			loadOldImage = new Bitmap ((Directory.GetCurrentDirectory()+"/Images/loadOld.png"));
+			playButtonImage = loadBitmap ((Directory.GetCurrentDirectory()+"/Images/playButton.png"));
+			stopButtonImage = loadBitmap ((Directory.GetCurrentDirectory()+"/Images/stopButton.png"));
+			saveButtonImage = loadBitmap ((Directory.GetCurrentDirectory()+"/Images/saveButton.png"));
+			loadButtonImage = loadBitmap ((Directory.GetCurrentDirectory()+"/Images/loadButton.png"));
+			leftButtonImage = loadBitmap ((Directory.GetCurrentDirectory()+"/Images/leftButton.png"));
+			rightButtonImage = loadBitmap ((Directory.GetCurrentDirectory()+"/Images/rightButton.png"));
+			bpmButtonImage = loadBitmap ((Directory.GetCurrentDirectory()+"/Images/bpmButton.png"));
+			yellowPlayButtonImage = loadBitmap ((Directory.GetCurrentDirectory()+"/Images/yellowPlayButton.png"));
+			creditsButtonImage = loadBitmap ((Directory.GetCurrentDirectory()+"/Images/creditsButton.png"));
+			loadOldImage = loadBitmap ((Directory.GetCurrentDirectory()+"/Images/loadOld.png"));
 
 			// Set up sound engine thing
 			soundEngine = new ISoundEngine ();
@@ -175,7 +183,7 @@ namespace GrowtopiaMusicSimulatorReborn
 			if (backgroundMode == true) {
 				// We don't draw grid block if big bg mode.
 				noteImages [0] = null;
-				bigBG = new Bitmap ((Directory.GetCurrentDirectory () + "/Images/BigBG.png"));
+				bigBG = loadBitmap ((Directory.GetCurrentDirectory () + "/Images/BigBG.png"));
 			}
 
 			try{
@@ -184,10 +192,13 @@ namespace GrowtopiaMusicSimulatorReborn
 			if (Int32.Parse (downloadedString) > gmsVersion) {
 				MessageBox.Show ("Yo, there's a new version out.\nRemember to get it if you have the time.");
 			}
+				// Dispose.
+				client.Dispose();
 			}
 			catch{
 				Debug.Print ("Couldn't connect.");
 			}
+
 		}
 
 		void changeNoteWheel(object sender, MouseEventArgs e){
@@ -214,6 +225,7 @@ namespace GrowtopiaMusicSimulatorReborn
 					needRedraw = false;
 					this.Invalidate ();
 				}
+				// I'm just using thread.sleep becuase this does not need to be that accurate.
 				Thread.Sleep (redrawWait);
 			}
 		}
@@ -237,7 +249,11 @@ namespace GrowtopiaMusicSimulatorReborn
 					}
 				}
 
-				Thread.Sleep (OptionHolder.noteWait);
+				if (OptionHolder.timerMode) {
+					Thread.Sleep (OptionHolder.noteWait);
+				} else {
+					playingTimer.wait (OptionHolder.noteWait);
+				}
 				if ((barX+1) % 25 == 0) {
 					barX = 0;
 					if (pageNumber != 15) {
@@ -286,6 +302,8 @@ namespace GrowtopiaMusicSimulatorReborn
 		}
 
 		void mouseup(object sender, MouseEventArgs e){
+			lastPlaceX = 244;
+			lastPlaceY = 244;
 			clicking = false;
 		}
 
@@ -332,16 +350,8 @@ namespace GrowtopiaMusicSimulatorReborn
 		}
 
 		void paint_stuff(object sender, PaintEventArgs e){
-		// 3/27/16 - I don't plan on reimplementing normal grid mode.
-		
-		/*
-			if (backgroundMode == false) {
-				songPlace.drawNoErrorCheck (e.Graphics, 24, 13, pageNumber*25, 0, 0, 0, noteImages);
-			} else {
-		*/
-				e.Graphics.DrawImage (bigBG, 0, 0);
-				songPlace.drawLayer (e.Graphics, 24, 13, pageNumber*25, 0, 0, 0, noteImages,0);
-		//	}
+			e.Graphics.DrawImage (bigBG, 0, 0);
+			songPlace.drawLayer (e.Graphics, 24, 13, pageNumber*25, 0, 0, 0, noteImages,0);
 			drawUI (e.Graphics);
 			if (playing) {
 				e.Graphics.DrawImage (bpmButtonImage, 800, 448);
