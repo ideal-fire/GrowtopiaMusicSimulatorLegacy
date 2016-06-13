@@ -108,7 +108,7 @@ public class SetSounds{
 			bassFlatSounds[4]="bass_e_flat_d_sharp";
 			bassFlatSounds[5]="bass_d_flat_c_sharp";
 			bassFlatSounds[6]="bass_b";
-			bassFlatSounds[7]="bass_b_flat_a_sharp";
+			bassFlatSounds[7]="bass_low_b_flat_a_sharp";
 			bassFlatSounds[8]="bass_low_a_flat_g_sharp";
 			bassFlatSounds[9]="bass_low_g_flat_f_sharp";
 			bassFlatSounds[10]="bass_low_e";

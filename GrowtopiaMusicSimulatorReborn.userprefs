@@ -1,14 +1,16 @@
 ﻿<Properties StartupItem="GrowtopiaMusicSimulatorReborn\GrowtopiaMusicSimulatorReborn.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Release" ActiveRuntime="MS.NET" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="GrowtopiaMusicSimulatorReborn\MainForm.cs">
-    <Files>
-      <File FileName="GrowtopiaMusicSimulatorReborn\MainForm.cs" Line="241" Column="7" />
-      <File FileName="GrowtopiaMusicSimulatorReborn\MainForm.BigMethods.cs" Line="55" Column="16" />
-      <File FileName="GrowtopiaMusicSimulatorReborn\OptionHolder.cs" Line="11" Column="3" />
-    </Files>
-  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.ItemProperties.GrowtopiaMusicSimulatorReborn PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
-  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MonoDevelop.Ide.Workbench ActiveDocument="GrowtopiaMusicSimulatorReborn\SetSounds.cs">
+    <Files>
+      <File FileName="GrowtopiaMusicSimulatorReborn\MainForm.cs" Line="161" Column="34" />
+      <File FileName="GrowtopiaMusicSimulatorReborn\MainForm.BigMethods.cs" Line="55" Column="12" />
+      <File FileName="GrowtopiaMusicSimulatorReborn\OptionHolder.cs" Line="11" Column="3" />
+      <File FileName="GrowtopiaMusicSimulatorReborn\SetSounds.cs" Line="102" Column="4" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
 </Properties>
