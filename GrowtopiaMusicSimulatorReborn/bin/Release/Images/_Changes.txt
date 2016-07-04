@@ -1,9 +1,13 @@
-Added features:
 Growtopia Music Simulator 2.0+ changelog
 
 2.4
 ---
-Fix low B flat.
+* Confirmation prompts when saving, loading, and exiting.
+* Configurable hotkeys
+* Fixed piano note image
+* Removed .AngryLevel from list of file formats when loading
+* Added GMSr at the second byte in a song file. Change file format byte to 4.
+* Now will try to detect if the file you're loading isn't a Growtopia Music Simulator Re;born file. Will now suggest to use loadold if the file is wierd.
 
 2.3
 ---
@@ -34,4 +38,4 @@ Removed features:
 * Import from gms android
 * Move da buttons
 * Custom theme downloader
-* Linux and Mac Os X support (Until I can get a different sound engine)
+* Linux and Mac Os X support

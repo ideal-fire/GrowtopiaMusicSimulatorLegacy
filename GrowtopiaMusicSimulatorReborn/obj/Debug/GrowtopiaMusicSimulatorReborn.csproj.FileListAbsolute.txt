@@ -38,3 +38,4 @@ C:\Users\admin\NewNathansFolder\Programing\C#\GrowtopiaMusicSimulatorRe-born\Gro
 C:\Users\admin\NewNathansFolder\Programing\C#\GrowtopiaMusicSimulatorRe-born\GrowtopiaMusicSimulatorReborn\obj\Debug\GrowtopiaMusicSimulatorReborn.csproj.GenerateResource.Cache
 C:\Users\admin\NewNathansFolder\Programing\C#\GrowtopiaMusicSimulatorRe-born\GrowtopiaMusicSimulatorReborn\obj\Debug\GrowtopiaMusicSimulatorReborn.exe
 C:\Users\admin\NewNathansFolder\Programing\C#\GrowtopiaMusicSimulatorRe-born\GrowtopiaMusicSimulatorReborn\obj\Debug\GrowtopiaMusicSimulatorReborn.pdb
+C:\Users\admin\NewNathansFolder\Programing\C#\GrowtopiaMusicSimulatorRe-born\GrowtopiaMusicSimulatorReborn\obj\Debug\GrowtopiaMusicSimulatorReborn.HotkeyConfig.resources

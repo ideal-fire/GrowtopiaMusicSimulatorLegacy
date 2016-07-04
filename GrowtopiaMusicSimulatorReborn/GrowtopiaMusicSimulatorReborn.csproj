@@ -59,6 +59,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="HotkeyConfig.cs" />
+    <Compile Include="HotkeyConfig.Designer.cs">
+      <DependentUpon>HotkeyConfig.cs</DependentUpon>
+    </Compile>
     <Compile Include="MainForm.cs" />
     <Compile Include="PopBPM.cs" />
     <Compile Include="PopBPM.Designer.cs">
@@ -80,6 +84,9 @@
     <None Include="app.config" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="HotkeyConfig.resx">
+      <DependentUpon>HotkeyConfig.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="PopBPM.resx">
       <DependentUpon>PopBPM.cs</DependentUpon>
     </EmbeddedResource>

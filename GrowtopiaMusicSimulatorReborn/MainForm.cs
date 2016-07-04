@@ -4,7 +4,6 @@
  * Time: 5:33 PM
  */
 using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 using MapLibrary;
@@ -70,11 +69,9 @@ namespace GrowtopiaMusicSimulatorReborn
 		Bitmap yellowPlayButtonImage;
 		Bitmap creditsButtonImage;
 		Bitmap loadOldImage;
+		Bitmap optionsImage;
 
 		// Misc stuffz
-		// True = Draw big bg. False = draw lots of tiny grid images.
-		// Now a constant because I don't plan on making this an option.
-		const bool backgroundMode=true;
 		byte pageNumber=0;
 		bool clicking=false;
 		bool playing=false;
@@ -87,14 +84,14 @@ namespace GrowtopiaMusicSimulatorReborn
 		const byte redrawWait = 20;
 
 		// For drawing shapes and whatnot.
-		System.Drawing.Brush textBrush = new SolidBrush(System.Drawing.Color.Black);
-		Font textFont = new Font("Arial",14);
-		Brush grayBrush = new SolidBrush (Color.FromArgb (100, 128, 128, 128));
+		public static System.Drawing.Brush textBrush = new SolidBrush(System.Drawing.Color.Black);
+		public static Font textFont = new Font("Arial",14);
+		public static Brush grayBrush = new SolidBrush (Color.FromArgb (100, 128, 128, 128));
 		Brush redBrush = new SolidBrush(Color.Red);
 		// Spice it up a bit with SpringGreen instead of green.
 		Brush greenBrush = new SolidBrush(Color.SpringGreen);
 		
-		const short gmsVersion=3;
+		const short gmsVersion=4;
 
 		// Bar position displaying variable of doom
 		byte barX=0;
@@ -107,19 +104,14 @@ namespace GrowtopiaMusicSimulatorReborn
 		public MainForm()
 		{
 			// Check for the credits file.
-			if (!File.Exists ((Directory.GetCurrentDirectory () + "/Images/_credits.txt"))) {
-				MessageBox.Show ("I don't appreciate you not appreciating.\nSomehow, I doubt you moved the credits file to your desktop so you can look\nat it everyday.");
-				MessageBox.Show ("_Credits.txt gone.");
-				Application.Exit ();
-			}
 			if (File.Exists (Directory.GetCurrentDirectory () + "/Images/_useOld.nathan")) {
 				OptionHolder.timerMode = true;
 			}
 			// Load options
-			loadOptionsFile(ref OptionHolder.playNoteOnPlace,ref OptionHolder.showConfirmation,ref OptionHolder.byteEX);
+			loadOptionsFile(ref OptionHolder.playNoteOnPlace,ref OptionHolder.showConfirmation,ref OptionHolder.byteEX, ref OptionHolder.hotkeys);
 			Icon = new Icon((Directory.GetCurrentDirectory () + "/Images/icon.ico"));
-			this.Text = "GrowtopiaMusicSimulatorReborn";
-			this.Name = "Growtopia Music Simulator Re;born";
+			this.Name = "GrowtopiaMusicSimulatorReborn";
+			this.Text = "Growtopia Music Simulator Re;born";
 			// True size is 832x480		
 			this.Size = new System.Drawing.Size(848,518);
 			// Turn off form reszing.
@@ -156,6 +148,7 @@ namespace GrowtopiaMusicSimulatorReborn
 			yellowPlayButtonImage = loadBitmap ((Directory.GetCurrentDirectory()+"/Images/yellowPlayButton.png"));
 			creditsButtonImage = loadBitmap ((Directory.GetCurrentDirectory()+"/Images/creditsButton.png"));
 			loadOldImage = loadBitmap ((Directory.GetCurrentDirectory()+"/Images/loadOld.png"));
+			optionsImage = loadBitmap((Directory.GetCurrentDirectory() + "/Images/optionsButton.png"));
 
 			// Set up sound engine thing
 			soundEngine = new ISoundEngine ();
@@ -180,11 +173,7 @@ namespace GrowtopiaMusicSimulatorReborn
 			// Contains giant byte arrays for the sounds.
 			soundEngine = SetSounds.setTheSounds ();
 
-			if (backgroundMode == true) {
-				// We don't draw grid block if big bg mode.
-				noteImages [0] = null;
-				bigBG = loadBitmap ((Directory.GetCurrentDirectory () + "/Images/BigBG.png"));
-			}
+			bigBG = loadBitmap ((Directory.GetCurrentDirectory () + "/Images/BigBG.png"));
 
 			try{
 			WebClient client = new WebClient();
@@ -199,7 +188,11 @@ namespace GrowtopiaMusicSimulatorReborn
 				Debug.Print ("Couldn't connect.");
 			}
 
+
+			this.FormClosing+=new FormClosingEventHandler(mainFormClosing);
+			this.KeyDown += new KeyEventHandler(mainFormKeyDown);
 		}
+
 
 		void changeNoteWheel(object sender, MouseEventArgs e){
 			if (e.Delta < 0) {
@@ -227,6 +220,16 @@ namespace GrowtopiaMusicSimulatorReborn
 				}
 				// I'm just using thread.sleep becuase this does not need to be that accurate.
 				Thread.Sleep (redrawWait);
+			}
+		}
+
+		void mainFormClosing(object sender, FormClosingEventArgs e) {
+			// Make sure the user really wants to close the window.
+			DialogResult dialogAnswer = MessageBox.Show("Are you sure you want to close Growtopia Music Simulator Re;born?\nYou'll loose anything you haven't saved.", "Don't mess up", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+			if (dialogAnswer == DialogResult.No) {
+				// If they chose no, stop closing.
+				e.Cancel = true;
+				return;
 			}
 		}
 
@@ -324,7 +327,7 @@ namespace GrowtopiaMusicSimulatorReborn
 				g.DrawImage (gridImage, 32, 448);
 			}
 			g.DrawImage (saveButtonImage, 64, 448);
-			g.DrawImage (loadButtonImage, 96, 448);
+			g.DrawImage (loadButtonImage, 544, 448);
 			g.DrawImage (leftButtonImage, 128, 448);
 			g.DrawImage (rightButtonImage, 160, 448);
 			if (playing) {
@@ -341,11 +344,14 @@ namespace GrowtopiaMusicSimulatorReborn
 			}else{
 				g.FillRectangle(redBrush,224,448,32,32);
 			}
+			/*
 			if (OptionHolder.showConfirmation){
 			g.FillRectangle(greenBrush,256,448,32,32);
 			}else{
 			g.FillRectangle(redBrush,256,448,32,32);
 			}
+			*/
+			g.DrawImage(optionsImage, 256, 448);
 			g.DrawImage (loadOldImage, 416, 448);
 		}
 

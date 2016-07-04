@@ -11,7 +11,7 @@ namespace GrowtopiaMusicSimulatorReborn
 	{
 
 		static void easySaveOptions(){
-		saveOptionsFile(OptionHolder.playNoteOnPlace,OptionHolder.showConfirmation,OptionHolder.byteEX);
+		saveOptionsFile(OptionHolder.playNoteOnPlace,OptionHolder.showConfirmation,OptionHolder.byteEX,OptionHolder.hotkeys);
 		}
 
 		Bitmap loadBitmap(string _filePath){
@@ -24,7 +24,7 @@ namespace GrowtopiaMusicSimulatorReborn
 		}
 
 
-		public static void loadOptionsFile(ref bool _playOnPlace, ref bool _showConfirmation, ref bool _byteEX){
+		public static void loadOptionsFile(ref bool _playOnPlace, ref bool _showConfirmation, ref bool _byteEX, ref byte[] hotkeys){
 			FileStream file;
 			try{
 			file = new FileStream((Directory.GetCurrentDirectory () + "/Images/Options.txt"),FileMode.Open);
@@ -39,29 +39,44 @@ namespace GrowtopiaMusicSimulatorReborn
 				MessageBox.Show("The options file format is newer than this version of Growtopia Music Simulator Re;born can load.\nA new options file will be created with the default settings.");
 				br.Dispose();
 				file.Dispose();
-				saveOptionsFile(true,true,OptionHolder.byteEX);
+				saveOptionsFile(true,true,OptionHolder.byteEX,OptionHolder.hotkeys);
 				return;
 			}
+
 			_byteEX = br.ReadBoolean();
 			_playOnPlace = br.ReadBoolean();
 			_showConfirmation = br.ReadBoolean();
+			if (optionsFormat == 1) {
+				return;
+			}
+
+			for (int i = 0; i < 13; i++) {
+				hotkeys[i] = br.ReadByte();
+			}
+
+			br.Dispose();
+			file.Dispose();
 		}
 		
-		public static void saveOptionsFile(bool _playOnPlace, bool _showConfirmation, bool _byteEX){
-		FileStream file = new FileStream((Directory.GetCurrentDirectory () + "/Images/Options.txt"),FileMode.Create);
-		BinaryWriter bw = new BinaryWriter(file);
-		// Options file version
-		bw.Write((byte)1);
-		// byteEX
-		bw.Write(_byteEX);
-		// play on place?
-		bw.Write(_playOnPlace);
-		// show confirmation?
-		bw.Write(_showConfirmation);
-		
-		// Close files
-		bw.Dispose();
-		file.Dispose();
+		public static void saveOptionsFile(bool _playOnPlace, bool _showConfirmation, bool _byteEX, byte[] hotkeys){
+			FileStream file = new FileStream((Directory.GetCurrentDirectory () + "/Images/Options.txt"),FileMode.Create);
+			BinaryWriter bw = new BinaryWriter(file);
+			// Options file version
+			bw.Write((byte)2);
+			// byteEX
+			bw.Write(_byteEX);
+			// play on place?
+			bw.Write(_playOnPlace);
+			// show confirmation?
+			bw.Write(_showConfirmation);
+
+			for (int i = 0; i < hotkeys.Length; i++) {
+				bw.Write((byte)hotkeys[i]);
+			}
+
+			// Close files
+			bw.Dispose();
+			file.Dispose();
 		}
 
 		void checkUI(MouseEventArgs e){
@@ -98,26 +113,7 @@ namespace GrowtopiaMusicSimulatorReborn
 							MessageBox.Show ("Could not save file.\n"+ex.ToString());
 							return;
 						}
-					} else if (e.X < 128) {
-						// When you press load button
-						OpenFileDialog ofd = new OpenFileDialog ();
-						ofd.ShowDialog ();
-						FileStream fs;
-						try{
-						fs = new FileStream (ofd.FileName, FileMode.Open);
-						}
-						catch(Exception ex){
-							MessageBox.Show ("Could not open file.\nDid you select nothing?\n"+ex.ToString());
-							return;
-						}
-						songPlace.maparray = customLoadMapFromFile (ref fs).Item4;
-						fs.Dispose ();
-
-						needRedraw = true;
-						if (OptionHolder.showConfirmation) {
-							MessageBox.Show ("Loadedededed.");
-						}
-					} else if (e.X < 160) {
+					}else if (e.X < 160) {
 						// Left button
 						// Gotta protect morons from themselves.
 						if (!playing) {
@@ -154,16 +150,55 @@ namespace GrowtopiaMusicSimulatorReborn
 						MessageBox.Show ("Play note on place is now:" + OptionHolder.playNoteOnPlace.ToString () + "\nOptions file saved.");
 						needRedraw = true;
 					} else if (e.X < 288) {
-						OptionHolder.showConfirmation = !OptionHolder.showConfirmation;
-						easySaveOptions ();
-						MessageBox.Show ("Showing confirmations for saving and whatnot is now:" + OptionHolder.showConfirmation + "\nOptions file saved.");
-						needRedraw = true;
+						//OptionHolder.showConfirmation = !OptionHolder.showConfirmation;
+						//easySaveOptions ();
+						//MessageBox.Show ("Showing confirmations for saving and whatnot is now:" + OptionHolder.showConfirmation + "\nOptions file saved.");
+						//needRedraw = true;
+						HotkeyConfig hc = new HotkeyConfig();
+						hc.ShowDialog();
+						saveOptionsFile(OptionHolder.playNoteOnPlace,OptionHolder.showConfirmation,OptionHolder.byteEX,OptionHolder.hotkeys);
 					} else if (e.X < 448) {
 					// Load old gms file.
+						DialogResult dialogAnswer = MessageBox.Show("Are you sure you want to open a song file?\nYou'll loose your current song if you haven't saved.", "Don't mess up", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+						if (dialogAnswer == DialogResult.No) {
+							// They don't want this madness.
+							return;
+						}
 						loadOld();
 					}
 					else if (e.X<480){
 						MessageBox.Show ("Programming - MyLegGuy\nOriginal theme - SumRndmDde\nBPM formula - y3ll0\nMatching sounds to notes - HonestyCow\n\nThis couldn't be possible without these people.");
+					}else if (e.X < 576 && e.X>=544) {
+						// When you press load button
+						OpenFileDialog ofd = new OpenFileDialog();
+						ofd.ShowDialog();
+
+						DialogResult dialogAnswer = MessageBox.Show("Are you sure you want to open a song file?\nYou'll loose your current song if you haven't saved.", "Don't mess up", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+						if (dialogAnswer == DialogResult.No) {
+							// They don't want this madness.
+							return;
+						}
+
+						FileStream fs;
+						try {
+							fs = new FileStream(ofd.FileName, FileMode.Open);
+						}
+						catch (Exception ex) {
+							MessageBox.Show("Could not open file.\nDid you select nothing?\n" + ex.ToString());
+							return;
+						}
+						try {
+							songPlace.maparray = customLoadMapFromFile(ref fs).Item4;
+						}
+						catch (Exception ex) {
+							MessageBox.Show("There was an error loading the file.\nHere's the error.\n\n" + ex.ToString());
+						}
+						fs.Dispose();
+
+						needRedraw = true;
+						if (OptionHolder.showConfirmation) {
+							MessageBox.Show("Loadedededed.");
+						}
 					}else if (e.X>800){
 						PopBPM pbpm = new PopBPM(reverseBPMformula(OptionHolder.noteWait));
 						pbpm.StartPosition = FormStartPosition.CenterScreen;
@@ -224,6 +259,55 @@ namespace GrowtopiaMusicSimulatorReborn
 		public static Tuple<int,int,int,int[][,]> customLoadMapFromFile(ref FileStream filea){
 			BinaryReader file = new BinaryReader(filea);
 			int mapversion=file.ReadByte();
+
+			// Set to true if the verification process marks this as probrablly not a Gms reborn file
+			bool failed=false;
+
+			// Verify that this is a Growtopia Music Simulator reborn song file.
+			if (mapversion == 4) {
+				try {
+					string happyString = System.Text.Encoding.UTF8.GetString(file.ReadBytes(4));
+					if (happyString != "GMSr") {
+						// String doesn't match.
+						Debug.Print(happyString);
+						failed = true;
+					}
+				}
+				catch (Exception ex) {
+					Debug.Print(ex.ToString());
+					failed = true;
+				}
+			}
+			else if (mapversion == 3) {
+				file.BaseStream.Position += 2;
+				byte[] nextBytes = file.ReadBytes(3);
+				if (!(nextBytes[0] == 1 && nextBytes[1] == 2 && nextBytes[2] == 3)) {
+					failed = true;
+				}
+				else {
+					file.BaseStream.Position -= 5;
+				}
+			}
+			else {
+				failed = true;
+			}
+
+			if (failed) {
+				filea.Close();
+				filea.Dispose();
+				file.Close();
+				file.Dispose();
+				DialogResult dialogAnswer = MessageBox.Show("This probrablly isn't a Growtopia Music Simulator Re;born song file.\nIf this is a file from the old Growtopia Music Simulator, you can load it.\nIs this an old Growtopia Music Simulator song file?\n(One from the Growtopia Music Simulator that runs on Java)", "Wierd file detected", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+				if (dialogAnswer == DialogResult.Yes) {
+					MessageBox.Show("Please use the button labeled 'old' to load an old Growtopia Music Simulator song file.");
+					throw (new ArgumentException("Please use the button labeled 'old' to load an old Growtopia Music Simulator song file."));
+				}
+				else {
+					throw (new ArgumentException("oh. If it's not a Growtopia Music Simulator Re;born song file, or an old Growtopia Music Simulator song file then it can't be loaded."));
+				}
+			}
+
 			OptionHolder.noteWait = (short)bpmFormula((int)file.ReadInt16());
 			int mapWidth=file.ReadByte();
 			mapWidth = 400;
@@ -304,15 +388,14 @@ namespace GrowtopiaMusicSimulatorReborn
 
 
 		/// <summary>
-		/// Save method stolen- er... borrowed from An Excellent Map Editor.
-		/// But I wrote it, so it's okay.
+		/// Custom save method instead of using one with MapLibrary.
 		/// 
 		/// Forgets beginning data except for format version.
 		/// </summary>
 		public void save(){
 			SaveFileDialog a = new SaveFileDialog();
-			a.OverwritePrompt=false;
-			a.Filter="Angry LegGuy files (*.AngryLegGuy)|*.AngryLegGuy|Angry Level files (*.AngryLevel)|*.AngryLevel|All files (*.*)|*.*";
+			a.OverwritePrompt=true;
+			a.Filter="Angry LegGuy files (*.AngryLegGuy)|*.AngryLegGuy|All files (*.*)|*.*";
 			a.ShowDialog();
 			FileStream happyfile = File.Open(a.FileName,FileMode.Create);
 			BinaryWriter br = new BinaryWriter(happyfile);
@@ -323,8 +406,11 @@ namespace GrowtopiaMusicSimulatorReborn
 			int finishNumero = -80;
 			byte past=254;
 			byte present=255;
-			// Groowtopia Music Simulator map format
-			br.Write (Convert.ToByte(3));
+
+			// Groowtopia Music Simulator rebotn map format
+			br.Write(Convert.ToByte(4));
+			// Write GMSR to define this as a Growtopia Music Simulator reborn song
+			br.Write(System.Text.Encoding.UTF8.GetBytes("GMSr"));
 			// Write bpm
 			br.Write ((short)reverseBPMformula(OptionHolder.noteWait));
 			// THESE VALUES DONT MATTER FOR THE CUSTOM LOADING FUNCTION. WRITE DUMMY VALUES.
@@ -397,18 +483,36 @@ namespace GrowtopiaMusicSimulatorReborn
 
 		}
 
+		void mainFormKeyDown(object sender, KeyEventArgs e){
 
+			if (e.KeyValue == OptionHolder.hotkeys[0]) {
+				checkUI(new MouseEventArgs(MouseButtons.Left, 1, 1, 0, 0));
+			}
+			else if (e.KeyValue == OptionHolder.hotkeys[1]) {
+				checkUI(new MouseEventArgs(MouseButtons.Left, 1, 64, 0, 0));
+			}
+			else if (e.KeyValue == OptionHolder.hotkeys[2]) {
+				checkUI(new MouseEventArgs(MouseButtons.Left, 1, 128, 0, 0));
+			}
+			else if (e.KeyValue == OptionHolder.hotkeys[3]) {
+				checkUI(new MouseEventArgs(MouseButtons.Left, 1, 160, 0, 0));
+			}
+			else if (e.KeyValue == OptionHolder.hotkeys[4]) {
+				checkUI(new MouseEventArgs(MouseButtons.Left, 1, 192, 0, 0));
+			}
+			else if (e.KeyValue == OptionHolder.hotkeys[5]) {
+				checkUI(new MouseEventArgs(MouseButtons.Left, 1, 544, 0, 0));
+			}else{
+				for (int i = 6; i < 13; i++) {
+					if (e.KeyValue == OptionHolder.hotkeys[i]) {
+						noteValue = i-5;
+					}
+				}
+			}
+			needRedraw = true;
+		}
 
-
-
-
-
-
-
-
-
-
-// That's all.
+		// That's all.
 
 	}
 }
