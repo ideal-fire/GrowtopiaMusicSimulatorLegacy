@@ -95,7 +95,7 @@ namespace GrowtopiaMusicSimulatorReborn
 				needRedraw = true;
 				//playMusic();
 			}else{
-				// When you press note cange button.
+				// When you press note change button.
 				if (e.X < 64) {
 					if (noteValue == 7) {
 						noteValue = 0;
@@ -165,6 +165,7 @@ namespace GrowtopiaMusicSimulatorReborn
 							return;
 						}
 						loadOld();
+						maxX = GetMaxX();
 					}
 					else if (e.X<480){
 						MessageBox.Show ("Programming - MyLegGuy\nOriginal theme - SumRndmDde\nBPM formula - y3ll0\nMatching sounds to notes - HonestyCow\n\nThis couldn't be possible without these people.");
@@ -199,6 +200,7 @@ namespace GrowtopiaMusicSimulatorReborn
 						if (OptionHolder.showConfirmation) {
 							MessageBox.Show("Loadedededed.");
 						}
+						maxX = GetMaxX();
 					}else if (e.X>800){
 						PopBPM pbpm = new PopBPM(reverseBPMformula(OptionHolder.noteWait));
 						pbpm.StartPosition = FormStartPosition.CenterScreen;
@@ -510,6 +512,19 @@ namespace GrowtopiaMusicSimulatorReborn
 				}
 			}
 			needRedraw = true;
+		}
+
+
+		short GetMaxX(){
+			short _max=0;
+			for (int x = 0; x < songPlace.maparray[0].GetLength(0); x++) {
+				for (int y = 0; y < songPlace.maparray[0].GetLength(1); y++) {
+					if (songPlace.maparray[0][x, y] != 0) {
+						_max = (short)x;
+					}
+				}
+			}
+			return _max;
 		}
 
 		// That's all.

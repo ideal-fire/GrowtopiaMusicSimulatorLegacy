@@ -101,6 +101,14 @@ namespace GrowtopiaMusicSimulatorReborn
 		/// </summary>
 		TickTimer playingTimer = new TickTimer();
 
+		/// <summary>
+		/// This is the max X. Once the bar reaches here, the song repeats.
+		/// </summary>
+		short maxX = 0;
+
+		// Width/radio = height
+		const double sizeRatio = 15.0 / 26.0;
+
 		public MainForm()
 		{
 			// Check for the credits file.
@@ -112,10 +120,13 @@ namespace GrowtopiaMusicSimulatorReborn
 			Icon = new Icon((Directory.GetCurrentDirectory () + "/Images/icon.ico"));
 			this.Name = "GrowtopiaMusicSimulatorReborn";
 			this.Text = "Growtopia Music Simulator Re;born";
-			// True size is 832x480		
-			this.Size = new System.Drawing.Size(848,518);
+			// True size is 832x480
+			//this.Size = new System.Drawing.Size(848,518);
+			this.ClientSize = new Size(832, 480);
+			this.AutoScaleMode = AutoScaleMode.None;
+			this.MinimumSize = new Size(1, 1);
 			// Turn off form reszing.
-			this.FormBorderStyle = FormBorderStyle.FixedSingle;
+			this.FormBorderStyle = FormBorderStyle.Sizable;
 			songPlace.SetMap (25, 14, MapFunctions.NewMap (399, 13, 0, 1).Item3, 1);
 			normalPaint = new PaintEventHandler (paint_stuff);
 			this.Paint += normalPaint;
@@ -131,7 +142,7 @@ namespace GrowtopiaMusicSimulatorReborn
 			noteImages [7] = loadBitmap ((Directory.GetCurrentDirectory()+"/Images/drum.png"));
 			noteImages [8] = loadBitmap ((Directory.GetCurrentDirectory()+"/Images/blankNote.png"));
 			this.DoubleBuffered = true;
-			this.MouseDown += mousedown;
+			this.MouseDown += mouseDownWithScale;
 			this.MouseUp += mouseup;
 			this.MouseMove += mouseMove;
 			this.MouseWheel += changeNoteWheel;
@@ -188,21 +199,35 @@ namespace GrowtopiaMusicSimulatorReborn
 				Debug.Print ("Couldn't connect.");
 			}
 
+			//OptionHolder.windowScale = 1.4f;
+			//applyWindowScale();
 
 			this.FormClosing+=new FormClosingEventHandler(mainFormClosing);
 			this.KeyDown += new KeyEventHandler(mainFormKeyDown);
+
+			this.Resize += windowResized;
 		}
 
+
+		void windowResized(object sender, EventArgs e) {
+			if (ClientSize.Width * sizeRatio > ClientSize.Height) {
+				this.ClientSize = new Size(ClientSize.Width, (int)(ClientSize.Width * sizeRatio));
+			} else {
+				this.ClientSize = new Size((int)(ClientSize.Height/sizeRatio), (int)(ClientSize.Height));
+			}
+			OptionHolder.windowScale = (float)(ClientSize.Width / 832.0);
+			needRedraw = true;
+		}
 
 		void changeNoteWheel(object sender, MouseEventArgs e){
 			if (e.Delta < 0) {
 				if (noteValue == 0) {
-					noteValue = 7;
+					noteValue = 8;
 				} else {
 					noteValue--;
 				}
 			} else {
-				if (noteValue == 7) {
+				if (noteValue == 8) {
 					noteValue = 0;
 				} else {
 					noteValue++;
@@ -244,7 +269,9 @@ namespace GrowtopiaMusicSimulatorReborn
 
 		void playMusic(object startX){
 			barX = 0;
-			for (int x = Convert.ToInt32(startX); x < 400; x++) {
+			int x = Convert.ToInt32(startX);
+			//for (int x = Convert.ToInt32(startX); x < 400; x++) {
+			while (true){
 				needRedraw = true;
 				for (int y = 0; y < 14; y++) {
 					if (songPlace.maparray[0][x,y]!=0 && songPlace.maparray[0][x,y]!=8){
@@ -257,6 +284,8 @@ namespace GrowtopiaMusicSimulatorReborn
 				} else {
 					playingTimer.wait (OptionHolder.noteWait);
 				}
+
+
 				if ((barX+1) % 25 == 0) {
 					barX = 0;
 					if (pageNumber != 15) {
@@ -265,13 +294,18 @@ namespace GrowtopiaMusicSimulatorReborn
 				} else {
 					barX++;
 				}
+
+				if (barX + pageNumber * 25 > maxX) {
+					pageNumber = 0;
+					barX = 0;
+					x = -1;
+				}
+				x++;
 			}
-			playing = false;
-			needRedraw = true;
 		}
 
 		void playNote(byte noteId, byte yLevel){
-			if (noteValue > 0) {
+			if (noteId > 0 && noteId<8) {
 				soundEngine.Play2D (noteArrays [noteId - 1] [yLevel]);
 			}
 		}
@@ -283,6 +317,16 @@ namespace GrowtopiaMusicSimulatorReborn
 					needRedraw = true;
 					lastPlaceX = (byte)(e.X / 32);
 					lastPlaceY = (byte)(e.Y / 32);
+
+					if (lastPlaceX == maxX) {
+						for (int _y = 0; _y < songPlace.maparray[0].GetLength(1); _y++) {
+							if (songPlace.maparray[0][lastPlaceX, _y] != 0) {
+								return;
+							}
+						}
+					}
+					maxX = GetMaxX();
+
 					return;
 				}
 				if (OptionHolder.playNoteOnPlace) {
@@ -292,6 +336,9 @@ namespace GrowtopiaMusicSimulatorReborn
 				needRedraw = true;
 				lastPlaceX = (byte)(e.X / 32);
 				lastPlaceY = (byte)(e.Y / 32);
+				if (lastPlaceX > maxX) {
+					maxX = lastPlaceX;
+				}
 			}
 		}
 
@@ -300,8 +347,18 @@ namespace GrowtopiaMusicSimulatorReborn
 		/// /////////////////////////////////
 		void mouseMove(object sender, MouseEventArgs e){
 			if (clicking) {
-				place (e);
+				place (new MouseEventArgs(e.Button, e.Clicks, OptionHolder.convertScaledToReal(e.X), OptionHolder.convertScaledToReal(e.Y), e.Delta));
 			}
+		}
+
+		/// <summary>
+		/// Does the mousedown event, but with the scale applied.
+		/// </summary>
+		/// <returns>void</returns>
+		/// <param name="sender">Sender.</param>
+		/// <param name="e">MouseEvnetArgs for da event.</param>
+		void mouseDownWithScale(object sender, MouseEventArgs e) {
+			mousedown(sender, new MouseEventArgs(e.Button, e.Clicks, OptionHolder.convertScaledToReal(e.X), OptionHolder.convertScaledToReal(e.Y), e.Delta));
 		}
 
 		void mouseup(object sender, MouseEventArgs e){
@@ -337,7 +394,7 @@ namespace GrowtopiaMusicSimulatorReborn
 			}
 			g.DrawImage (bpmButtonImage, 800, 448);
 			g.DrawImage (yellowPlayButtonImage, 192, 448);
-			g.DrawString ("Page:" + (pageNumber + 1).ToString () + "/16",textFont,textBrush,300,448);
+			g.DrawString ("Page:" + (pageNumber + 1) + "/16",textFont,textBrush,300,448);
 			g.DrawImage (creditsButtonImage, 448, 448);
 			if (OptionHolder.playNoteOnPlace){
 				g.FillRectangle(greenBrush,224,448,32,32);
@@ -356,6 +413,7 @@ namespace GrowtopiaMusicSimulatorReborn
 		}
 
 		void paint_stuff(object sender, PaintEventArgs e){
+			OptionHolder.setScaleGraphics(e.Graphics);
 			e.Graphics.DrawImage (bigBG, 0, 0);
 			songPlace.drawLayer (e.Graphics, 24, 13, pageNumber*25, 0, 0, 0, noteImages,0);
 			drawUI (e.Graphics);

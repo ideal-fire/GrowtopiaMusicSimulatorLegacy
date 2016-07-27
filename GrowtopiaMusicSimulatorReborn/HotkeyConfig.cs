@@ -27,6 +27,7 @@ namespace GrowtopiaMusicSimulatorReborn
 			//this.KeyDown+=HotkeyConfigKeyDown;
 			//this.KeyDown += (HotkeyConfigKeyDown);
 			this.KeyPreview=true;
+			this.FormBorderStyle = FormBorderStyle.FixedSingle;
 		}
 		
 		void HotkeyConfigKeyDown(object sender, KeyEventArgs e){

@@ -5,11 +5,12 @@
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
-  <MonoDevelop.Ide.Workbench ActiveDocument="GrowtopiaMusicSimulatorReborn\MainForm.BigMethods.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="GrowtopiaMusicSimulatorReborn\MainForm.cs">
     <Files>
-      <File FileName="GrowtopiaMusicSimulatorReborn\MainForm.cs" Line="110" Column="19" />
-      <File FileName="GrowtopiaMusicSimulatorReborn\MainForm.BigMethods.cs" Line="75" Column="20" />
-      <File FileName="GrowtopiaMusicSimulatorReborn\OptionHolder.cs" Line="10" Column="39" />
+      <File FileName="GrowtopiaMusicSimulatorReborn\MainForm.cs" Line="216" Column="66" />
+      <File FileName="GrowtopiaMusicSimulatorReborn\MainForm.BigMethods.cs" Line="159" Column="7" />
+      <File FileName="GrowtopiaMusicSimulatorReborn\OptionHolder.cs" Line="60" Column="5" />
+      <File FileName="GrowtopiaMusicSimulatorReborn\HotkeyConfig.cs" Line="30" Column="55" />
     </Files>
   </MonoDevelop.Ide.Workbench>
 </Properties>
