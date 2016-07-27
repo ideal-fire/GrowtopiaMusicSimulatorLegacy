@@ -11,7 +11,7 @@ namespace GrowtopiaMusicSimulatorReborn
 	{
 
 		static void easySaveOptions(){
-		saveOptionsFile(OptionHolder.playNoteOnPlace,OptionHolder.showConfirmation,OptionHolder.byteEX,OptionHolder.hotkeys);
+			saveOptionsFile(OptionHolder.playNoteOnPlace,OptionHolder.showConfirmation,OptionHolder.byteEX,OptionHolder.hotkeys);
 		}
 
 		Bitmap loadBitmap(string _filePath){
@@ -117,21 +117,23 @@ namespace GrowtopiaMusicSimulatorReborn
 						// Left button
 						// Gotta protect morons from themselves.
 						if (!playing) {
+							needRedraw = true;
 							if (pageNumber == 0) {
+								pageNumber = (short)(songPlace.maparray[0].GetLength(0) / 25-1);
 								return;
 							}
 							pageNumber--;
-							needRedraw = true;
 						}
 					} else if (e.X < 192) {
 						if (!playing) {
 							// right button
 							// Morons...must protect...
-							if (pageNumber == 15) {
+							needRedraw = true;
+							if (pageNumber == songPlace.maparray[0].GetLength(0)/25-1) {
+								pageNumber = 0;
 								return;
 							}
 							pageNumber++;
-							needRedraw = true;
 						}
 					} else if (e.X < 224) {
 						if (!playing) {
@@ -168,11 +170,17 @@ namespace GrowtopiaMusicSimulatorReborn
 						maxX = GetMaxX();
 					}
 					else if (e.X<480){
-						MessageBox.Show ("Programming - MyLegGuy\nOriginal theme - SumRndmDde\nBPM formula - y3ll0\nMatching sounds to notes - HonestyCow\n\nThis couldn't be possible without these people.");
+						MessageBox.Show ("Programming - MyLegGuy\nOriginal theme - SumRndmDde\nBPM formula - y3ll0\nMatching sounds to notes - HonestyCow\n\nThxz..");
+					}else if (e.X<512){
+						resizeSong();
 					}else if (e.X < 576 && e.X>=544) {
 						// When you press load button
 						OpenFileDialog ofd = new OpenFileDialog();
 						ofd.ShowDialog();
+
+						if (ofd.FileName == String.Empty) {
+							return;
+						}
 
 						DialogResult dialogAnswer = MessageBox.Show("Are you sure you want to open a song file?\nYou'll loose your current song if you haven't saved.", "Don't mess up", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 						if (dialogAnswer == DialogResult.No) {
@@ -190,6 +198,10 @@ namespace GrowtopiaMusicSimulatorReborn
 						}
 						try {
 							songPlace.maparray = customLoadMapFromFile(ref fs).Item4;
+							// Make sure you're not out of bounds.
+							if (songPlace.maparray[0].GetLength(0) / 25 - 1 < pageNumber) {
+								pageNumber = 0;
+							}
 						}
 						catch (Exception ex) {
 							MessageBox.Show("There was an error loading the file.\nHere's the error.\n\n" + ex.ToString());
@@ -223,6 +235,55 @@ namespace GrowtopiaMusicSimulatorReborn
 			return 15000/re;
 		}
 
+		void resizeSong() {
+			SongResizePopup srp = new SongResizePopup(songPlace.maparray[0].GetLength(0));
+			srp.ShowDialog();
+			if (srp.songLengthBox.Value % 25 != 0) {
+				srp.songLengthBox.Value = ((Math.Floor(srp.songLengthBox.Value / 25) + 1) * 25);
+				MessageBox.Show("The song length was rounded up to " + srp.songLengthBox.Value+".");
+			}
+
+			if (srp.songLengthBox.Value<songPlace.maparray[0].GetLength(0)) {
+				DialogResult dialogAnswer = MessageBox.Show("You're about to shrink your song. You will loose any notes that are in the area that'll be cut off.", "Don't mess up", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+				if (dialogAnswer == DialogResult.No) {
+					srp.Dispose();
+					return;
+				}
+			}
+
+			ResizeArray(ref songPlace.maparray[0], (int)srp.songLengthBox.Value, 14);
+			if (maxX + 1 > songPlace.maparray[0].GetLength(0)) {
+				maxX = GetMaxX();
+			}
+			needRedraw = true;
+			srp.Dispose();
+			if (songPlace.maparray[0].GetLength(0) / 25 - 1 < pageNumber) {
+				pageNumber = 0;
+			}
+		}
+
+
+		/// <summary>
+		/// Mthod for resizing a multi dimensional array
+		/// Stole from PsychoCoder on dreamincode.
+		/// </summary>
+		/// <param name="original">Original array you want to resize
+		/// <param name="rows"># of rows in the new array
+		/// <param name="cols"># of columns in the new array
+		private void ResizeArray(ref byte[,] original, int rows, int cols) {
+			//create a new 2 dimensional array with
+			//the size we want
+			byte[,] newArray = new byte[rows, cols];
+			//copy the contents of the old array to the new one
+			Array.Copy(original, newArray, Math.Min(original.Length,rows*cols));
+			//set the original to the new array
+			original = newArray;
+		}
+
+		// Map format revisions:
+		// 3 - Initial format
+		// 4 - Adds GMSr after map format byte
+		// 5 - Replaces map height byte so mapwidth can be read as a short.
 
 		void loadOld(){
 			OpenFileDialog ofd = new OpenFileDialog ();
@@ -258,7 +319,7 @@ namespace GrowtopiaMusicSimulatorReborn
 
 
 		// It came back to haunt me. Making it so I can have a maximum of 255x255 map. I had to write this custom method now.
-		public static Tuple<int,int,int,int[][,]> customLoadMapFromFile(ref FileStream filea){
+		public static Tuple<int,int,int,byte[][,]> customLoadMapFromFile(ref FileStream filea){
 			BinaryReader file = new BinaryReader(filea);
 			int mapversion=file.ReadByte();
 
@@ -266,7 +327,7 @@ namespace GrowtopiaMusicSimulatorReborn
 			bool failed=false;
 
 			// Verify that this is a Growtopia Music Simulator reborn song file.
-			if (mapversion == 4) {
+			if (mapversion == 4 || mapversion==5) {
 				try {
 					string happyString = System.Text.Encoding.UTF8.GetString(file.ReadBytes(4));
 					if (happyString != "GMSr") {
@@ -311,10 +372,18 @@ namespace GrowtopiaMusicSimulatorReborn
 			}
 
 			OptionHolder.noteWait = (short)bpmFormula((int)file.ReadInt16());
-			int mapWidth=file.ReadByte();
-			mapWidth = 400;
-			int mapHeight=file.ReadByte();
+			int mapWidth;
+			int mapHeight;
+			if (mapversion <= 4) {
+				mapWidth = file.ReadByte();
+				mapWidth = 400;
+				mapHeight = file.ReadByte();
+			} else {
+				// Version 5 is when map resizing was introduced, actually load the map width.
+				mapWidth = file.ReadInt16();
+			}
 			mapHeight = 14;
+
 			byte past = 255;
 			byte present = 254;
 			byte rollValue = 55;
@@ -322,9 +391,9 @@ namespace GrowtopiaMusicSimulatorReborn
 			int rollAmount = 0;
 			int layers = file.ReadByte();
 			layers = 1;
-			int[][,] workMap = new int[layers][,];
+			byte[][,] workMap = new byte[layers][,];
 			for (int i = 0; i < layers; i++) {
-				workMap [i] = new int[401, 15];
+				workMap [i] = new byte[mapWidth, 14];
 			}
 			//Debug.Print(mapversion.ToString()+";"+mapWidth.ToString()+";"+mapHeight.ToString()+".");
 			for (int i = 0; i < layers; i++) {
@@ -392,13 +461,15 @@ namespace GrowtopiaMusicSimulatorReborn
 		/// <summary>
 		/// Custom save method instead of using one with MapLibrary.
 		/// 
-		/// Forgets beginning data except for format version.
 		/// </summary>
 		public void save(){
 			SaveFileDialog a = new SaveFileDialog();
 			a.OverwritePrompt=true;
 			a.Filter="Angry LegGuy files (*.AngryLegGuy)|*.AngryLegGuy|All files (*.*)|*.*";
 			a.ShowDialog();
+			if (a.FileName == String.Empty) {
+				return;
+			}
 			FileStream happyfile = File.Open(a.FileName,FileMode.Create);
 			BinaryWriter br = new BinaryWriter(happyfile);
 			int numero=0;
@@ -410,16 +481,14 @@ namespace GrowtopiaMusicSimulatorReborn
 			byte present=255;
 
 			// Groowtopia Music Simulator rebotn map format
-			br.Write(Convert.ToByte(4));
+			br.Write(Convert.ToByte(5));
 			// Write GMSR to define this as a Growtopia Music Simulator reborn song
 			br.Write(System.Text.Encoding.UTF8.GetBytes("GMSr"));
 			// Write bpm
 			br.Write ((short)reverseBPMformula(OptionHolder.noteWait));
-			// THESE VALUES DONT MATTER FOR THE CUSTOM LOADING FUNCTION. WRITE DUMMY VALUES.
+			// Write width as a short, taking up the height byte, and a dummy value for layers.
 			// Width
-			br.Write (Convert.ToByte(1));
-			// Height
-			br.Write (Convert.ToByte(2));
+			br.Write ((short)songPlace.maparray[0].GetLength(0));
 			// Layers?
 			br.Write (Convert.ToByte(3));
 				currentRun=255;
@@ -427,7 +496,7 @@ namespace GrowtopiaMusicSimulatorReborn
 				runNumber = 0;
 				finishNumero = -80;
 				for (int ya = 0; ya < 14; ya++) {
-					for (int xa = 0; xa < 400; xa++) {
+					for (int xa = 0; xa < songPlace.maparray[0].GetLength(0); xa++) {
 						topoffor:
 						if (!doingRun) {
 							past = present;
@@ -507,7 +576,7 @@ namespace GrowtopiaMusicSimulatorReborn
 			}else{
 				for (int i = 6; i < 13; i++) {
 					if (e.KeyValue == OptionHolder.hotkeys[i]) {
-						noteValue = i-5;
+						noteValue = (byte)(i-5);
 					}
 				}
 			}

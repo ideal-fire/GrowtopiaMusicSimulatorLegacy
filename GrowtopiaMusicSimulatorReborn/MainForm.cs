@@ -54,7 +54,7 @@ namespace GrowtopiaMusicSimulatorReborn
 		string[] bassSharpSounds = new string[14];
 		string[] bassFlatSounds = new string[14];
 		string[][] noteArrays = new string[7][];
-		int noteValue=1;
+		byte noteValue=1;
 
 		//Various images
 		Bitmap playButtonImage;
@@ -70,9 +70,10 @@ namespace GrowtopiaMusicSimulatorReborn
 		Bitmap creditsButtonImage;
 		Bitmap loadOldImage;
 		Bitmap optionsImage;
+		Bitmap resizeImage;
 
 		// Misc stuffz
-		byte pageNumber=0;
+		short pageNumber=0;
 		bool clicking=false;
 		bool playing=false;
 		// Two variables so we don't try to rapidly place where we've already placed.
@@ -91,7 +92,7 @@ namespace GrowtopiaMusicSimulatorReborn
 		// Spice it up a bit with SpringGreen instead of green.
 		Brush greenBrush = new SolidBrush(Color.SpringGreen);
 		
-		const short gmsVersion=4;
+		const short gmsVersion=5;
 
 		// Bar position displaying variable of doom
 		byte barX=0;
@@ -104,7 +105,7 @@ namespace GrowtopiaMusicSimulatorReborn
 		/// <summary>
 		/// This is the max X. Once the bar reaches here, the song repeats.
 		/// </summary>
-		short maxX = 0;
+		int maxX = 0;
 
 		// Width/radio = height
 		const double sizeRatio = 15.0 / 26.0;
@@ -119,13 +120,13 @@ namespace GrowtopiaMusicSimulatorReborn
 			loadOptionsFile(ref OptionHolder.playNoteOnPlace,ref OptionHolder.showConfirmation,ref OptionHolder.byteEX, ref OptionHolder.hotkeys);
 			Icon = new Icon((Directory.GetCurrentDirectory () + "/Images/icon.ico"));
 			this.Name = "GrowtopiaMusicSimulatorReborn";
-			this.Text = "Growtopia Music Simulator Re;born";
+			this.Text = "Growtopia Music Simulator Re;born v2.6";
 			// True size is 832x480
 			//this.Size = new System.Drawing.Size(848,518);
 			this.ClientSize = new Size(832, 480);
 			this.AutoScaleMode = AutoScaleMode.None;
 			this.MinimumSize = new Size(1, 1);
-			// Turn off form reszing.
+			// Turne off form reszing.
 			this.FormBorderStyle = FormBorderStyle.Sizable;
 			songPlace.SetMap (25, 14, MapFunctions.NewMap (399, 13, 0, 1).Item3, 1);
 			normalPaint = new PaintEventHandler (paint_stuff);
@@ -160,6 +161,7 @@ namespace GrowtopiaMusicSimulatorReborn
 			creditsButtonImage = loadBitmap ((Directory.GetCurrentDirectory()+"/Images/creditsButton.png"));
 			loadOldImage = loadBitmap ((Directory.GetCurrentDirectory()+"/Images/loadOld.png"));
 			optionsImage = loadBitmap((Directory.GetCurrentDirectory() + "/Images/optionsButton.png"));
+			resizeImage = loadBitmap((Directory.GetCurrentDirectory() + "/Images/resizeButton.png"));
 
 			// Set up sound engine thing
 			soundEngine = new ISoundEngine ();
@@ -318,7 +320,7 @@ namespace GrowtopiaMusicSimulatorReborn
 					lastPlaceX = (byte)(e.X / 32);
 					lastPlaceY = (byte)(e.Y / 32);
 
-					if (lastPlaceX == maxX) {
+					if (lastPlaceX+pageNumber*25== maxX) {
 						for (int _y = 0; _y < songPlace.maparray[0].GetLength(1); _y++) {
 							if (songPlace.maparray[0][lastPlaceX, _y] != 0) {
 								return;
@@ -332,12 +334,12 @@ namespace GrowtopiaMusicSimulatorReborn
 				if (OptionHolder.playNoteOnPlace) {
 					playNote ((byte)noteValue, Convert.ToByte(e.Y / 32));
 				}
-				songPlace.maparray [0] [e.X / 32+(pageNumber*25), e.Y / 32] = noteValue;
+				songPlace.maparray [0] [e.X / 32+(pageNumber*25), e.Y / 32] = (byte)noteValue;
 				needRedraw = true;
 				lastPlaceX = (byte)(e.X / 32);
 				lastPlaceY = (byte)(e.Y / 32);
-				if (lastPlaceX > maxX) {
-					maxX = lastPlaceX;
+				if (lastPlaceX+pageNumber*25 > maxX) {
+					maxX = (lastPlaceX+pageNumber*25);
 				}
 			}
 		}
@@ -394,8 +396,9 @@ namespace GrowtopiaMusicSimulatorReborn
 			}
 			g.DrawImage (bpmButtonImage, 800, 448);
 			g.DrawImage (yellowPlayButtonImage, 192, 448);
-			g.DrawString ("Page:" + (pageNumber + 1) + "/16",textFont,textBrush,300,448);
+			g.DrawString ("Page:" + (pageNumber + 1) + "/"+songPlace.maparray[0].GetLength(0)/25,textFont,textBrush,300,448);
 			g.DrawImage (creditsButtonImage, 448, 448);
+			g.DrawImage(resizeImage, 480, 448);
 			if (OptionHolder.playNoteOnPlace){
 				g.FillRectangle(greenBrush,224,448,32,32);
 			}else{

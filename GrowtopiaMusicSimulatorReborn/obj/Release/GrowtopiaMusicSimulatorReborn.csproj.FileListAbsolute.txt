@@ -22,3 +22,4 @@ C:\Users\admin\NewNathansFolder\Programing\C#\GrowtopiaMusicSimulatorRe-born\Gro
 C:\Users\admin\NewNathansFolder\Programing\C#\GrowtopiaMusicSimulatorRe-born\GrowtopiaMusicSimulatorReborn\obj\Release\GrowtopiaMusicSimulatorReborn.csproj.GenerateResource.Cache
 C:\Users\admin\NewNathansFolder\Programing\C#\GrowtopiaMusicSimulatorRe-born\GrowtopiaMusicSimulatorReborn\obj\Release\GrowtopiaMusicSimulatorReborn.exe
 C:\Users\admin\NewNathansFolder\Programing\C#\GrowtopiaMusicSimulatorRe-born\GrowtopiaMusicSimulatorReborn\obj\Release\GrowtopiaMusicSimulatorReborn.HotkeyConfig.resources
+C:\Users\admin\NewNathansFolder\Programing\C#\GrowtopiaMusicSimulatorRe-born\GrowtopiaMusicSimulatorReborn\obj\Release\GrowtopiaMusicSimulatorReborn.SongResizePopup.resources

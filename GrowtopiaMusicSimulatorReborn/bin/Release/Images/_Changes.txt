@@ -1,13 +1,31 @@
 Growtopia Music Simulator 2.0+ changelog
 
-2.4
+2.6
+---
+* Will no longer display an error if no file is selected when saving or loading
+* The song will repeat when it reaches the end of the song.
+* The window can now be enlarged it will automaticlly mantain the correct width to height ratio.
+* You can now resize the song using the button next to the credits button.
+	This can be used to make songs bigger than one world.
+	You'll be warned when shrinking a song.
+	The maximum number of pages you can have is 3999.
+* Theme is now a bit better.
+* Sheet Music: Blank can now be placed and now uses official graphics.
+* Made loadold button less ugly
+
+2.5
 ---
 * Confirmation prompts when saving, loading, and exiting.
 * Configurable hotkeys
 * Fixed piano note image
 * Removed .AngryLevel from list of file formats when loading
 * Added GMSr at the second byte in a song file. Change file format byte to 4.
-* Now will try to detect if the file you're loading isn't a Growtopia Music Simulator Re;born file. Will now suggest to use loadold if the file is wierd.
+* Now will try to detect if the file you're loading isn't a Growtopia Music Simulator Re;born file. Will now suggest to use loadold if the file is weird.
+
+2.4
+---
+Fix some b flat or something.
+I don't really remember.
 
 2.3
 ---

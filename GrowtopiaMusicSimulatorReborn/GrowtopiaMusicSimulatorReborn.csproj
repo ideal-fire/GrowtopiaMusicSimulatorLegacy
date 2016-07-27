@@ -13,6 +13,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <StartupObject>GrowtopiaMusicSimulatorReborn.Program</StartupObject>
     <ApplicationIcon>..\iconPNG.ico</ApplicationIcon>
+    <ReleaseVersion>1</ReleaseVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Platform)' == 'AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -75,6 +76,10 @@
     <Compile Include="MainForm.BigMethods.cs" />
     <Compile Include="BassSounds.cs" />
     <Compile Include="OptionHolder.cs" />
+    <Compile Include="SongResizePopup.cs" />
+    <Compile Include="SongResizePopup.Designer.cs">
+      <DependentUpon>SongResizePopup.cs</DependentUpon>
+    </Compile>
     <Compile Include="TitleScreen.cs" />
     <Compile Include="RealMain.cs" />
     <Compile Include="DrumSounds.cs" />
@@ -89,6 +94,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="PopBPM.resx">
       <DependentUpon>PopBPM.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SongResizePopup.resx">
+      <DependentUpon>SongResizePopup.Designer.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

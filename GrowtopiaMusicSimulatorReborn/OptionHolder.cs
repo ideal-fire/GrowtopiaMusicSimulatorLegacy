@@ -57,7 +57,7 @@ namespace GrowtopiaMusicSimulatorReborn
 		/// <param name="_passedG">The graphics object to apply the scale to</param>
 		public static void setScaleGraphics(Graphics _passedG) {
 			if (windowScale > 1) {
-				_passedG.InterpolationMode = InterpolationMode.NearestNeighbor;
+				//_passedG.InterpolationMode = InterpolationMode.NearestNeighbor;
 				_passedG.ScaleTransform(windowScale, windowScale);
 			}
 		}

@@ -69,6 +69,11 @@ namespace GrowtopiaMusicSimulatorReborn
 			0,
 			0,
 			0});
+			this.numericUpDown1.Maximum = new decimal(new int[] {
+			9999,
+			0,
+			0,
+			0});
 			// 
 			// label2
 			// 
