@@ -92,7 +92,7 @@ namespace GrowtopiaMusicSimulatorReborn
 		// Spice it up a bit with SpringGreen instead of green.
 		Brush greenBrush = new SolidBrush(Color.SpringGreen);
 		
-		const short gmsVersion=5;
+		const short gmsVersion=6;
 
 		// Bar position displaying variable of doom
 		byte barX=0;
@@ -120,7 +120,7 @@ namespace GrowtopiaMusicSimulatorReborn
 			loadOptionsFile(ref OptionHolder.playNoteOnPlace,ref OptionHolder.showConfirmation,ref OptionHolder.byteEX, ref OptionHolder.hotkeys);
 			Icon = new Icon((Directory.GetCurrentDirectory () + "/Images/icon.ico"));
 			this.Name = "GrowtopiaMusicSimulatorReborn";
-			this.Text = "Growtopia Music Simulator Re;born v2.6";
+			this.Text = "Growtopia Music Simulator Re;born v2.7 ("+gmsVersion+")";
 			// True size is 832x480
 			//this.Size = new System.Drawing.Size(848,518);
 			this.ClientSize = new Size(832, 480);
@@ -290,8 +290,11 @@ namespace GrowtopiaMusicSimulatorReborn
 
 				if ((barX+1) % 25 == 0) {
 					barX = 0;
-					if (pageNumber != 15) {
+					if (pageNumber != songPlace.maparray[0].GetLength(0) / 25) {
 						pageNumber++;
+					} else {
+						MessageBox.Show("Wow, this is a strange bug that should be reported! I think... Maybe... Herez some valuez:\n" + pageNumber.ToString() + "\n" + songPlace.maparray[0].GetLength(0) + "\n" + x.ToString());
+						break;
 					}
 				} else {
 					barX++;
