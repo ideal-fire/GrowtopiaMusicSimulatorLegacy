@@ -72,7 +72,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PianoSounds.cs" />
-    <Compile Include="SetSounds.cs" />
+    <Compile Include="SetSoundsFile.cs" />
     <Compile Include="MainForm.BigMethods.cs" />
     <Compile Include="BassSounds.cs" />
     <Compile Include="OptionHolder.cs" />
@@ -80,10 +80,12 @@
     <Compile Include="SongResizePopup.Designer.cs">
       <DependentUpon>SongResizePopup.cs</DependentUpon>
     </Compile>
+    <Compile Include="SpookySoundData.cs" />
     <Compile Include="TitleScreen.cs" />
     <Compile Include="RealMain.cs" />
     <Compile Include="DrumSounds.cs" />
     <Compile Include="TickTimer.cs" />
+    <Compile Include="SaxSounds.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

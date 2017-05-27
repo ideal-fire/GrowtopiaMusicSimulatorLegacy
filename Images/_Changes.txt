@@ -1,5 +1,11 @@
 Growtopia Music Simulator 2.0+ changelog
 
+2.8
+---
+Spooky notes
+Sax notes
+Repeat notes
+
 2.7
 ---
 * Fixes problem when trying to play past page 16 when using the normal play button.

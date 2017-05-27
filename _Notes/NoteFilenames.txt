@@ -1,0 +1,46 @@
+NORMAL
+24 B
+22 A
+20 G
+18 F
+17 E
+15 D
+13 C
+12 B
+10 A
+08 G
+06 F
+05 E
+03 D
+01 C
+FLAT
+23 B
+21 A
+19 G
+17 F
+16 E
+14 D
+12 C
+11 B
+09 A
+07 G
+05 F
+04 E
+02 D
+00 C
+SHARP
+(c) B
+(b flat) A
+(a flat) G
+(g flat) F
+(f) E
+(e flat) D
+(d flat) C
+[repeat]
+(c) B
+(b flat) A
+(a flat) G
+(g flat) F
+(f) E
+(e flat) D
+(d flat) C

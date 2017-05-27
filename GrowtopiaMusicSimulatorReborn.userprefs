@@ -1,4 +1,4 @@
-﻿<Properties StartupItem="GrowtopiaMusicSimulatorReborn\GrowtopiaMusicSimulatorReborn.csproj">
+﻿<Properties StartupConfiguration="{1FEAD6F5-23B8-4BB6-85AC-62CA35171DF7}|Default">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" ActiveRuntime="MS.NET" />
   <MonoDevelop.Ide.ItemProperties.GrowtopiaMusicSimulatorReborn PreferredExecutionTarget="MonoDevelop.Default" />
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
@@ -7,22 +7,11 @@
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.Workbench ActiveDocument="GrowtopiaMusicSimulatorReborn\MainForm.cs">
     <Files>
-      <File FileName="GrowtopiaMusicSimulatorReborn\MainForm.cs" Line="123" Column="55" />
+      <File FileName="GrowtopiaMusicSimulatorReborn\MainForm.cs" Line="140" Column="32" />
       <File FileName="GrowtopiaMusicSimulatorReborn\MainForm.BigMethods.cs" Line="583" Column="14" />
       <File FileName="GrowtopiaMusicSimulatorReborn\OptionHolder.cs" Line="60" Column="7" />
       <File FileName="GrowtopiaMusicSimulatorReborn\SongResizePopup.cs" Line="26" Column="38" />
     </Files>
-    <Pads>
-      <Pad Id="ProjectPad">
-        <State name="__root__">
-          <Node name="GrowtopiaMusicSimulatorReborn" expanded="True">
-            <Node name="GrowtopiaMusicSimulatorReborn" expanded="True">
-              <Node name="MainForm.cs" selected="True" />
-              <Node name="SongResizePopup.cs" expanded="True" />
-            </Node>
-          </Node>
-        </State>
-      </Pad>
-    </Pads>
   </MonoDevelop.Ide.Workbench>
+  <MultiItemStartupConfigurations />
 </Properties>

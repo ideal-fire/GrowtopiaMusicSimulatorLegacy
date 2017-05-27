@@ -97,7 +97,7 @@ namespace GrowtopiaMusicSimulatorReborn
 			}else{
 				// When you press note change button.
 				if (e.X < 64) {
-					if (noteValue == 7) {
+					if (noteValue == 14) {
 						noteValue = 0;
 					} else {
 						noteValue++;
@@ -161,6 +161,7 @@ namespace GrowtopiaMusicSimulatorReborn
 						saveOptionsFile(OptionHolder.playNoteOnPlace,OptionHolder.showConfirmation,OptionHolder.byteEX,OptionHolder.hotkeys);
 					} else if (e.X < 448) {
 					// Load old gms file.
+					MessageBox.Show("This button is for loading old song files from the original Growtopia Music Simulator. To load newer song files from Growtopia Music Simulator Re;born, use the normal load button. It's a yellow folder.");
 						DialogResult dialogAnswer = MessageBox.Show("Are you sure you want to open a song file?\nYou'll loose your current song if you haven't saved.", "Don't mess up", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 						if (dialogAnswer == DialogResult.No) {
 							// They don't want this madness.
@@ -252,6 +253,7 @@ namespace GrowtopiaMusicSimulatorReborn
 			}
 
 			ResizeArray(ref songPlace.maparray[0], (int)srp.songLengthBox.Value, 14);
+			ResizeArray(ref RepeatUsed, (int)srp.songLengthBox.Value, 14);
 			if (maxX + 1 > songPlace.maparray[0].GetLength(0)) {
 				maxX = GetMaxX();
 			}

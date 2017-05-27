@@ -1,0 +1,8 @@
+
+b# is c
+a# is b flat
+g# is a flat
+f# is g flat
+e# is f
+d# is e flat
+c# is d flat
