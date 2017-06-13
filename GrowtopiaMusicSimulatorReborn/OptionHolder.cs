@@ -9,12 +9,24 @@ namespace GrowtopiaMusicSimulatorReborn
 		public static bool playNoteOnPlace=true;
 		public static bool showConfirmation=true;
 		public static short noteWait=150;
-		public const byte maxOptionsFormat=2;
+		// Options file version
+		// 2 is 2.8(7) and below?
+		// 3 is when all notes (up to spooky) got hotkeys
+		public const byte maxOptionsFormat=3;
 
 		/// <summary>
 		/// The hotkeys.
+		/// It seems that each note has a spot in this array and that spot stores its hotkey
+		/// 13 is blank (backspace) (f1 - 112)
+		/// 14 is sax (8)
+		/// 15 is sax sharp (9)
+		/// 16 is sax flat (0)
+		/// 17 is repeat start
+		/// 18 is repeat end
+		/// 19 is spooky (backspace)
 		/// </summary>
-		public static byte[] hotkeys = {65,83,68,70,71,72,49,50,51,52,53,54,55};
+		public static byte[] hotkeys = {65,83,68,70,71,72,49,50,51,52,53,54,55, 112,56,57,48,189,187,8};
+
 
 		/// <summary>
 		/// byteEX.

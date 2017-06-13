@@ -32,6 +32,7 @@ namespace GrowtopiaMusicSimulatorReborn
 		
 		void HotkeyConfigKeyDown(object sender, KeyEventArgs e){
 			System.Diagnostics.Debug.Print("Pressed.");
+			Debug.Print(e.KeyValue.ToString());
 			if (isWaitingForKey){
 				System.Diagnostics.Debug.Print("Pressed two.");
 				OptionHolder.hotkeys[currentHotkeySet]=(byte)(e.KeyValue);
@@ -45,7 +46,7 @@ namespace GrowtopiaMusicSimulatorReborn
 				e.Graphics.FillRectangle(MainForm.grayBrush,0,0,this.Width,this.Height);
 				e.Graphics.DrawString("Press a key.",MainForm.textFont,MainForm.textBrush,0,0);
 			}else{
-				e.Graphics.DrawString("Click a button to set it's hotkey.",MainForm.textFont,MainForm.textBrush,0,0);
+				e.Graphics.DrawString("Click a button to set its hotkey.",MainForm.textFont,MainForm.textBrush,0,0);
 			}
 		}
 		
@@ -129,7 +130,37 @@ namespace GrowtopiaMusicSimulatorReborn
 		{
 			this.Close();
 		}
+
+		void SetSpookyClick(object sender, EventArgs e)
+		{
+			readyPress(19);
+		}
+		void SetSaxClick(object sender, EventArgs e)
+		{
+			readyPress(14);
+		}
+		void SetSaxSharpClick(object sender, EventArgs e)
+		{
+			readyPress(15);
+		}
+		void SetSaxFlatClick(object sender, EventArgs e)
+		{
+			readyPress(16);
+		}
+		void SetRepeatStartClick(object sender, EventArgs e)
+		{
+			readyPress(17);
+		}
+		void SetRepeatEndClick(object sender, EventArgs e)
+		{
+			readyPress(18);
+		}
+		void SetBlankClick(object sender, EventArgs e)
+		{
+			readyPress(13);
+		}
 		
+
 		
 	}
 }

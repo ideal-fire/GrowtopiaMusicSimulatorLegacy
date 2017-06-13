@@ -104,7 +104,7 @@ namespace GrowtopiaMusicSimulatorReborn
 		/// <summary>
 		/// Version that is compared to pasebin version
 		/// </summary>
-		const short gmsVersion=7;
+		const short gmsVersion=8;
 
 		// Bar position displaying variable of doom
 		byte barX=0;
@@ -135,7 +135,7 @@ namespace GrowtopiaMusicSimulatorReborn
 			loadOptionsFile(ref OptionHolder.playNoteOnPlace,ref OptionHolder.showConfirmation,ref OptionHolder.byteEX, ref OptionHolder.hotkeys);
 			Icon = new Icon((Directory.GetCurrentDirectory () + "/Images/icon.ico"));
 			this.Name = "GrowtopiaMusicSimulatorReborn";
-			this.Text = "Growtopia Music Simulator Re;born v2.8 ("+gmsVersion+")";
+			this.Text = "Growtopia Music Simulator Re;born v2.9 ("+gmsVersion+")";
 			// True size is 832x480
 			//this.Size = new System.Drawing.Size(848,518);
 			this.ClientSize = new Size(832, 480);
@@ -159,14 +159,14 @@ namespace GrowtopiaMusicSimulatorReborn
 			noteImages [4] = loadBitmap ((Directory.GetCurrentDirectory()+"/Images/bass.png"));
 			noteImages [5] = loadBitmap ((Directory.GetCurrentDirectory()+"/Images/bassSharp.png"));
 			noteImages [6] = loadBitmap ((Directory.GetCurrentDirectory()+"/Images/bassFlat.png"));
-			noteImages [7] = loadBitmap ((Directory.GetCurrentDirectory()+"/Images/drum.png"));
-			noteImages [8] = loadBitmap ((Directory.GetCurrentDirectory()+"/Images/blankNote.png"));
-			noteImages [9] = loadBitmap((Directory.GetCurrentDirectory()+"/Images/Sax.png"));
-			noteImages [10] = loadBitmap((Directory.GetCurrentDirectory()+"/Images/SaxSharp.png"));
-			noteImages [11] = loadBitmap((Directory.GetCurrentDirectory()+"/Images/SaxFlat.png"));
-			noteImages [repeatStartId] = loadBitmap((Directory.GetCurrentDirectory()+"/Images/RepeatLeft.png"));
-			noteImages [repeatEndId] = loadBitmap((Directory.GetCurrentDirectory()+"/Images/RepeatRight.png"));
-			noteImages [14] = loadBitmap((Directory.GetCurrentDirectory()+"/Images/Spooky.png"));
+			noteImages [7] = loadBitmap ((Directory.GetCurrentDirectory()+"/Images/drum.png")); // 12
+			noteImages [8] = loadBitmap ((Directory.GetCurrentDirectory()+"/Images/blankNote.png")); //13
+			noteImages [9] = loadBitmap((Directory.GetCurrentDirectory()+"/Images/Sax.png")); // 14
+			noteImages [10] = loadBitmap((Directory.GetCurrentDirectory()+"/Images/SaxSharp.png")); // 15
+			noteImages [11] = loadBitmap((Directory.GetCurrentDirectory()+"/Images/SaxFlat.png")); // 16
+			noteImages [repeatStartId] = loadBitmap((Directory.GetCurrentDirectory()+"/Images/RepeatLeft.png")); // 17
+			noteImages [repeatEndId] = loadBitmap((Directory.GetCurrentDirectory()+"/Images/RepeatRight.png")); // 18
+			noteImages [14] = loadBitmap((Directory.GetCurrentDirectory()+"/Images/Spooky.png")); // 19
 			this.DoubleBuffered = true;
 			this.MouseDown += mouseDownWithScale;
 			this.MouseUp += mouseup;
@@ -218,13 +218,18 @@ namespace GrowtopiaMusicSimulatorReborn
 			bigBG = loadBitmap ((Directory.GetCurrentDirectory () + "/Images/BigBG.png"));
 
 			try{
-			WebClient client = new WebClient();
-			String downloadedString = client.DownloadString("http://pastebin.com/raw/VNLxD23j");
-			if (Int32.Parse (downloadedString) > gmsVersion) {
-				MessageBox.Show ("Yo, there's a new version out.\nRemember to get it if you have the time.");
-			}
-				// Dispose.
-				client.Dispose();
+				if (!(File.Exists (Directory.GetCurrentDirectory () + "/Images/_noUpdateCheck.nathan"))) {
+
+					WebClient client = new WebClient();
+					String downloadedString = client.DownloadString("http://pastebin.com/raw/VNLxD23j");
+			
+					if (Int32.Parse (downloadedString) > gmsVersion) {
+						MessageBox.Show ("Yo, there's a new version out.\nRemember to get it if you have the time.");
+					}
+
+					// Dispose.
+					client.Dispose();
+				}
 			}
 			catch{
 				Debug.Print ("Couldn't connect.");
@@ -314,18 +319,26 @@ namespace GrowtopiaMusicSimulatorReborn
 				needRedraw = true;
 				
 				if (_pleaseLookForRepeatsAfterwards==true){
-					for (int x2 = 0; x2 < songPlace.maparray[0].GetLength(0); x2++) {
+					//Debug.Print("Looking for repeat...");
+					for (int x2 = x-1; x2 > 0; x2--) {
+					//for (int x2 = 0; x2 < songPlace.maparray[0].GetLength(0); x2++) {
+						//Debug.Print("Checking at {0}",x2);
 						if (songPlace.maparray[0][x2,lookForY]==repeatStartId){
+							//Debug.Print("Found at {0}",x2);
 							x=x2;
 							barX=(byte)(x % 25);
 							pageNumber=(short)Math.Floor((double)(x/25));
 							_pleaseLookForRepeatsAfterwards=false;
+						}
+						if (_pleaseLookForRepeatsAfterwards==false){
+							break;
 						}
 						
 					}
 				}
 				// If no repeat start was found, go to the song's start
 				if (_pleaseLookForRepeatsAfterwards==true){
+					//Debug.Print("not found!");
 					barX=0;
 					x=0;
 					pageNumber=0;
@@ -337,7 +350,7 @@ namespace GrowtopiaMusicSimulatorReborn
 						if (RepeatUsed[x,y]==0){
 							_pleaseLookForRepeatsAfterwards=true;
 							lookForY=y;
-							//Debug.Print(x +","+y+" is now used.");
+							Debug.Print(x +","+y+" is now used.");
 							RepeatUsed[x,y]=1;
 						}else{
 							//Debug.Print(x +","+y+" is already used.");

@@ -50,9 +50,20 @@ namespace GrowtopiaMusicSimulatorReborn
 				return;
 			}
 
-			for (int i = 0; i < 13; i++) {
-				hotkeys[i] = br.ReadByte();
+			
+			try{
+				for (int i = 0; i < 13; i++) {
+					hotkeys[i] = br.ReadByte();
+				}
+				if (optionsFormat>=3){
+					for (int i = 13; i < 20; i++) {
+						hotkeys[i] = br.ReadByte();
+					}
+				}
+			}catch{
+				MessageBox.Show("Error loading hotkeys.");
 			}
+			
 
 			br.Dispose();
 			file.Dispose();
@@ -62,7 +73,7 @@ namespace GrowtopiaMusicSimulatorReborn
 			FileStream file = new FileStream((Directory.GetCurrentDirectory () + "/Images/Options.txt"),FileMode.Create);
 			BinaryWriter bw = new BinaryWriter(file);
 			// Options file version
-			bw.Write((byte)2);
+			bw.Write((byte)OptionHolder.maxOptionsFormat);
 			// byteEX
 			bw.Write(_byteEX);
 			// play on place?
@@ -576,7 +587,7 @@ namespace GrowtopiaMusicSimulatorReborn
 			else if (e.KeyValue == OptionHolder.hotkeys[5]) {
 				checkUI(new MouseEventArgs(MouseButtons.Left, 1, 544, 0, 0));
 			}else{
-				for (int i = 6; i < 13; i++) {
+				for (int i = 6; i < 20; i++) {
 					if (e.KeyValue == OptionHolder.hotkeys[i]) {
 						noteValue = (byte)(i-5);
 					}
