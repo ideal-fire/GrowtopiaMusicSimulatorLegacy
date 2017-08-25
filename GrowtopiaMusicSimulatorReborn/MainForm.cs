@@ -104,7 +104,8 @@ namespace GrowtopiaMusicSimulatorReborn
 		/// <summary>
 		/// Version that is compared to pasebin version
 		/// </summary>
-		const short gmsVersion=8;
+		const short gmsVersion=9;
+		const string versionAsString = "2.9.1";
 
 		// Bar position displaying variable of doom
 		byte barX=0;
@@ -135,7 +136,7 @@ namespace GrowtopiaMusicSimulatorReborn
 			loadOptionsFile(ref OptionHolder.playNoteOnPlace,ref OptionHolder.showConfirmation,ref OptionHolder.byteEX, ref OptionHolder.hotkeys);
 			Icon = new Icon((Directory.GetCurrentDirectory () + "/Images/icon.ico"));
 			this.Name = "GrowtopiaMusicSimulatorReborn";
-			this.Text = "Growtopia Music Simulator Re;born v2.9 ("+gmsVersion+")";
+			this.Text = "Growtopia Music Simulator Re;born v"+versionAsString+" ("+gmsVersion+")";
 			// True size is 832x480
 			//this.Size = new System.Drawing.Size(848,518);
 			this.ClientSize = new Size(832, 480);
@@ -324,11 +325,21 @@ namespace GrowtopiaMusicSimulatorReborn
 					//for (int x2 = 0; x2 < songPlace.maparray[0].GetLength(0); x2++) {
 						//Debug.Print("Checking at {0}",x2);
 						if (songPlace.maparray[0][x2,lookForY]==repeatStartId){
-							//Debug.Print("Found at {0}",x2);
+							//Debug.Print("Found at {0}. x is {1}",x2,x);
+							// Reset repeat notes within the repeat region
+							for (int k=x-2;k>x2;k--){ // x is the current x position in the song. We subtract 1 because the loop continued and it increased itself and subtract 1 because we don't want to reset the same X position as the repeat note just used. In total, we subtract 2.
+								//Debug.Print("resetting on {0}",k);
+								for (int l=0;l<14;l++){
+									RepeatUsed[k,l]=0;
+								}
+							}
 							x=x2;
 							barX=(byte)(x % 25);
 							pageNumber=(short)Math.Floor((double)(x/25));
 							_pleaseLookForRepeatsAfterwards=false;
+							
+							
+							
 						}
 						if (_pleaseLookForRepeatsAfterwards==false){
 							break;
@@ -382,7 +393,7 @@ namespace GrowtopiaMusicSimulatorReborn
 				}
 
 				// If we're at the end of the song, restart
-				if (barX + pageNumber * 25 > maxX) {
+				if (barX + pageNumber * 25 > maxX && _pleaseLookForRepeatsAfterwards==false) {
 					pageNumber = 0;
 					barX = 0;
 					x = -1;

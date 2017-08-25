@@ -27,9 +27,9 @@ namespace GrowtopiaMusicSimulatorReborn
 		public static void loadOptionsFile(ref bool _playOnPlace, ref bool _showConfirmation, ref bool _byteEX, ref byte[] hotkeys){
 			FileStream file;
 			try{
-			file = new FileStream((Directory.GetCurrentDirectory () + "/Images/Options.txt"),FileMode.Open);
+				file = new FileStream((Directory.GetCurrentDirectory () + "/Images/Options.txt"),FileMode.Open);
 			}catch{
-				MessageBox.Show ("Options file not found.\nWill create a new one.");
+				//MessageBox.Show ("Options file not found.\nWill create a new one.");
 				easySaveOptions ();
 				return;
 			}
