@@ -18,7 +18,11 @@ namespace GrowtopiaMusicSimulatorReborn
 			try{
 				return new Bitmap(_filePath);
 			}catch(Exception ex){
-				MessageBox.Show("Error loading\n"+_filePath+"\nThe file probrably doesn't exist. Here's the error:\n"+ex.ToString());
+				if (File.Exists(_filePath)){
+					MessageBox.Show("File does not exist. "+_filePath);
+				}else{
+					MessageBox.Show("Error loading file: "+_filePath+"\nHere's the error:\n"+ex.ToString());
+				}
 				return null;
 			}
 		}
@@ -49,7 +53,6 @@ namespace GrowtopiaMusicSimulatorReborn
 			if (optionsFormat == 1) {
 				return;
 			}
-
 			
 			try{
 				for (int i = 0; i < 13; i++) {
@@ -74,11 +77,8 @@ namespace GrowtopiaMusicSimulatorReborn
 			BinaryWriter bw = new BinaryWriter(file);
 			// Options file version
 			bw.Write((byte)OptionHolder.maxOptionsFormat);
-			// byteEX
 			bw.Write(_byteEX);
-			// play on place?
 			bw.Write(_playOnPlace);
-			// show confirmation?
 			bw.Write(_showConfirmation);
 
 			for (int i = 0; i < hotkeys.Length; i++) {
@@ -108,10 +108,18 @@ namespace GrowtopiaMusicSimulatorReborn
 			}else{
 				// When you press note change button.
 				if (e.X < 64) {
-					if (noteValue == 14) {
-						noteValue = 0;
-					} else {
-						noteValue++;
+					if (e.Button == MouseButtons.Left){
+						if (noteValue == maxNote) {
+							noteValue = 0;
+						} else {
+							noteValue++;
+						}
+					}else if (e.Button == MouseButtons.Right){
+						if (noteValue == 0) {
+							noteValue = maxNote;
+						} else {
+							noteValue--;
+						}
 					}
 					needRedraw = true;
 				} else {
@@ -185,6 +193,17 @@ namespace GrowtopiaMusicSimulatorReborn
 						MessageBox.Show ("Programming - MyLegGuy\nOriginal theme - SumRndmDde\nBPM formula - y3ll0\nMatching sounds to notes - HonestyCow\n\nThxz..");
 					}else if (e.X<512){
 						resizeSong();
+					}else if (e.X<544){
+						int[] countedNotes = new int[noteImages.Length];
+						for (int ya=0;ya<14;ya++){
+							for (int xa=0;xa<songPlace.maparray[0].GetLength(0);xa++){
+								if (songPlace.maparray[0][xa,ya]!=0){
+									countedNotes[songPlace.maparray[0][xa,ya]]+=1;
+								}
+							}
+						}
+						string _resultingMessage = String.Format("Piano: {0}. Piano sharp: {1}. Piano flat: {2}\nBass: {3}. Bass sharp: {4}. Bass flat: {5}\nSax: {6}. Sax sharp: {7}. Sax flat: {8}\nRepeat start: {9}. Repeat end: {10}. Spooky: {11}\nDrums: {12}. Blank: {13}. Audio gear: {14}",countedNotes[pianoId], countedNotes[pianoSharpId], countedNotes[pianoFlatId], countedNotes[bassId], countedNotes[bassSharpId], countedNotes[bassFlatId], countedNotes[saxId], countedNotes[saxSharpId], countedNotes[saxFlatId], countedNotes[repeatStartId], countedNotes[repeatEndId], countedNotes[spookyId], countedNotes[drumId], countedNotes[blankId], countedNotes[audioGearId]);
+						MessageBox.Show(_resultingMessage);
 					}else if (e.X < 576 && e.X>=544) {
 						// When you press load button
 						OpenFileDialog ofd = new OpenFileDialog();
@@ -199,26 +218,30 @@ namespace GrowtopiaMusicSimulatorReborn
 							// They don't want this madness.
 							return;
 						}
-
-						FileStream fs;
-						try {
-							fs = new FileStream(ofd.FileName, FileMode.Open);
-						}
-						catch (Exception ex) {
-							MessageBox.Show("Could not open file.\nDid you select nothing?\n" + ex.ToString());
-							return;
-						}
-						try {
-							songPlace.maparray = customLoadMapFromFile(ref fs).Item4;
-							// Make sure you're not out of bounds.
-							if (songPlace.maparray[0].GetLength(0) / 25 - 1 < pageNumber) {
-								pageNumber = 0;
+						
+						if (Path.GetExtension(ofd.FileName)==".gtmusic"){
+							songPlace.maparray = LoadMoronFormat(ofd.FileName);
+						}else{	
+							FileStream fs;
+							try {
+								fs = new FileStream(ofd.FileName, FileMode.Open);
 							}
+							catch (Exception ex) {
+								MessageBox.Show("Could not open file.\nDid you select nothing?\n" + ex.ToString());
+								return;
+							}
+							try {
+								songPlace.maparray = customLoadMapFromFile(ref fs,this).Item4;
+								// Make sure you're not out of bounds.
+								if (songPlace.maparray[0].GetLength(0) / 25 - 1 < pageNumber) {
+									pageNumber = 0;
+								}
+							}
+							catch (Exception ex) {
+								MessageBox.Show("There was an error loading the file.\nHere's the error.\n\n" + ex.ToString());
+							}
+							fs.Dispose();
 						}
-						catch (Exception ex) {
-							MessageBox.Show("There was an error loading the file.\nHere's the error.\n\n" + ex.ToString());
-						}
-						fs.Dispose();
 
 						needRedraw = true;
 						if (OptionHolder.showConfirmation) {
@@ -227,10 +250,10 @@ namespace GrowtopiaMusicSimulatorReborn
 						maxX = GetMaxX();
 					}else if (e.X>800){
 						PopBPM pbpm = new PopBPM(reverseBPMformula(OptionHolder.noteWait));
-						pbpm.StartPosition = FormStartPosition.CenterScreen;
+						pbpm.StartPosition = FormStartPosition.CenterParent;
 						pbpm.ShowDialog();
 						if (pbpm.numericUpDown1.Value < 20 || pbpm.numericUpDown1.Value > 200) {
-							MessageBox.Show ("Yo son.\nGrowtopia don't support dat BPM.\nBut you can still use it here.");
+							MessageBox.Show ("In Growtopia, BPM ranges from 20 to 200. You can't use this BPM in Growtopia, but you can use it in this simulator.");
 						}
 						OptionHolder.noteWait=(short)(bpmFormula(Convert.ToInt32(pbpm.numericUpDown1.Value)));
 						pbpm.Dispose();
@@ -265,6 +288,7 @@ namespace GrowtopiaMusicSimulatorReborn
 
 			ResizeArray(ref songPlace.maparray[0], (int)srp.songLengthBox.Value, 14);
 			ResizeArray(ref RepeatUsed, (int)srp.songLengthBox.Value, 14);
+			ResizeArray(ref possibleAudioRacks, (int)srp.songLengthBox.Value, 14);
 			if (maxX + 1 > songPlace.maparray[0].GetLength(0)) {
 				maxX = GetMaxX();
 			}
@@ -287,6 +311,15 @@ namespace GrowtopiaMusicSimulatorReborn
 			//create a new 2 dimensional array with
 			//the size we want
 			byte[,] newArray = new byte[rows, cols];
+			//copy the contents of the old array to the new one
+			Array.Copy(original, newArray, Math.Min(original.Length,rows*cols));
+			//set the original to the new array
+			original = newArray;
+		}
+		private void ResizeArray(ref AudioRack[,] original, int rows, int cols) {
+			//create a new 2 dimensional array with
+			//the size we want
+			AudioRack[,] newArray = new AudioRack[rows, cols];
 			//copy the contents of the old array to the new one
 			Array.Copy(original, newArray, Math.Min(original.Length,rows*cols));
 			//set the original to the new array
@@ -330,17 +363,68 @@ namespace GrowtopiaMusicSimulatorReborn
 			}
 		}
 
-
+		public static void LoadAudioGearInFile(ref BinaryReader file, ref byte[][,] workMap, int x, int y, MainForm tmf){
+			for (int i=0;i<5;i++){
+				tmf.possibleAudioRacks[x,y].noteInfo[i].noteValue=file.ReadByte();
+				tmf.possibleAudioRacks[x,y].noteInfo[i].noteYPosition=file.ReadByte();
+			}
+		}
+		
+		// Why is the note's name stored when they're already in order of the note?
+		public static byte[][,] LoadMoronFormat(string _filepath){
+			StreamReader sr = new StreamReader(new FileStream(_filepath,FileMode.Open));
+			if (sr.ReadLine()!="%cernmusicsim;"){
+				MessageBox.Show("Corrupt .gtmusic file! Magic letters not found.");
+			}
+			string _tempLine = sr.ReadLine();
+			OptionHolder.noteWait = (short)bpmFormula(int.Parse(_tempLine.Substring(_tempLine.IndexOf('=')+1,_tempLine.Length-_tempLine.IndexOf('=')-1)));
+			
+			byte[][,] workMap = new byte[1][,];
+			for (int i = 0; i < 1; i++) {
+				workMap [i] = new byte[400, 14];
+			}
+			for (int i=0;i<400;i++){
+				_tempLine = sr.ReadLine();
+				string[] _notesInThisColumn = _tempLine.Split(','); // Will have a length of 15 with the first element empty.
+				if (_notesInThisColumn.Length!=14){
+					Debug.Print(_tempLine);
+					Debug.Print("Becazuse it has a length of "+_notesInThisColumn.Length);
+					_tempLine = _tempLine.Substring(1);
+					_notesInThisColumn = _tempLine.Split(',');
+					Debug.Print("We now haz a length of "+_notesInThisColumn.Length);
+				}
+				//MessageBox.Show("Length of "+_notesInThisColumn.Length);
+				for (int j=0;j<14;j++){
+					//Debug.Print(j.ToString()+" "+i.ToString());
+					//Debug.Print(_notesInThisColumn[j]);
+					if (_notesInThisColumn[j].Length!=3){
+						continue;
+					}
+					//
+					byte _currentNoteId = AudioGearParseHelp.GetNoteIdFromInfo(Convert.ToChar(_notesInThisColumn[j].Substring(0,1)),Convert.ToChar(_notesInThisColumn[j].Substring(2,1))); // note char then accidental
+					workMap[0][i,13-(j)]=_currentNoteId;
+				}
+			}
+			
+			return workMap;
+		}
+		
 		// It came back to haunt me. Making it so I can have a maximum of 255x255 map. I had to write this custom method now.
-		public static Tuple<int,int,int,byte[][,]> customLoadMapFromFile(ref FileStream filea){
+		public static Tuple<int,int,int,byte[][,]> customLoadMapFromFile(ref FileStream filea, MainForm tmf){
 			BinaryReader file = new BinaryReader(filea);
 			int mapversion=file.ReadByte();
-
+			
 			// Set to true if the verification process marks this as probrablly not a Gms reborn file
 			bool failed=false;
-
-			// Verify that this is a Growtopia Music Simulator reborn song file.
-			if (mapversion == 4 || mapversion==5) {
+			
+			if (mapversion>OptionHolder.maxMusicFormat){
+				string happyString = System.Text.Encoding.UTF8.GetString(file.ReadBytes(4));
+				if (happyString == "GMSr"){
+					MessageBox.Show("This is a Growtopia Music Simulator Re;born song file, but its format version number is "+mapversion+" and this version only supports up to "+OptionHolder.maxMusicFormat+". Please update.");
+				}else{
+					failed=true;
+				}
+			}else if (mapversion >= 4) { // Verify that this is a Growtopia Music Simulator reborn song file.
 				try {
 					string happyString = System.Text.Encoding.UTF8.GetString(file.ReadBytes(4));
 					if (happyString != "GMSr") {
@@ -353,8 +437,7 @@ namespace GrowtopiaMusicSimulatorReborn
 					Debug.Print(ex.ToString());
 					failed = true;
 				}
-			}
-			else if (mapversion == 3) {
+			}else if (mapversion == 3) {
 				file.BaseStream.Position += 2;
 				byte[] nextBytes = file.ReadBytes(3);
 				if (!(nextBytes[0] == 1 && nextBytes[1] == 2 && nextBytes[2] == 3)) {
@@ -363,8 +446,7 @@ namespace GrowtopiaMusicSimulatorReborn
 				else {
 					file.BaseStream.Position -= 5;
 				}
-			}
-			else {
+			}else {
 				failed = true;
 			}
 
@@ -425,6 +507,12 @@ namespace GrowtopiaMusicSimulatorReborn
 									present = 244;
 									rolling = false;
 									workMap[i][x, y] = file.ReadByte ();
+									if (workMap[i][x,y]==MainForm.audioGearId){
+										LoadAudioGearInFile(ref file, ref workMap, x, y, tmf);
+										past=255;
+										present=254;
+										continue;
+									}
 									past = present;
 									present = Convert.ToByte (workMap[i][x, y]);
 									//Debug.Print ("Wrote: " + workMap [trueX, trueY].ToString () + " and present and past is: " + present.ToString () + " ; " + past.ToString () + ".");
@@ -433,11 +521,17 @@ namespace GrowtopiaMusicSimulatorReborn
 								workMap[i][x, y] = rollValue;
 								rollAmount--;
 								continue;
+							}else{
+								workMap[i][x, y] = file.ReadByte ();
+								if (workMap[i][x,y]==MainForm.audioGearId){
+									LoadAudioGearInFile(ref file, ref workMap, x, y, tmf);
+									past=255;
+									present=254;
+									continue;
+								}
+								past = present;
+								present = Convert.ToByte (workMap[i][x, y]);
 							}
-
-							workMap[i][x, y] = file.ReadByte ();
-							past = present;
-							present = Convert.ToByte (workMap[i][x, y]);
 							//Debug.Print ("Wrote: " + workMap [trueX, trueY].ToString () + " and present and past is: " + present.ToString () + " ; " + past.ToString () + ".");
 						} else {
 							if (rollAmount <= 0) {
@@ -446,13 +540,20 @@ namespace GrowtopiaMusicSimulatorReborn
 								present = 244;
 								rolling = false;
 								workMap[i][x, y] = file.ReadByte ();
+								if (workMap[i][x,y]==MainForm.audioGearId){
+									LoadAudioGearInFile(ref file, ref workMap, x, y, tmf);
+									past=255;
+									present=254;
+									continue;
+								}
 								past = present;
 								present = Convert.ToByte (workMap[i][x, y]);
 								//Debug.Print ("Wrote: " + workMap [trueX, trueY].ToString () + " and present and past is: " + present.ToString () + " ; " + past.ToString () + ".");
 								continue;
+							}else{
+								workMap[i][x, y] = rollValue;
+								rollAmount--;
 							}
-							workMap[i][x, y] = rollValue;
-							rollAmount--;
 
 						}
 					}
@@ -464,12 +565,6 @@ namespace GrowtopiaMusicSimulatorReborn
 			filea.Dispose();
 			return Tuple.Create (mapWidth, mapHeight,layers, workMap);
 		}
-
-
-
-
-
-
 
 		/// <summary>
 		/// Custom save method instead of using one with MapLibrary.
@@ -494,7 +589,7 @@ namespace GrowtopiaMusicSimulatorReborn
 			byte present=255;
 
 			// Groowtopia Music Simulator rebotn map format
-			br.Write(Convert.ToByte(5));
+			br.Write(Convert.ToByte(6));
 			// Write GMSR to define this as a Growtopia Music Simulator reborn song
 			br.Write(System.Text.Encoding.UTF8.GetBytes("GMSr"));
 			// Write bpm
@@ -512,8 +607,21 @@ namespace GrowtopiaMusicSimulatorReborn
 					for (int xa = 0; xa < songPlace.maparray[0].GetLength(0); xa++) {
 						topoffor:
 						if (!doingRun) {
+							
+							if ((songPlace.maparray [0] [xa, ya])==MainForm.audioGearId){
+								Debug.Print("Writign "+MainForm.audioGearId.ToString());
+								past=254;
+								present=255;
+								br.Write((byte)MainForm.audioGearId);
+								for (int i=0;i<5;i++){
+									br.Write(possibleAudioRacks[xa,ya].noteInfo[i].noteValue);
+									br.Write(possibleAudioRacks[xa,ya].noteInfo[i].noteYPosition);
+								}
+								continue;
+							}
+							
 							past = present;
-						present = Convert.ToByte ((songPlace.maparray [0] [xa, ya]));
+							present = Convert.ToByte ((songPlace.maparray [0] [xa, ya]));
 							br.Write (present);	
 							//Debug.Print ("Was: " + numero.ToString () + ".");
 							numero += 1;
@@ -528,7 +636,7 @@ namespace GrowtopiaMusicSimulatorReborn
 								//Debug.Print ("No pudedo. Last char is: " + byteworld [numero - 2].ToString () + " while this one is: " + byteworld [numero-1].ToString () + ".");
 							}
 						} else {
-						if (songPlace.maparray [0] [xa, ya] == currentRun && runNumber<=254) {
+							if (songPlace.maparray [0] [xa, ya] == currentRun && runNumber<=254) {
 								//Debug.Print ("Increment run number. "+world.maparray [xa, ya].ToString());
 								runNumber += 1;
 							} else {

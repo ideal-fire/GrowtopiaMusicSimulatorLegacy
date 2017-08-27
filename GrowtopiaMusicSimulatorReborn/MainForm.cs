@@ -15,6 +15,20 @@ using System.Net;
 
 namespace GrowtopiaMusicSimulatorReborn
 {
+	//enum NoteType : byte {Neutral, Sharp, Flat};
+	public struct SigleNoteInfo{
+		public byte noteValue;
+		public byte noteYPosition;
+	}
+	public struct AudioRack{
+		public AudioRack(int noob){
+			noteInfo = new SigleNoteInfo[5];
+			volume=100;
+		}
+		public SigleNoteInfo[] noteInfo;
+		public byte volume;
+	}
+	
 	/// <summary>
 	/// Place where you see all of da stuff.
 	/// Stuff is also done on here.
@@ -23,19 +37,19 @@ namespace GrowtopiaMusicSimulatorReborn
 	/// 
 	/// Four notes in each beat
 	/// All is played in 16th notes
-
 	public partial class MainForm : Form
 	{
 		// The map that's displayed
 		Map songPlace = new Map();
 		
 		byte[,] RepeatUsed;
+		AudioRack[,] possibleAudioRacks;
 		
 		// Normal paint handler
 		PaintEventHandler normalPaint;
 
 		// Array to hold all the images so we don't need if statements or something/
-		Bitmap[] noteImages;
+		public Bitmap[] noteImages;
 
 		// Threadz
 		Thread mainThread;
@@ -63,23 +77,24 @@ namespace GrowtopiaMusicSimulatorReborn
 		string[] saxSharpSounds = new string[14];
 		string[] spookySounds = new string[14];
 		
-		byte noteValue=1;
+		public byte noteValue=1;
 
 		//Various images
 		Bitmap playButtonImage;
 		Bitmap stopButtonImage;
 		Bitmap saveButtonImage;
 		Bitmap loadButtonImage;
-		Bitmap bigBG;
+		public Bitmap bigBG;
 		Bitmap rightButtonImage;
 		Bitmap leftButtonImage;
-		Bitmap gridImage;
+		public Bitmap gridImage;
 		Bitmap bpmButtonImage;
 		Bitmap yellowPlayButtonImage;
 		Bitmap creditsButtonImage;
 		Bitmap loadOldImage;
 		Bitmap optionsImage;
 		Bitmap resizeImage;
+		Bitmap countButtonImage;
 
 		// Misc stuffz
 		short pageNumber=0;
@@ -91,7 +106,7 @@ namespace GrowtopiaMusicSimulatorReborn
 
 
 		// Options
-		const byte redrawWait = 20;
+		public const byte redrawWait = 20;
 
 		// For drawing shapes and whatnot.
 		public static System.Drawing.Brush textBrush = new SolidBrush(System.Drawing.Color.Black);
@@ -104,8 +119,8 @@ namespace GrowtopiaMusicSimulatorReborn
 		/// <summary>
 		/// Version that is compared to pasebin version
 		/// </summary>
-		const short gmsVersion=9;
-		const string versionAsString = "2.9.1";
+		const short gmsVersion=10;
+		const string versionAsString = "2.3";
 
 		// Bar position displaying variable of doom
 		byte barX=0;
@@ -123,8 +138,23 @@ namespace GrowtopiaMusicSimulatorReborn
 		// Width/radio = height
 		const double sizeRatio = 15.0 / 26.0;
 
-		const int repeatStartId = 12;
-		const int repeatEndId = 13;
+		public const byte pianoId = 1;
+		public const byte pianoSharpId = 2;
+		public const byte pianoFlatId = 3;
+		public const byte bassId = 4;
+		public const byte bassSharpId = 5;
+		public const byte bassFlatId = 6;
+		public const byte drumId = 7;
+		public const byte blankId = 8;
+		public const byte saxId = 9;
+		public const byte saxSharpId = 10;
+		public const byte saxFlatId = 11;
+		public const byte repeatStartId = 12;
+		public const byte repeatEndId = 13;
+		public const byte spookyId = 14;
+		public const byte audioGearId = 15;
+		
+		public const byte maxNote=15;
 		
 		public MainForm()
 		{
@@ -146,14 +176,20 @@ namespace GrowtopiaMusicSimulatorReborn
 			this.FormBorderStyle = FormBorderStyle.FixedSingle;
 			songPlace.SetMap (25, 14, MapFunctions.NewMap (399, 13, 0, 1).Item3, 1);
 			
-			
 			RepeatUsed = new byte[songPlace.maparray[0].GetLength(0),songPlace.maparray[0].GetLength(1)];
+			possibleAudioRacks = new AudioRack[songPlace.maparray[0].GetLength(0),songPlace.maparray[0].GetLength(1)];
+			for (int i=0;i<songPlace.maparray[0].GetLength(0);i++){
+				for (int j=0;j<songPlace.maparray[0].GetLength(1);j++){
+					possibleAudioRacks[i,j] = new AudioRack(3);
+				}
+			}
 			
 			normalPaint = new PaintEventHandler (paint_stuff);
 			this.Paint += normalPaint;
 			// Load note images.
-			noteImages = new Bitmap[15];
+			noteImages = new Bitmap[16];
 			gridImage = loadBitmap ((Directory.GetCurrentDirectory()+"/Images/Grid.bmp"));
+			//noteImages [0] = gridImage;
 			noteImages [1] = loadBitmap ((Directory.GetCurrentDirectory()+"/Images/piano.png"));
 			noteImages [2] = loadBitmap ((Directory.GetCurrentDirectory()+"/Images/pianoSharp.png"));
 			noteImages [3] = loadBitmap ((Directory.GetCurrentDirectory()+"/Images/pianoFlat.png"));
@@ -168,6 +204,7 @@ namespace GrowtopiaMusicSimulatorReborn
 			noteImages [repeatStartId] = loadBitmap((Directory.GetCurrentDirectory()+"/Images/RepeatLeft.png")); // 17
 			noteImages [repeatEndId] = loadBitmap((Directory.GetCurrentDirectory()+"/Images/RepeatRight.png")); // 18
 			noteImages [14] = loadBitmap((Directory.GetCurrentDirectory()+"/Images/Spooky.png")); // 19
+			noteImages [15] = loadBitmap((Directory.GetCurrentDirectory()+"/Images/AudioGear.png"));
 			this.DoubleBuffered = true;
 			this.MouseDown += mouseDownWithScale;
 			this.MouseUp += mouseup;
@@ -188,7 +225,8 @@ namespace GrowtopiaMusicSimulatorReborn
 			loadOldImage = loadBitmap ((Directory.GetCurrentDirectory()+"/Images/loadOld.png"));
 			optionsImage = loadBitmap((Directory.GetCurrentDirectory() + "/Images/optionsButton.png"));
 			resizeImage = loadBitmap((Directory.GetCurrentDirectory() + "/Images/resizeButton.png"));
-
+			countButtonImage = loadBitmap((Directory.GetCurrentDirectory() + "/Images/CountButton.png"));
+			
 			// Set up sound engine thing
 			soundEngine = new ISoundEngine ();
 
@@ -260,12 +298,12 @@ namespace GrowtopiaMusicSimulatorReborn
 		void changeNoteWheel(object sender, MouseEventArgs e){
 			if (e.Delta < 0) {
 				if (noteValue == 0) {
-					noteValue = 13;
+					noteValue = maxNote;
 				} else {
 					noteValue--;
 				}
 			} else {
-				if (noteValue == 14) {
+				if (noteValue == maxNote) {
 					noteValue = 0;
 				} else {
 					noteValue++;
@@ -367,7 +405,12 @@ namespace GrowtopiaMusicSimulatorReborn
 							//Debug.Print(x +","+y+" is already used.");
 						}
 					}
-					playNote((songPlace.maparray[0][x,y]),(byte)y);
+					
+					if (songPlace.maparray[0][x,y]==audioGearId){
+						PlayAudioRack(possibleAudioRacks[x,y]);
+					}else{
+						playNote((songPlace.maparray[0][x,y]),(byte)y);
+					}
 					//if (songPlace.maparray[0][x,y]!=0 && songPlace.maparray[0][x,y]!=8){
 					//	soundEngine.Play2D(noteArrays[(songPlace.maparray[0][x,y])-1][y]);
 					//}
@@ -403,10 +446,16 @@ namespace GrowtopiaMusicSimulatorReborn
 				
 			}
 		}
-
-		void playNote(byte noteId, byte yLevel){
-			if (noteId > 0 && noteId<15) {
-				if (noteId!=0 && noteId!=8 && noteId!=12 && noteId!=13){
+		
+		void PlayAudioRack(AudioRack toPlay){
+			for (int i=0;i<5;i++){
+				playNote(toPlay.noteInfo[i].noteValue,toPlay.noteInfo[i].noteYPosition);
+			}
+		}
+		
+		public void playNote(byte noteId, byte yLevel){
+			if (noteId > 0 && noteId<maxNote+1) {
+				if (noteId!=0 && noteId!=blankId && noteId!=repeatStartId && noteId!=repeatEndId && noteId!=audioGearId){
 					soundEngine.Play2D (noteArrays [noteId - 1] [yLevel]);
 				}
 			}
@@ -430,16 +479,28 @@ namespace GrowtopiaMusicSimulatorReborn
 					maxX = GetMaxX();
 
 					return;
-				}
-				if (OptionHolder.playNoteOnPlace) {
-					playNote ((byte)noteValue, Convert.ToByte(e.Y / 32));
-				}
-				songPlace.maparray [0] [e.X / 32+(pageNumber*25), e.Y / 32] = (byte)noteValue;
-				needRedraw = true;
-				lastPlaceX = (byte)(e.X / 32);
-				lastPlaceY = (byte)(e.Y / 32);
-				if (lastPlaceX+pageNumber*25 > maxX) {
-					maxX = (lastPlaceX+pageNumber*25);
+				}else{
+					
+					if (noteValue==15 && songPlace.maparray [0] [e.X / 32+(pageNumber*25), e.Y / 32]==15){ // If you try to play audio gear/rack on top of another audio gear/rack.
+						Debug.Print("edit");
+						EditAudioRack pbpm = new EditAudioRack(possibleAudioRacks[e.X / 32+(pageNumber*25), e.Y / 32],this);
+						pbpm.StartPosition = FormStartPosition.CenterParent;
+						pbpm.ShowDialog();
+						possibleAudioRacks[e.X / 32+(pageNumber*25), e.Y / 32] = pbpm.editedAudioRack;
+						
+						mouseup(null,null);
+					}else{	
+						if (OptionHolder.playNoteOnPlace) {
+							playNote ((byte)noteValue, Convert.ToByte(e.Y / 32));
+						}
+						songPlace.maparray [0] [e.X / 32+(pageNumber*25), e.Y / 32] = (byte)noteValue;
+						needRedraw = true;
+						lastPlaceX = (byte)(e.X / 32);
+						lastPlaceY = (byte)(e.Y / 32);
+						if (lastPlaceX+pageNumber*25 > maxX) {
+							maxX = (lastPlaceX+pageNumber*25);
+						}
+					}
 				}
 			}
 		}
@@ -499,6 +560,7 @@ namespace GrowtopiaMusicSimulatorReborn
 			g.DrawString ("Page:" + (pageNumber + 1) + "/"+songPlace.maparray[0].GetLength(0)/25,textFont,textBrush,300,448);
 			g.DrawImage (creditsButtonImage, 448, 448);
 			g.DrawImage(resizeImage, 480, 448);
+			g.DrawImage (countButtonImage, 512, 448);
 			if (OptionHolder.playNoteOnPlace){
 				g.FillRectangle(greenBrush,224,448,32,32);
 			}else{

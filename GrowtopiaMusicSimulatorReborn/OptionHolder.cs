@@ -13,6 +13,8 @@ namespace GrowtopiaMusicSimulatorReborn
 		// 2 is 2.8(7) and below?
 		// 3 is when all notes (up to spooky) got hotkeys
 		public const byte maxOptionsFormat=3;
+		
+		public const byte maxMusicFormat=6;
 
 		/// <summary>
 		/// The hotkeys.
