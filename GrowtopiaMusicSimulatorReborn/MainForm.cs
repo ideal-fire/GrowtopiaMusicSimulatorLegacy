@@ -120,7 +120,7 @@ namespace GrowtopiaMusicSimulatorReborn
 		/// Version that is compared to pasebin version
 		/// </summary>
 		const short gmsVersion=10;
-		const string versionAsString = "2.3";
+		const string versionAsString = "3.0";
 
 		// Bar position displaying variable of doom
 		byte barX=0;
