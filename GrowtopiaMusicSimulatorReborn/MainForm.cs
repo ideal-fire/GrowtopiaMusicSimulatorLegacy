@@ -62,20 +62,20 @@ namespace GrowtopiaMusicSimulatorReborn
 		ISoundEngine soundEngine;
 
 		// Arrays to hold sound string references
-		string[] pianoSounds = new string[14];
-		string[] pianoSharpSounds = new string[14];
-		string[] pianoFlatSounds = new string[14];
-		string[] drumSounds = new string[14];
-		string[] bassSounds = new string[14];
-		string[] bassSharpSounds = new string[14];
-		string[] bassFlatSounds = new string[14];
+		string[] pianoSounds;
+		string[] pianoSharpSounds;
+		string[] pianoFlatSounds;
+		string[] drumSounds;
+		string[] bassSounds;
+		string[] bassSharpSounds;
+		string[] bassFlatSounds;
 		
 		string[][] noteArrays = new string[15][];
 
-		string[] saxSounds = new string[14];
-		string[] saxFlatSounds = new string[14];
-		string[] saxSharpSounds = new string[14];
-		string[] spookySounds = new string[14];
+		string[] saxSounds;
+		string[] saxFlatSounds;
+		string[] saxSharpSounds;
+		string[] spookySounds;
 		
 		public byte noteValue=1;
 
@@ -119,8 +119,8 @@ namespace GrowtopiaMusicSimulatorReborn
 		/// <summary>
 		/// Version that is compared to pasebin version
 		/// </summary>
-		const short gmsVersion=10;
-		const string versionAsString = "3.0";
+		const short gmsVersion=11;
+		const string versionAsString = "3.1";
 
 		// Bar position displaying variable of doom
 		byte barX=0;
@@ -167,8 +167,6 @@ namespace GrowtopiaMusicSimulatorReborn
 			Icon = new Icon((Directory.GetCurrentDirectory () + "/Images/icon.ico"));
 			this.Name = "GrowtopiaMusicSimulatorReborn";
 			this.Text = "Growtopia Music Simulator Re;born v"+versionAsString+" ("+gmsVersion+")";
-			// True size is 832x480
-			//this.Size = new System.Drawing.Size(848,518);
 			this.ClientSize = new Size(832, 480);
 			this.AutoScaleMode = AutoScaleMode.None;
 			this.MinimumSize = new Size(1, 1);
@@ -190,21 +188,21 @@ namespace GrowtopiaMusicSimulatorReborn
 			noteImages = new Bitmap[16];
 			gridImage = loadBitmap ((Directory.GetCurrentDirectory()+"/Images/Grid.bmp"));
 			//noteImages [0] = gridImage;
-			noteImages [1] = loadBitmap ((Directory.GetCurrentDirectory()+"/Images/piano.png"));
-			noteImages [2] = loadBitmap ((Directory.GetCurrentDirectory()+"/Images/pianoSharp.png"));
-			noteImages [3] = loadBitmap ((Directory.GetCurrentDirectory()+"/Images/pianoFlat.png"));
-			noteImages [4] = loadBitmap ((Directory.GetCurrentDirectory()+"/Images/bass.png"));
-			noteImages [5] = loadBitmap ((Directory.GetCurrentDirectory()+"/Images/bassSharp.png"));
-			noteImages [6] = loadBitmap ((Directory.GetCurrentDirectory()+"/Images/bassFlat.png"));
-			noteImages [7] = loadBitmap ((Directory.GetCurrentDirectory()+"/Images/drum.png")); // 12
-			noteImages [8] = loadBitmap ((Directory.GetCurrentDirectory()+"/Images/blankNote.png")); //13
-			noteImages [9] = loadBitmap((Directory.GetCurrentDirectory()+"/Images/Sax.png")); // 14
-			noteImages [10] = loadBitmap((Directory.GetCurrentDirectory()+"/Images/SaxSharp.png")); // 15
-			noteImages [11] = loadBitmap((Directory.GetCurrentDirectory()+"/Images/SaxFlat.png")); // 16
+			noteImages [pianoId] = loadBitmap ((Directory.GetCurrentDirectory()+"/Images/piano.png"));
+			noteImages [pianoSharpId] = loadBitmap ((Directory.GetCurrentDirectory()+"/Images/pianoSharp.png"));
+			noteImages [pianoFlatId] = loadBitmap ((Directory.GetCurrentDirectory()+"/Images/pianoFlat.png"));
+			noteImages [bassId] = loadBitmap ((Directory.GetCurrentDirectory()+"/Images/bass.png"));
+			noteImages [bassSharpId] = loadBitmap ((Directory.GetCurrentDirectory()+"/Images/bassSharp.png"));
+			noteImages [bassFlatId] = loadBitmap ((Directory.GetCurrentDirectory()+"/Images/bassFlat.png"));
+			noteImages [drumId] = loadBitmap ((Directory.GetCurrentDirectory()+"/Images/drum.png")); // 12
+			noteImages [blankId] = loadBitmap ((Directory.GetCurrentDirectory()+"/Images/blankNote.png")); //13
+			noteImages [saxId] = loadBitmap((Directory.GetCurrentDirectory()+"/Images/Sax.png")); // 14
+			noteImages [saxSharpId] = loadBitmap((Directory.GetCurrentDirectory()+"/Images/SaxSharp.png")); // 15
+			noteImages [saxFlatId] = loadBitmap((Directory.GetCurrentDirectory()+"/Images/SaxFlat.png")); // 16
 			noteImages [repeatStartId] = loadBitmap((Directory.GetCurrentDirectory()+"/Images/RepeatLeft.png")); // 17
 			noteImages [repeatEndId] = loadBitmap((Directory.GetCurrentDirectory()+"/Images/RepeatRight.png")); // 18
-			noteImages [14] = loadBitmap((Directory.GetCurrentDirectory()+"/Images/Spooky.png")); // 19
-			noteImages [15] = loadBitmap((Directory.GetCurrentDirectory()+"/Images/AudioGear.png"));
+			noteImages [spookyId] = loadBitmap((Directory.GetCurrentDirectory()+"/Images/Spooky.png")); // 19
+			noteImages [audioGearId] = loadBitmap((Directory.GetCurrentDirectory()+"/Images/AudioGear.png"));
 			this.DoubleBuffered = true;
 			this.MouseDown += mouseDownWithScale;
 			this.MouseUp += mouseup;
@@ -238,7 +236,46 @@ namespace GrowtopiaMusicSimulatorReborn
 			//soundEngine.Play2D("testsound.wav");
 
 			// Set the strings that can be used as argument to play sounds
-			SetSounds.setSoundArray(ref pianoSounds,ref pianoSharpSounds,ref pianoFlatSounds, ref drumSounds, ref bassSounds,ref bassSharpSounds,ref bassFlatSounds, ref saxSounds, ref saxSharpSounds, ref saxFlatSounds, ref spookySounds);
+			
+			LoadSounds.SetSoundNames(ref pianoSounds, ref pianoSharpSounds, ref pianoFlatSounds, "piano");
+			LoadSounds.SetSoundNames(ref bassSounds, ref bassSharpSounds, ref bassFlatSounds, "bass");
+			LoadSounds.SetSoundNames(ref saxSounds, ref saxSharpSounds, ref saxFlatSounds, "sax");
+			// spooky
+			// drum
+			drumSounds = new string[14];
+			drumSounds[0]="drum_0";
+			drumSounds[1]="drum_1";	
+			drumSounds[2]="drum_2";
+			drumSounds[3]="drum_3";
+			drumSounds[4]="drum_4";
+			drumSounds[5]="drum_5";
+			drumSounds[6]="drum_6";
+			drumSounds[7]="drum_0";
+			drumSounds[8]="drum_1";
+			drumSounds[9]="drum_2";
+			drumSounds[10]="drum_3";
+			drumSounds[11]="drum_4";
+			drumSounds[12]="drum_5";
+			drumSounds[13]="drum_6";
+			spookySounds = new string[14];
+			spookySounds[13]="spooky_1";
+			spookySounds[12]="spooky_3";
+			spookySounds[11]="spooky_5";
+			spookySounds[10]="spooky_6";
+			spookySounds[9]="spooky_8";
+			spookySounds[8]="spooky_10";
+			spookySounds[7]="spooky_12";
+			spookySounds[6]="spooky_13";
+			spookySounds[5]="spooky_15";
+			spookySounds[4]="spooky_17";
+			spookySounds[3]="spooky_18";
+			spookySounds[2]="spooky_20";
+			spookySounds[1]="spooky_22";
+			spookySounds[0]="spooky_24";
+
+			// Contains giant byte arrays for the sounds.
+			soundEngine = LoadSounds.loadTheSounds();
+			
 			noteArrays [0] = pianoSounds;
 			noteArrays [1] = pianoSharpSounds;
 			noteArrays [2] = pianoFlatSounds;
@@ -251,21 +288,15 @@ namespace GrowtopiaMusicSimulatorReborn
 			noteArrays [10] = saxFlatSounds;
 			noteArrays [13] = spookySounds;
 
-			// Contains giant byte arrays for the sounds.
-			soundEngine = SetSounds.setTheSounds ();
-
 			bigBG = loadBitmap ((Directory.GetCurrentDirectory () + "/Images/BigBG.png"));
 
 			try{
 				if (!(File.Exists (Directory.GetCurrentDirectory () + "/Images/_noUpdateCheck.nathan"))) {
-
 					WebClient client = new WebClient();
 					String downloadedString = client.DownloadString("http://pastebin.com/raw/VNLxD23j");
-			
 					if (Int32.Parse (downloadedString) > gmsVersion) {
 						MessageBox.Show ("Yo, there's a new version out.\nRemember to get it if you have the time.");
 					}
-
 					// Dispose.
 					client.Dispose();
 				}

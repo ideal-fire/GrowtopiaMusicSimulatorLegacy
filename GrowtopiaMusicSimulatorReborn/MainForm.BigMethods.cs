@@ -380,42 +380,61 @@ namespace GrowtopiaMusicSimulatorReborn
 			OptionHolder.noteWait = (short)bpmFormula(int.Parse(_tempLine.Substring(_tempLine.IndexOf('=')+1,_tempLine.Length-_tempLine.IndexOf('=')-1)));
 			
 			byte[][,] workMap = new byte[1][,];
-			for (int i = 0; i < 1; i++) {
-				workMap [i] = new byte[400, 14];
-			}
+			workMap [0] = new byte[400, 14];
+			
 			for (int i=0;i<400;i++){
 				_tempLine = sr.ReadLine();
 				string[] _notesInThisColumn = _tempLine.Split(','); // Will have a length of 15 with the first element empty.
-				if (_notesInThisColumn.Length!=14){
-					Debug.Print(_tempLine);
-					Debug.Print("Becazuse it has a length of "+_notesInThisColumn.Length);
-					_tempLine = _tempLine.Substring(1);
-					_notesInThisColumn = _tempLine.Split(',');
-					Debug.Print("We now haz a length of "+_notesInThisColumn.Length);
-				}
-				//MessageBox.Show("Length of "+_notesInThisColumn.Length);
-				for (int j=0;j<14;j++){
+				for (int j=0;j<_notesInThisColumn.Length;j++){
 					//Debug.Print(j.ToString()+" "+i.ToString());
 					//Debug.Print(_notesInThisColumn[j]);
 					if (_notesInThisColumn[j].Length!=3){
 						continue;
 					}
 					//
-					byte _currentNoteId = AudioGearParseHelp.GetNoteIdFromInfo(Convert.ToChar(_notesInThisColumn[j].Substring(0,1)),Convert.ToChar(_notesInThisColumn[j].Substring(2,1))); // note char then accidental
-					workMap[0][i,13-(j)]=_currentNoteId;
+					//byte _currentNoteId = AudioGearParseHelp.GetNoteIdFromInfo(Convert.ToChar(_notesInThisColumn[j].Substring(0,1)),Convert.ToChar(_notesInThisColumn[j].Substring(2,1))); // note char then accidental
+					//workMap[0][i,13-(j)]=_currentNoteId;
+					char[] _textAsCharArray = _notesInThisColumn[j].ToCharArray();
+					byte _currentNoteId = AudioGearParseHelp.GetNoteIdFromInfo(_textAsCharArray[0],_textAsCharArray[2]);
+					workMap[0][i,AudioGearParseHelp.NoteNameToY(_textAsCharArray[1])] = _currentNoteId;
 				}
 			}
 			
 			return workMap;
 		}
 		
+		// File stream has already seeked pasted "GMSO"
+		public static byte[][,] LoadGrowtopiaMusicSimulatorOnlineFile(ref FileStream file){
+			byte[][,] workMap = new byte[1][,];
+			file.Seek(4,SeekOrigin.Current);
+			workMap[0] = new byte[400,14];
+			for (int i=0;i<400;i++){
+				for (int j=0;j<14;j++){
+					workMap[0][i,j] = (byte)(file.ReadByte()-48); // Subtract 48 to convert from ASCII
+					//Debug.Print(workMap[0][i,j].ToString());
+				}
+			}
+			return workMap;
+		}
+		
 		// It came back to haunt me. Making it so I can have a maximum of 255x255 map. I had to write this custom method now.
+		// Tuple is map width, map height, map layers, and map.
 		public static Tuple<int,int,int,byte[][,]> customLoadMapFromFile(ref FileStream filea, MainForm tmf){
 			BinaryReader file = new BinaryReader(filea);
 			int mapversion=file.ReadByte();
 			
 			// Set to true if the verification process marks this as probrablly not a Gms reborn file
 			bool failed=false;
+			
+			if (mapversion==71){ // This is "G" in ASCII. This is the first letter of "GMSO", the magic word for Growtopia Music Simulator Online files.
+				string magicGMSOString = "G"+System.Text.Encoding.UTF8.GetString(file.ReadBytes(3));
+				if (magicGMSOString=="GMSO"){
+					//MessageBox.Show("Growtopia Music Simulator Online file detected.");
+					return Tuple.Create(400,14,1,LoadGrowtopiaMusicSimulatorOnlineFile(ref filea));
+				}else{ // If not, seek back.
+					file.BaseStream.Seek(1,SeekOrigin.Begin);
+				}
+			}
 			
 			if (mapversion>OptionHolder.maxMusicFormat){
 				string happyString = System.Text.Encoding.UTF8.GetString(file.ReadBytes(4));
@@ -446,24 +465,15 @@ namespace GrowtopiaMusicSimulatorReborn
 				else {
 					file.BaseStream.Position -= 5;
 				}
-			}else {
+			}else{
 				failed = true;
 			}
 
 			if (failed) {
-				filea.Close();
-				filea.Dispose();
 				file.Close();
 				file.Dispose();
-				DialogResult dialogAnswer = MessageBox.Show("This probrablly isn't a Growtopia Music Simulator Re;born song file.\nIf this is a file from the old Growtopia Music Simulator, you can load it.\nIs this an old Growtopia Music Simulator song file?\n(One from the Growtopia Music Simulator that runs on Java)", "Wierd file detected", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-
-				if (dialogAnswer == DialogResult.Yes) {
-					MessageBox.Show("Please use the button labeled 'old' to load an old Growtopia Music Simulator song file.");
-					throw (new ArgumentException("Please use the button labeled 'old' to load an old Growtopia Music Simulator song file."));
-				}
-				else {
-					throw (new ArgumentException("oh. If it's not a Growtopia Music Simulator Re;born song file, or an old Growtopia Music Simulator song file then it can't be loaded."));
-				}
+				MessageBox.Show("Corrupted or invalid Growtopia Music Simulator Re;born song file.\nIf this is an old Growtopia Music Simulator file (2015 Java version) then you can load it with the \"Load OLD\" button.", "Wierd file detected");
+				throw(new ArgumentException("Invalid Growtopia Music Simulator Re;born file."));
 			}
 
 			OptionHolder.noteWait = (short)bpmFormula((int)file.ReadInt16());
