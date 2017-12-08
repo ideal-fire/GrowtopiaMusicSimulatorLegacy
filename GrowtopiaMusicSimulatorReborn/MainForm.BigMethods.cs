@@ -269,7 +269,13 @@ namespace GrowtopiaMusicSimulatorReborn
 		public static int reverseBPMformula(int re){
 			return 15000/re;
 		}
-
+		
+		void actuallyDoTheResize(int _width){
+			ResizeArray(ref songPlace.maparray[0], _width, 14);
+			ResizeArray(ref RepeatUsed, _width, 14);
+			ResizeArray(ref possibleAudioRacks, _width, 14);
+		}
+		
 		void resizeSong() {
 			SongResizePopup srp = new SongResizePopup(songPlace.maparray[0].GetLength(0));
 			srp.ShowDialog();
@@ -285,10 +291,8 @@ namespace GrowtopiaMusicSimulatorReborn
 					return;
 				}
 			}
-
-			ResizeArray(ref songPlace.maparray[0], (int)srp.songLengthBox.Value, 14);
-			ResizeArray(ref RepeatUsed, (int)srp.songLengthBox.Value, 14);
-			ResizeArray(ref possibleAudioRacks, (int)srp.songLengthBox.Value, 14);
+			
+			actuallyDoTheResize((int)srp.songLengthBox.Value);
 			if (maxX + 1 > songPlace.maparray[0].GetLength(0)) {
 				maxX = GetMaxX();
 			}
@@ -324,6 +328,15 @@ namespace GrowtopiaMusicSimulatorReborn
 			Array.Copy(original, newArray, Math.Min(original.Length,rows*cols));
 			//set the original to the new array
 			original = newArray;
+			
+			for (int i=0;i<original.GetLength(0);i++){
+				for (int j=0;j<original.GetLength(1);j++){
+					if (possibleAudioRacks[i,j].noteInfo==null){
+						possibleAudioRacks[i,j] = new AudioRack(3);
+					}
+				}
+			}
+			
 		}
 
 		// Map format revisions:
@@ -500,6 +513,10 @@ namespace GrowtopiaMusicSimulatorReborn
 			for (int i = 0; i < layers; i++) {
 				workMap [i] = new byte[mapWidth, 14];
 			}
+			
+			// HACK - E-z fix
+			tmf.actuallyDoTheResize(mapWidth);
+			
 			//Debug.Print(mapversion.ToString()+";"+mapWidth.ToString()+";"+mapHeight.ToString()+".");
 			for (int i = 0; i < layers; i++) {
 				for (int y = 0; y < mapHeight; y++) {

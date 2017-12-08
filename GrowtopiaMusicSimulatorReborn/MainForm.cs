@@ -158,7 +158,12 @@ namespace GrowtopiaMusicSimulatorReborn
 		
 		public MainForm()
 		{
-			// Check for the credits file.
+			if (Directory.Exists("./Images")==false){
+				MessageBox.Show("./Images is missing.");
+			}
+			if (Directory.Exists("./NoteSounds")==false){
+				MessageBox.Show("./NoteSounds is missing.");
+			}
 			if (File.Exists (Directory.GetCurrentDirectory () + "/Images/_useOld.nathan")) {
 				OptionHolder.timerMode = true;
 			}
