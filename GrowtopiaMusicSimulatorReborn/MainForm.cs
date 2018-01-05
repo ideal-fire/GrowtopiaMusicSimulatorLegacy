@@ -119,8 +119,8 @@ namespace GrowtopiaMusicSimulatorReborn
 		/// <summary>
 		/// Version that is compared to pasebin version
 		/// </summary>
-		const short gmsVersion=11;
-		const string versionAsString = "3.1";
+		const short gmsVersion=13;
+		const string versionAsString = "3.3";
 
 		// Bar position displaying variable of doom
 		byte barX=0;
@@ -395,11 +395,12 @@ namespace GrowtopiaMusicSimulatorReborn
 				
 				if (_pleaseLookForRepeatsAfterwards==true){
 					//Debug.Print("Looking for repeat...");
-					for (int x2 = x-1; x2 > 0; x2--) {
+					for (int x2 = x-1; x2 >= 0; x2--) {
 					//for (int x2 = 0; x2 < songPlace.maparray[0].GetLength(0); x2++) {
 						//Debug.Print("Checking at {0}",x2);
 						if (songPlace.maparray[0][x2,lookForY]==repeatStartId){
 							//Debug.Print("Found at {0}. x is {1}",x2,x);
+							//Debug.Print("x2 is {0} x is {1}",x2,x);
 							// Reset repeat notes within the repeat region
 							for (int k=x-2;k>x2;k--){ // x is the current x position in the song. We subtract 1 because the loop continued and it increased itself and subtract 1 because we don't want to reset the same X position as the repeat note just used. In total, we subtract 2.
 								//Debug.Print("resetting on {0}",k);
@@ -411,9 +412,6 @@ namespace GrowtopiaMusicSimulatorReborn
 							barX=(byte)(x % 25);
 							pageNumber=(short)Math.Floor((double)(x/25));
 							_pleaseLookForRepeatsAfterwards=false;
-							
-							
-							
 						}
 						if (_pleaseLookForRepeatsAfterwards==false){
 							break;
@@ -435,7 +433,7 @@ namespace GrowtopiaMusicSimulatorReborn
 						if (RepeatUsed[x,y]==0){
 							_pleaseLookForRepeatsAfterwards=true;
 							lookForY=y;
-							Debug.Print(x +","+y+" is now used.");
+							//Debug.Print(x +","+y+" is now used.");
 							RepeatUsed[x,y]=1;
 						}else{
 							//Debug.Print(x +","+y+" is already used.");

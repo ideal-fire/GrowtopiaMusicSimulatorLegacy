@@ -3,6 +3,8 @@ using IrrKlang;
 using System.IO;
 using System.Diagnostics;
 
+//https://web.archive.org/web/20171208220332/https://www.growtopiagame.com/forums/archive/index.php/t-208287.html
+
 namespace GrowtopiaMusicSimulatorReborn{
 	
 public static class LoadSounds{
@@ -49,7 +51,7 @@ public static class LoadSounds{
 			noteSharpSounds[4]=noteSounds[3];
 			noteSharpSounds[5]=noteFlatSounds[4];
 			noteSharpSounds[6]=noteFlatSounds[5];
-			noteSharpSounds[7]=noteSounds[7];
+			noteSharpSounds[7]=noteSounds[6];
 			noteSharpSounds[8]=noteFlatSounds[7];
 			noteSharpSounds[9]=noteFlatSounds[8];
 			noteSharpSounds[10]=noteFlatSounds[9];
