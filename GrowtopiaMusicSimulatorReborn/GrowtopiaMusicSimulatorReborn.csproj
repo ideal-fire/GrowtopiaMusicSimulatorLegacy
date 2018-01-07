@@ -98,8 +98,6 @@
     <Compile Include="SongResizePopup.Designer.cs">
       <DependentUpon>SongResizePopup.cs</DependentUpon>
     </Compile>
-    <Compile Include="TitleScreen.cs" />
-    <Compile Include="RealMain.cs" />
     <Compile Include="TickTimer.cs" />
   </ItemGroup>
   <ItemGroup>

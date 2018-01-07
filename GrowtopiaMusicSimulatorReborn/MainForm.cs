@@ -119,8 +119,8 @@ namespace GrowtopiaMusicSimulatorReborn
 		/// <summary>
 		/// Version that is compared to pasebin version
 		/// </summary>
-		const short gmsVersion=13;
-		const string versionAsString = "3.3";
+		const short gmsVersion=14;
+		const string versionAsString = "3.4";
 
 		// Bar position displaying variable of doom
 		byte barX=0;
@@ -156,27 +156,33 @@ namespace GrowtopiaMusicSimulatorReborn
 		
 		public const byte maxNote=15;
 		
-		public MainForm()
-		{
-			if (Directory.Exists("./Images")==false){
-				MessageBox.Show("./Images is missing.");
+		void warnIfMissingFolder(string _foldername){
+			if (!Directory.Exists(_foldername)){
+				MessageBox.Show(_foldername+" is missing.");
 			}
-			if (Directory.Exists("./NoteSounds")==false){
-				MessageBox.Show("./NoteSounds is missing.");
-			}
-			if (File.Exists (Directory.GetCurrentDirectory () + "/Images/_useOld.nathan")) {
+		}
+		
+		public MainForm(string[] args){
+			//AppDomain.CurrentDomain.BaseDirectory
+			warnIfMissingFolder(AppDomain.CurrentDomain.BaseDirectory+"Images");
+			warnIfMissingFolder(AppDomain.CurrentDomain.BaseDirectory+"NoteSounds");
+			if (File.Exists (AppDomain.CurrentDomain.BaseDirectory + "/Images/_useOld.nathan")) {
 				OptionHolder.timerMode = true;
 			}
 			// Load options
 			loadOptionsFile(ref OptionHolder.playNoteOnPlace,ref OptionHolder.showConfirmation,ref OptionHolder.byteEX, ref OptionHolder.hotkeys);
-			Icon = new Icon((Directory.GetCurrentDirectory () + "/Images/icon.ico"));
+			Icon = new Icon((AppDomain.CurrentDomain.BaseDirectory + "/Images/icon.ico"));
 			this.Name = "GrowtopiaMusicSimulatorReborn";
 			this.Text = "Growtopia Music Simulator Re;born v"+versionAsString+" ("+gmsVersion+")";
 			this.ClientSize = new Size(832, 480);
 			this.AutoScaleMode = AutoScaleMode.None;
 			this.MinimumSize = new Size(1, 1);
-			// Turne off form reszing.
-			this.FormBorderStyle = FormBorderStyle.FixedSingle;
+			if (OptionHolder.canResizeWindow){
+				this.FormBorderStyle = FormBorderStyle.Sizable;
+				this.Resize += windowResized;
+			}else{
+				this.FormBorderStyle = FormBorderStyle.FixedSingle;
+			}
 			songPlace.SetMap (25, 14, MapFunctions.NewMap (399, 13, 0, 1).Item3, 1);
 			
 			RepeatUsed = new byte[songPlace.maparray[0].GetLength(0),songPlace.maparray[0].GetLength(1)];
@@ -191,23 +197,23 @@ namespace GrowtopiaMusicSimulatorReborn
 			this.Paint += normalPaint;
 			// Load note images.
 			noteImages = new Bitmap[16];
-			gridImage = loadBitmap ((Directory.GetCurrentDirectory()+"/Images/Grid.bmp"));
+			gridImage = loadBitmap ((AppDomain.CurrentDomain.BaseDirectory+"/Images/Grid.bmp"));
 			//noteImages [0] = gridImage;
-			noteImages [pianoId] = loadBitmap ((Directory.GetCurrentDirectory()+"/Images/piano.png"));
-			noteImages [pianoSharpId] = loadBitmap ((Directory.GetCurrentDirectory()+"/Images/pianoSharp.png"));
-			noteImages [pianoFlatId] = loadBitmap ((Directory.GetCurrentDirectory()+"/Images/pianoFlat.png"));
-			noteImages [bassId] = loadBitmap ((Directory.GetCurrentDirectory()+"/Images/bass.png"));
-			noteImages [bassSharpId] = loadBitmap ((Directory.GetCurrentDirectory()+"/Images/bassSharp.png"));
-			noteImages [bassFlatId] = loadBitmap ((Directory.GetCurrentDirectory()+"/Images/bassFlat.png"));
-			noteImages [drumId] = loadBitmap ((Directory.GetCurrentDirectory()+"/Images/drum.png")); // 12
-			noteImages [blankId] = loadBitmap ((Directory.GetCurrentDirectory()+"/Images/blankNote.png")); //13
-			noteImages [saxId] = loadBitmap((Directory.GetCurrentDirectory()+"/Images/Sax.png")); // 14
-			noteImages [saxSharpId] = loadBitmap((Directory.GetCurrentDirectory()+"/Images/SaxSharp.png")); // 15
-			noteImages [saxFlatId] = loadBitmap((Directory.GetCurrentDirectory()+"/Images/SaxFlat.png")); // 16
-			noteImages [repeatStartId] = loadBitmap((Directory.GetCurrentDirectory()+"/Images/RepeatLeft.png")); // 17
-			noteImages [repeatEndId] = loadBitmap((Directory.GetCurrentDirectory()+"/Images/RepeatRight.png")); // 18
-			noteImages [spookyId] = loadBitmap((Directory.GetCurrentDirectory()+"/Images/Spooky.png")); // 19
-			noteImages [audioGearId] = loadBitmap((Directory.GetCurrentDirectory()+"/Images/AudioGear.png"));
+			noteImages [pianoId] = loadBitmap ((AppDomain.CurrentDomain.BaseDirectory+"/Images/piano.png"));
+			noteImages [pianoSharpId] = loadBitmap ((AppDomain.CurrentDomain.BaseDirectory+"/Images/pianoSharp.png"));
+			noteImages [pianoFlatId] = loadBitmap ((AppDomain.CurrentDomain.BaseDirectory+"/Images/pianoFlat.png"));
+			noteImages [bassId] = loadBitmap ((AppDomain.CurrentDomain.BaseDirectory+"/Images/bass.png"));
+			noteImages [bassSharpId] = loadBitmap ((AppDomain.CurrentDomain.BaseDirectory+"/Images/bassSharp.png"));
+			noteImages [bassFlatId] = loadBitmap ((AppDomain.CurrentDomain.BaseDirectory+"/Images/bassFlat.png"));
+			noteImages [drumId] = loadBitmap ((AppDomain.CurrentDomain.BaseDirectory+"/Images/drum.png")); // 12
+			noteImages [blankId] = loadBitmap ((AppDomain.CurrentDomain.BaseDirectory+"/Images/blankNote.png")); //13
+			noteImages [saxId] = loadBitmap((AppDomain.CurrentDomain.BaseDirectory+"/Images/Sax.png")); // 14
+			noteImages [saxSharpId] = loadBitmap((AppDomain.CurrentDomain.BaseDirectory+"/Images/SaxSharp.png")); // 15
+			noteImages [saxFlatId] = loadBitmap((AppDomain.CurrentDomain.BaseDirectory+"/Images/SaxFlat.png")); // 16
+			noteImages [repeatStartId] = loadBitmap((AppDomain.CurrentDomain.BaseDirectory+"/Images/RepeatLeft.png")); // 17
+			noteImages [repeatEndId] = loadBitmap((AppDomain.CurrentDomain.BaseDirectory+"/Images/RepeatRight.png")); // 18
+			noteImages [spookyId] = loadBitmap((AppDomain.CurrentDomain.BaseDirectory+"/Images/Spooky.png")); // 19
+			noteImages [audioGearId] = loadBitmap((AppDomain.CurrentDomain.BaseDirectory+"/Images/AudioGear.png"));
 			this.DoubleBuffered = true;
 			this.MouseDown += mouseDownWithScale;
 			this.MouseUp += mouseup;
@@ -216,19 +222,19 @@ namespace GrowtopiaMusicSimulatorReborn
 			Application.ApplicationExit += new EventHandler(this.closeStuff);
 
 			// Load misc images
-			playButtonImage = loadBitmap ((Directory.GetCurrentDirectory()+"/Images/playButton.png"));
-			stopButtonImage = loadBitmap ((Directory.GetCurrentDirectory()+"/Images/stopButton.png"));
-			saveButtonImage = loadBitmap ((Directory.GetCurrentDirectory()+"/Images/saveButton.png"));
-			loadButtonImage = loadBitmap ((Directory.GetCurrentDirectory()+"/Images/loadButton.png"));
-			leftButtonImage = loadBitmap ((Directory.GetCurrentDirectory()+"/Images/leftButton.png"));
-			rightButtonImage = loadBitmap ((Directory.GetCurrentDirectory()+"/Images/rightButton.png"));
-			bpmButtonImage = loadBitmap ((Directory.GetCurrentDirectory()+"/Images/bpmButton.png"));
-			yellowPlayButtonImage = loadBitmap ((Directory.GetCurrentDirectory()+"/Images/yellowPlayButton.png"));
-			creditsButtonImage = loadBitmap ((Directory.GetCurrentDirectory()+"/Images/creditsButton.png"));
-			loadOldImage = loadBitmap ((Directory.GetCurrentDirectory()+"/Images/loadOld.png"));
-			optionsImage = loadBitmap((Directory.GetCurrentDirectory() + "/Images/optionsButton.png"));
-			resizeImage = loadBitmap((Directory.GetCurrentDirectory() + "/Images/resizeButton.png"));
-			countButtonImage = loadBitmap((Directory.GetCurrentDirectory() + "/Images/CountButton.png"));
+			playButtonImage = loadBitmap ((AppDomain.CurrentDomain.BaseDirectory+"/Images/playButton.png"));
+			stopButtonImage = loadBitmap ((AppDomain.CurrentDomain.BaseDirectory+"/Images/stopButton.png"));
+			saveButtonImage = loadBitmap ((AppDomain.CurrentDomain.BaseDirectory+"/Images/saveButton.png"));
+			loadButtonImage = loadBitmap ((AppDomain.CurrentDomain.BaseDirectory+"/Images/loadButton.png"));
+			leftButtonImage = loadBitmap ((AppDomain.CurrentDomain.BaseDirectory+"/Images/leftButton.png"));
+			rightButtonImage = loadBitmap ((AppDomain.CurrentDomain.BaseDirectory+"/Images/rightButton.png"));
+			bpmButtonImage = loadBitmap ((AppDomain.CurrentDomain.BaseDirectory+"/Images/bpmButton.png"));
+			yellowPlayButtonImage = loadBitmap ((AppDomain.CurrentDomain.BaseDirectory+"/Images/yellowPlayButton.png"));
+			creditsButtonImage = loadBitmap ((AppDomain.CurrentDomain.BaseDirectory+"/Images/creditsButton.png"));
+			loadOldImage = loadBitmap ((AppDomain.CurrentDomain.BaseDirectory+"/Images/loadOld.png"));
+			optionsImage = loadBitmap((AppDomain.CurrentDomain.BaseDirectory + "/Images/optionsButton.png"));
+			resizeImage = loadBitmap((AppDomain.CurrentDomain.BaseDirectory + "/Images/resizeButton.png"));
+			countButtonImage = loadBitmap((AppDomain.CurrentDomain.BaseDirectory + "/Images/CountButton.png"));
 			
 			// Set up sound engine thing
 			soundEngine = new ISoundEngine ();
@@ -293,10 +299,10 @@ namespace GrowtopiaMusicSimulatorReborn
 			noteArrays [10] = saxFlatSounds;
 			noteArrays [13] = spookySounds;
 
-			bigBG = loadBitmap ((Directory.GetCurrentDirectory () + "/Images/BigBG.png"));
+			bigBG = loadBitmap ((AppDomain.CurrentDomain.BaseDirectory + "/Images/BigBG.png"));
 
 			try{
-				if (!(File.Exists (Directory.GetCurrentDirectory () + "/Images/_noUpdateCheck.nathan"))) {
+				if (!(File.Exists (AppDomain.CurrentDomain.BaseDirectory + "/Images/_noUpdateCheck.txt") || File.Exists (AppDomain.CurrentDomain.BaseDirectory + "/Images/_noUpdateCheck.nathan"))) {
 					WebClient client = new WebClient();
 					String downloadedString = client.DownloadString("http://pastebin.com/raw/VNLxD23j");
 					if (Int32.Parse (downloadedString) > gmsVersion) {
@@ -315,13 +321,15 @@ namespace GrowtopiaMusicSimulatorReborn
 
 			this.FormClosing+=new FormClosingEventHandler(mainFormClosing);
 			this.KeyDown += new KeyEventHandler(mainFormKeyDown);
-
-			//this.Resize += windowResized;
+			
+			if (args.Length==1){
+				easyOpenSongFile(args[0]);
+				maxX = GetMaxX();
+			}
 		}
-
-
+		// TODO - Fix this, shrinking window doesn't work unless you use the corner.
 		void windowResized(object sender, EventArgs e) {
-			return;
+			// Don't need to check if window resize is enabled because this method is only used if it's on
 			if (ClientSize.Width * sizeRatio > ClientSize.Height) {
 				this.ClientSize = new Size(ClientSize.Width, (int)(ClientSize.Width * sizeRatio));
 			} else {
@@ -575,6 +583,7 @@ namespace GrowtopiaMusicSimulatorReborn
 		}
 
 		void drawUI(Graphics g){
+			g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
 			if (noteValue > 0) {
 				g.DrawImage (noteImages [noteValue], 32, 448);
 			} else {

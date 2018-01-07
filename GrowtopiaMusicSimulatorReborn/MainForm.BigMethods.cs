@@ -31,7 +31,7 @@ namespace GrowtopiaMusicSimulatorReborn
 		public static void loadOptionsFile(ref bool _playOnPlace, ref bool _showConfirmation, ref bool _byteEX, ref byte[] hotkeys){
 			FileStream file;
 			try{
-				file = new FileStream((Directory.GetCurrentDirectory () + "/Images/Options.txt"),FileMode.Open);
+				file = new FileStream((AppDomain.CurrentDomain.BaseDirectory + "/Images/Options.txt"),FileMode.Open);
 			}catch{
 				//MessageBox.Show ("Options file not found.\nWill create a new one.");
 				easySaveOptions ();
@@ -73,7 +73,7 @@ namespace GrowtopiaMusicSimulatorReborn
 		}
 		
 		public static void saveOptionsFile(bool _playOnPlace, bool _showConfirmation, bool _byteEX, byte[] hotkeys){
-			FileStream file = new FileStream((Directory.GetCurrentDirectory () + "/Images/Options.txt"),FileMode.Create);
+			FileStream file = new FileStream((AppDomain.CurrentDomain.BaseDirectory + "/Images/Options.txt"),FileMode.Create);
 			BinaryWriter bw = new BinaryWriter(file);
 			// Options file version
 			bw.Write((byte)OptionHolder.maxOptionsFormat);
@@ -90,6 +90,32 @@ namespace GrowtopiaMusicSimulatorReborn
 			file.Dispose();
 		}
 
+		void easyOpenSongFile(string _filename){
+			if (Path.GetExtension(_filename)==".gtmusic"){
+				songPlace.maparray = LoadMoronFormat(_filename);
+			}else{	
+				FileStream fs;
+				try {
+					fs = new FileStream(_filename, FileMode.Open);
+				}
+				catch (Exception ex) {
+					MessageBox.Show("Could not open file.\nDid you select nothing?\n" + ex.ToString());
+					return;
+				}
+				try {
+					songPlace.maparray = customLoadMapFromFile(ref fs,this).Item4;
+					// Make sure you're not out of bounds.
+					if (songPlace.maparray[0].GetLength(0) / 25 - 1 < pageNumber) {
+						pageNumber = 0;
+					}
+				}
+				catch (Exception ex) {
+					MessageBox.Show("There was an error loading the file.\nHere's the error.\n\n" + ex.ToString());
+				}
+				fs.Dispose();
+			}
+		}
+		
 		void checkUI(MouseEventArgs e){
 			if (e.X<32){
 				// When you press play button.
@@ -165,10 +191,10 @@ namespace GrowtopiaMusicSimulatorReborn
 						}
 						needRedraw = true;
 					} else if (e.X < 256) {
-					// Play note on place
+						// Play note on place
 						OptionHolder.playNoteOnPlace = !OptionHolder.playNoteOnPlace;
 						easySaveOptions ();
-						MessageBox.Show ("Play note on place is now:" + OptionHolder.playNoteOnPlace.ToString () + "\nOptions file saved.");
+						MessageBox.Show ("Play note on place is now " + OptionHolder.playNoteOnPlace.ToString () + "\nOptions file saved.");
 						needRedraw = true;
 					} else if (e.X < 288) {
 						//OptionHolder.showConfirmation = !OptionHolder.showConfirmation;
@@ -219,29 +245,7 @@ namespace GrowtopiaMusicSimulatorReborn
 							return;
 						}
 						
-						if (Path.GetExtension(ofd.FileName)==".gtmusic"){
-							songPlace.maparray = LoadMoronFormat(ofd.FileName);
-						}else{	
-							FileStream fs;
-							try {
-								fs = new FileStream(ofd.FileName, FileMode.Open);
-							}
-							catch (Exception ex) {
-								MessageBox.Show("Could not open file.\nDid you select nothing?\n" + ex.ToString());
-								return;
-							}
-							try {
-								songPlace.maparray = customLoadMapFromFile(ref fs,this).Item4;
-								// Make sure you're not out of bounds.
-								if (songPlace.maparray[0].GetLength(0) / 25 - 1 < pageNumber) {
-									pageNumber = 0;
-								}
-							}
-							catch (Exception ex) {
-								MessageBox.Show("There was an error loading the file.\nHere's the error.\n\n" + ex.ToString());
-							}
-							fs.Dispose();
-						}
+						easyOpenSongFile(ofd.FileName);
 
 						needRedraw = true;
 						if (OptionHolder.showConfirmation) {

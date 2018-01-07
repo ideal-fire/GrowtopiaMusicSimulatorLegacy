@@ -6,16 +6,18 @@ namespace GrowtopiaMusicSimulatorReborn
 {
 	public static class OptionHolder
 	{
-		public static bool playNoteOnPlace=true;
-		public static bool showConfirmation=true;
 		public static short noteWait=150;
 		// Options file version
 		// 2 is 2.8(7) and below?
 		// 3 is when all notes (up to spooky) got hotkeys
 		public const byte maxOptionsFormat=3;
-		
 		public const byte maxMusicFormat=6;
-
+		
+		public const bool canResizeWindow=false;
+		
+		public static bool playNoteOnPlace=true;
+		public static bool showConfirmation=true;
+		
 		/// <summary>
 		/// The hotkeys.
 		/// It seems that each note has a spot in this array and that spot stores its hotkey
@@ -28,7 +30,6 @@ namespace GrowtopiaMusicSimulatorReborn
 		/// 19 is spooky (backspace)
 		/// </summary>
 		public static byte[] hotkeys = {65,83,68,70,71,72,49,50,51,52,53,54,55, 112,56,57,48,189,187,8};
-
 
 		/// <summary>
 		/// byteEX.
@@ -62,8 +63,7 @@ namespace GrowtopiaMusicSimulatorReborn
 		public static int convertScaledToReal(int _input) {
 			return (int)(_input / windowScale);
 		}
-
-
+		
 		/// <summary>
 		/// Applys the window scale to the supplied graphics object.
 		/// </summary>

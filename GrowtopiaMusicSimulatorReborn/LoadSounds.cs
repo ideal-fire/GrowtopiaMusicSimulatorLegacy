@@ -62,8 +62,8 @@ public static class LoadSounds{
 
 		public static void LoadSpecificSounds(ref byte[][] _toStoreArray, string _noteName){
 			for (int i=0;i!=26;i++){
-				if (File.Exists(Path.Combine("./NoteSounds/",_noteName+"_"+i+".wav"))){
-					_toStoreArray[i] = File.ReadAllBytes(Path.Combine("./NoteSounds/",_noteName+"_"+i+".wav"));
+				if (File.Exists(Path.Combine(AppDomain.CurrentDomain.BaseDirectory,"NoteSounds/",_noteName+"_"+i+".wav"))){
+					_toStoreArray[i] = File.ReadAllBytes(Path.Combine(AppDomain.CurrentDomain.BaseDirectory,"NoteSounds/",_noteName+"_"+i+".wav"));
 				}
 			}
 		}
