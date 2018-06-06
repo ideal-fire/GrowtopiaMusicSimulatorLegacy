@@ -69,17 +69,23 @@ namespace GrowtopiaMusicSimulatorReborn
 		string[] bassSounds;
 		string[] bassSharpSounds;
 		string[] bassFlatSounds;
-		
-		string[][] noteArrays = new string[15][];
 
 		string[] saxSounds;
 		string[] saxFlatSounds;
 		string[] saxSharpSounds;
 		string[] spookySounds;
 		
+		string[] fluteSounds;
+		string[] fluteSharpSounds;
+		string[] fluteFlatSounds;
+		string[] festiveSounds;
+		string[] guitarSounds;
+		string[] guitarSharpSounds;
+		string[] guitarFlatSounds;
+		
 		public byte noteValue=1;
 
-		//Various images
+		//Various images for UI
 		Bitmap playButtonImage;
 		Bitmap stopButtonImage;
 		Bitmap saveButtonImage;
@@ -95,7 +101,7 @@ namespace GrowtopiaMusicSimulatorReborn
 		Bitmap optionsImage;
 		Bitmap resizeImage;
 		Bitmap countButtonImage;
-
+		
 		// Misc stuffz
 		short pageNumber=0;
 		bool clicking=false;
@@ -153,8 +159,17 @@ namespace GrowtopiaMusicSimulatorReborn
 		public const byte repeatEndId = 13;
 		public const byte spookyId = 14;
 		public const byte audioGearId = 15;
+		public const byte fluteId=16;
+		public const byte fluteSharpId = 17;
+		public const byte fluteFlatId = 18;
+		public const byte festiveId = 19;
+		public const byte guitarId = 20;
+		public const byte guitarSharpId = 21;
+		public const byte guitarFlatId = 22;
 		
-		public const byte maxNote=15;
+		public const byte maxNote=22;
+		
+		string[][] noteArrays = new string[maxNote][];
 		
 		void warnIfMissingFolder(string _foldername){
 			if (!Directory.Exists(_foldername)){
@@ -196,24 +211,32 @@ namespace GrowtopiaMusicSimulatorReborn
 			normalPaint = new PaintEventHandler (paint_stuff);
 			this.Paint += normalPaint;
 			// Load note images.
-			noteImages = new Bitmap[16];
+			noteImages = new Bitmap[maxNote+1];
 			gridImage = loadBitmap ((AppDomain.CurrentDomain.BaseDirectory+"/Images/Grid.bmp"));
 			//noteImages [0] = gridImage;
-			noteImages [pianoId] = loadBitmap ((AppDomain.CurrentDomain.BaseDirectory+"/Images/piano.png"));
-			noteImages [pianoSharpId] = loadBitmap ((AppDomain.CurrentDomain.BaseDirectory+"/Images/pianoSharp.png"));
-			noteImages [pianoFlatId] = loadBitmap ((AppDomain.CurrentDomain.BaseDirectory+"/Images/pianoFlat.png"));
-			noteImages [bassId] = loadBitmap ((AppDomain.CurrentDomain.BaseDirectory+"/Images/bass.png"));
-			noteImages [bassSharpId] = loadBitmap ((AppDomain.CurrentDomain.BaseDirectory+"/Images/bassSharp.png"));
-			noteImages [bassFlatId] = loadBitmap ((AppDomain.CurrentDomain.BaseDirectory+"/Images/bassFlat.png"));
-			noteImages [drumId] = loadBitmap ((AppDomain.CurrentDomain.BaseDirectory+"/Images/drum.png")); // 12
-			noteImages [blankId] = loadBitmap ((AppDomain.CurrentDomain.BaseDirectory+"/Images/blankNote.png")); //13
-			noteImages [saxId] = loadBitmap((AppDomain.CurrentDomain.BaseDirectory+"/Images/Sax.png")); // 14
-			noteImages [saxSharpId] = loadBitmap((AppDomain.CurrentDomain.BaseDirectory+"/Images/SaxSharp.png")); // 15
-			noteImages [saxFlatId] = loadBitmap((AppDomain.CurrentDomain.BaseDirectory+"/Images/SaxFlat.png")); // 16
-			noteImages [repeatStartId] = loadBitmap((AppDomain.CurrentDomain.BaseDirectory+"/Images/RepeatLeft.png")); // 17
-			noteImages [repeatEndId] = loadBitmap((AppDomain.CurrentDomain.BaseDirectory+"/Images/RepeatRight.png")); // 18
-			noteImages [spookyId] = loadBitmap((AppDomain.CurrentDomain.BaseDirectory+"/Images/Spooky.png")); // 19
-			noteImages [audioGearId] = loadBitmap((AppDomain.CurrentDomain.BaseDirectory+"/Images/AudioGear.png"));
+			noteImages [pianoId] = loadBitmap ((AppDomain.CurrentDomain.BaseDirectory+"/ProprietaryImages/piano.png"));
+			noteImages [pianoSharpId] = loadBitmap ((AppDomain.CurrentDomain.BaseDirectory+"/ProprietaryImages/pianoSharp.png"));
+			noteImages [pianoFlatId] = loadBitmap ((AppDomain.CurrentDomain.BaseDirectory+"/ProprietaryImages/pianoFlat.png"));
+			noteImages [bassId] = loadBitmap ((AppDomain.CurrentDomain.BaseDirectory+"/ProprietaryImages/bass.png"));
+			noteImages [bassSharpId] = loadBitmap ((AppDomain.CurrentDomain.BaseDirectory+"/ProprietaryImages/bassSharp.png"));
+			noteImages [bassFlatId] = loadBitmap ((AppDomain.CurrentDomain.BaseDirectory+"/ProprietaryImages/bassFlat.png"));
+			noteImages [drumId] = loadBitmap ((AppDomain.CurrentDomain.BaseDirectory+"/ProprietaryImages/drum.png")); // 12
+			noteImages [blankId] = loadBitmap ((AppDomain.CurrentDomain.BaseDirectory+"/ProprietaryImages/blankNote.png")); //13
+			noteImages [saxId] = loadBitmap((AppDomain.CurrentDomain.BaseDirectory+"/ProprietaryImages/Sax.png")); // 14
+			noteImages [saxSharpId] = loadBitmap((AppDomain.CurrentDomain.BaseDirectory+"/ProprietaryImages/SaxSharp.png")); // 15
+			noteImages [saxFlatId] = loadBitmap((AppDomain.CurrentDomain.BaseDirectory+"/ProprietaryImages/SaxFlat.png")); // 16
+			noteImages [repeatStartId] = loadBitmap((AppDomain.CurrentDomain.BaseDirectory+"/ProprietaryImages/RepeatLeft.png")); // 17
+			noteImages [repeatEndId] = loadBitmap((AppDomain.CurrentDomain.BaseDirectory+"/ProprietaryImages/RepeatRight.png")); // 18
+			noteImages [spookyId] = loadBitmap((AppDomain.CurrentDomain.BaseDirectory+"/ProprietaryImages/Spooky.png")); // 19
+			noteImages [audioGearId] = loadBitmap((AppDomain.CurrentDomain.BaseDirectory+"/ProprietaryImages/AudioGear.png"));
+			noteImages [fluteId] = loadBitmap ((AppDomain.CurrentDomain.BaseDirectory+"/Images/flute.png"));
+			noteImages [fluteSharpId] = loadBitmap ((AppDomain.CurrentDomain.BaseDirectory+"/Images/fluteSharp.png"));
+			noteImages [fluteFlatId] = loadBitmap ((AppDomain.CurrentDomain.BaseDirectory+"/Images/fluteFlat.png"));
+			noteImages [festiveId] = loadBitmap ((AppDomain.CurrentDomain.BaseDirectory+"/Images/festive.png"));
+			noteImages [guitarId] = loadBitmap ((AppDomain.CurrentDomain.BaseDirectory+"/Images/guitar.png"));
+			noteImages [guitarSharpId] = loadBitmap ((AppDomain.CurrentDomain.BaseDirectory+"/Images/guitarSharp.png"));
+			noteImages [guitarFlatId] = loadBitmap ((AppDomain.CurrentDomain.BaseDirectory+"/Images/guitarFlat.png"));
+			
 			this.DoubleBuffered = true;
 			this.MouseDown += mouseDownWithScale;
 			this.MouseUp += mouseup;
@@ -251,6 +274,9 @@ namespace GrowtopiaMusicSimulatorReborn
 			LoadSounds.SetSoundNames(ref pianoSounds, ref pianoSharpSounds, ref pianoFlatSounds, "piano");
 			LoadSounds.SetSoundNames(ref bassSounds, ref bassSharpSounds, ref bassFlatSounds, "bass");
 			LoadSounds.SetSoundNames(ref saxSounds, ref saxSharpSounds, ref saxFlatSounds, "sax");
+			LoadSounds.SetSoundNames(ref fluteSounds, ref fluteSharpSounds, ref fluteFlatSounds, "flute");
+			LoadSounds.SetSoundNames(ref guitarSounds, ref guitarSharpSounds, ref guitarFlatSounds, "spanish_guitar");
+			
 			// spooky
 			// drum
 			drumSounds = new string[14];
@@ -283,6 +309,21 @@ namespace GrowtopiaMusicSimulatorReborn
 			spookySounds[2]="spooky_20";
 			spookySounds[1]="spooky_22";
 			spookySounds[0]="spooky_24";
+			festiveSounds = new string[14];
+			festiveSounds[13]="festive_1";
+			festiveSounds[12]="festive_3";
+			festiveSounds[11]="festive_5";
+			festiveSounds[10]="festive_6";
+			festiveSounds[9]="festive_8";
+			festiveSounds[8]="festive_10";
+			festiveSounds[7]="festive_12";
+			festiveSounds[6]="festive_13";
+			festiveSounds[5]="festive_15";
+			festiveSounds[4]="festive_17";
+			festiveSounds[3]="festive_18";
+			festiveSounds[2]="festive_20";
+			festiveSounds[1]="festive_22";
+			festiveSounds[0]="festive_24";
 
 			// Contains giant byte arrays for the sounds.
 			soundEngine = LoadSounds.loadTheSounds();
@@ -298,7 +339,14 @@ namespace GrowtopiaMusicSimulatorReborn
 			noteArrays [9] = saxSharpSounds;
 			noteArrays [10] = saxFlatSounds;
 			noteArrays [13] = spookySounds;
-
+			noteArrays[fluteId-1] = fluteSounds;
+			noteArrays[fluteSharpId-1] = fluteSharpSounds;
+			noteArrays[fluteFlatId-1] = fluteFlatSounds;
+			noteArrays[festiveId-1] = festiveSounds;
+			noteArrays[guitarId-1] = guitarSounds;
+			noteArrays[guitarSharpId-1] = guitarSharpSounds;
+			noteArrays[guitarFlatId-1] = guitarFlatSounds;
+			
 			bigBG = loadBitmap ((AppDomain.CurrentDomain.BaseDirectory + "/Images/BigBG.png"));
 
 			try{

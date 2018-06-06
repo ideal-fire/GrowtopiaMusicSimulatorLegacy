@@ -63,6 +63,11 @@ namespace GrowtopiaMusicSimulatorReborn
 						hotkeys[i] = br.ReadByte();
 					}
 				}
+				if (optionsFormat>=4){
+					for (int i = 20; i < 28; i++) {
+						hotkeys[i] = br.ReadByte();
+					}
+				}
 			}catch{
 				MessageBox.Show("Error loading hotkeys.");
 			}
@@ -216,7 +221,7 @@ namespace GrowtopiaMusicSimulatorReborn
 						maxX = GetMaxX();
 					}
 					else if (e.X<480){
-						MessageBox.Show ("Programming - MyLegGuy\nOriginal theme - SumRndmDde\nBPM formula - y3ll0\nMatching sounds to notes - HonestyCow\n\nThxz..");
+						MessageBox.Show ("Programming - MyLegGuy\nOriginal theme - SumRndmDde\nBPM formula - y3ll0\nMatching sounds to notes - HonestyCow\nAlso see all LICENSE.txt files.\n\nThxz..");
 					}else if (e.X<512){
 						resizeSong();
 					}else if (e.X<544){
@@ -228,7 +233,7 @@ namespace GrowtopiaMusicSimulatorReborn
 								}
 							}
 						}
-						string _resultingMessage = String.Format("Piano: {0}. Piano sharp: {1}. Piano flat: {2}\nBass: {3}. Bass sharp: {4}. Bass flat: {5}\nSax: {6}. Sax sharp: {7}. Sax flat: {8}\nRepeat start: {9}. Repeat end: {10}. Spooky: {11}\nDrums: {12}. Blank: {13}. Audio gear: {14}",countedNotes[pianoId], countedNotes[pianoSharpId], countedNotes[pianoFlatId], countedNotes[bassId], countedNotes[bassSharpId], countedNotes[bassFlatId], countedNotes[saxId], countedNotes[saxSharpId], countedNotes[saxFlatId], countedNotes[repeatStartId], countedNotes[repeatEndId], countedNotes[spookyId], countedNotes[drumId], countedNotes[blankId], countedNotes[audioGearId]);
+						string _resultingMessage = String.Format("Piano: {0}. Piano sharp: {1}. Piano flat: {2}\nBass: {3}. Bass sharp: {4}. Bass flat: {5}\nSax: {6}. Sax sharp: {7}. Sax flat: {8}\nRepeat start: {9}. Repeat end: {10}. Spooky: {11}\nDrums: {12}. Blank: {13}. Audio gear: {14}\nFlute: {15}. Flute sharp: {16}. Flute flat: {17}.\nFestive: {18}.\nGuitar: {19}. Guitar sharp: {20}. Guitar Flat: {21}.",countedNotes[pianoId], countedNotes[pianoSharpId], countedNotes[pianoFlatId], countedNotes[bassId], countedNotes[bassSharpId], countedNotes[bassFlatId], countedNotes[saxId], countedNotes[saxSharpId], countedNotes[saxFlatId], countedNotes[repeatStartId], countedNotes[repeatEndId], countedNotes[spookyId], countedNotes[drumId], countedNotes[blankId], countedNotes[audioGearId],countedNotes[fluteId],countedNotes[fluteSharpId],countedNotes[fluteFlatId],countedNotes[festiveId],countedNotes[guitarId],countedNotes[guitarSharpId],countedNotes[guitarFlatId]);
 						MessageBox.Show(_resultingMessage);
 					}else if (e.X < 576 && e.X>=544) {
 						// When you press load button
@@ -726,7 +731,7 @@ namespace GrowtopiaMusicSimulatorReborn
 			else if (e.KeyValue == OptionHolder.hotkeys[5]) {
 				checkUI(new MouseEventArgs(MouseButtons.Left, 1, 544, 0, 0));
 			}else{
-				for (int i = 6; i < 20; i++) {
+				for (int i = 6; i < OptionHolder.hotkeys.Length; i++) {
 					if (e.KeyValue == OptionHolder.hotkeys[i]) {
 						noteValue = (byte)(i-5);
 					}

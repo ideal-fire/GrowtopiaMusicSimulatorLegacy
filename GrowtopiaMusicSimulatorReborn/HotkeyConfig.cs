@@ -159,6 +159,34 @@ namespace GrowtopiaMusicSimulatorReborn
 		{
 			readyPress(13);
 		}
+		void SetFluteClick(object sender, EventArgs e)
+		{
+			readyPress(MainForm.fluteId+5);
+		}
+		void SetFluteSharpClick(object sender, EventArgs e)
+		{
+			readyPress(MainForm.fluteSharpId+5);
+		}
+		void SetFluteFlatClick(object sender, EventArgs e)
+		{
+			readyPress(MainForm.fluteFlatId+5);
+		}
+		void SetFestiveClick(object sender, EventArgs e)
+		{
+			readyPress(MainForm.festiveId+5);
+		}
+		void SetGuitarClick(object sender, EventArgs e)
+		{
+			readyPress(MainForm.guitarId+5);
+		}
+		void SetGuitarSharpClick(object sender, EventArgs e)
+		{
+			readyPress(MainForm.guitarSharpId+5);
+		}
+		void SetGuitarFlatClick(object sender, EventArgs e)
+		{
+			readyPress(MainForm.guitarFlatId+5);
+		}
 		
 
 		

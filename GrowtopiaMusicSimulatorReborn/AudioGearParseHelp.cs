@@ -24,9 +24,14 @@ namespace GrowtopiaMusicSimulatorReborn
 				return 'D';
 			}else if (_noteValue<=MainForm.saxFlatId){
 				return 'S';
-			}else if (_noteValue<=MainForm.spookyId){
-				Console.Out.WriteLine("Spooky notes are not supported in Growtopia.");
+			}else if (_noteValue==MainForm.spookyId){
 				return 'N';
+			}else if (_noteValue<=MainForm.fluteFlatId){
+				return 'F';
+			}else if (_noteValue==MainForm.festiveId){
+				return 'N';
+			}else if (_noteValue<=MainForm.guitarFlatId){
+				return 'G';
 			}
 			return 'N';
 		}

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Windows.Forms;
 
 namespace GrowtopiaMusicSimulatorReborn
 {
@@ -10,7 +11,8 @@ namespace GrowtopiaMusicSimulatorReborn
 		// Options file version
 		// 2 is 2.8(7) and below?
 		// 3 is when all notes (up to spooky) got hotkeys
-		public const byte maxOptionsFormat=3;
+		// 4 is when all notes up to guitar flat got hotkeys
+		public const byte maxOptionsFormat=4;
 		public const byte maxMusicFormat=6;
 		
 		public const bool canResizeWindow=false;
@@ -28,8 +30,11 @@ namespace GrowtopiaMusicSimulatorReborn
 		/// 17 is repeat start
 		/// 18 is repeat end
 		/// 19 is spooky (backspace)
+		/// 
+		/// 27 is this array's ID for guitar flat
+		/// i-5 is note ID
 		/// </summary>
-		public static byte[] hotkeys = {65,83,68,70,71,72,49,50,51,52,53,54,55, 112,56,57,48,189,187,8};
+		public static byte[] hotkeys = {65,83,68,70,71,72,49,50,51,52,53,54,55,112,56,57,48,189,187,8,81,87,69,82,84,89,85,73};
 
 		/// <summary>
 		/// byteEX.

@@ -54,6 +54,13 @@ namespace GrowtopiaMusicSimulatorReborn
 			this.setRepeatStart = new System.Windows.Forms.Button();
 			this.setRepeatEnd = new System.Windows.Forms.Button();
 			this.setBlank = new System.Windows.Forms.Button();
+			this.setFlute = new System.Windows.Forms.Button();
+			this.setFluteSharp = new System.Windows.Forms.Button();
+			this.setFluteFlat = new System.Windows.Forms.Button();
+			this.setGuitar = new System.Windows.Forms.Button();
+			this.setFestive = new System.Windows.Forms.Button();
+			this.setGuitarSharp = new System.Windows.Forms.Button();
+			this.setGuitarFlat = new System.Windows.Forms.Button();
 			this.SuspendLayout();
 			// 
 			// setPlay
@@ -268,11 +275,88 @@ namespace GrowtopiaMusicSimulatorReborn
 			this.setBlank.UseVisualStyleBackColor = true;
 			this.setBlank.Click += new System.EventHandler(this.SetBlankClick);
 			// 
+			// setFlute
+			// 
+			this.setFlute.Location = new System.Drawing.Point(286, 81);
+			this.setFlute.Name = "setFlute";
+			this.setFlute.Size = new System.Drawing.Size(75, 23);
+			this.setFlute.TabIndex = 21;
+			this.setFlute.Text = "Flute";
+			this.setFlute.UseVisualStyleBackColor = true;
+			this.setFlute.Click += new System.EventHandler(this.SetFluteClick);
+			// 
+			// setFluteSharp
+			// 
+			this.setFluteSharp.Location = new System.Drawing.Point(286, 111);
+			this.setFluteSharp.Name = "setFluteSharp";
+			this.setFluteSharp.Size = new System.Drawing.Size(75, 23);
+			this.setFluteSharp.TabIndex = 22;
+			this.setFluteSharp.Text = "Flute Sharp";
+			this.setFluteSharp.UseVisualStyleBackColor = true;
+			this.setFluteSharp.Click += new System.EventHandler(this.SetFluteSharpClick);
+			// 
+			// setFluteFlat
+			// 
+			this.setFluteFlat.Location = new System.Drawing.Point(286, 141);
+			this.setFluteFlat.Name = "setFluteFlat";
+			this.setFluteFlat.Size = new System.Drawing.Size(75, 23);
+			this.setFluteFlat.TabIndex = 23;
+			this.setFluteFlat.Text = "Flute Flat";
+			this.setFluteFlat.UseVisualStyleBackColor = true;
+			this.setFluteFlat.Click += new System.EventHandler(this.SetFluteFlatClick);
+			// 
+			// setGuitar
+			// 
+			this.setGuitar.Location = new System.Drawing.Point(286, 197);
+			this.setGuitar.Name = "setGuitar";
+			this.setGuitar.Size = new System.Drawing.Size(75, 23);
+			this.setGuitar.TabIndex = 24;
+			this.setGuitar.Text = "Guitar";
+			this.setGuitar.UseVisualStyleBackColor = true;
+			this.setGuitar.Click += new System.EventHandler(this.SetGuitarClick);
+			// 
+			// setFestive
+			// 
+			this.setFestive.Location = new System.Drawing.Point(286, 168);
+			this.setFestive.Name = "setFestive";
+			this.setFestive.Size = new System.Drawing.Size(75, 23);
+			this.setFestive.TabIndex = 25;
+			this.setFestive.Text = "Festive";
+			this.setFestive.UseVisualStyleBackColor = true;
+			this.setFestive.Click += new System.EventHandler(this.SetFestiveClick);
+			// 
+			// setGuitarSharp
+			// 
+			this.setGuitarSharp.Location = new System.Drawing.Point(286, 227);
+			this.setGuitarSharp.Name = "setGuitarSharp";
+			this.setGuitarSharp.Size = new System.Drawing.Size(75, 23);
+			this.setGuitarSharp.TabIndex = 26;
+			this.setGuitarSharp.Text = "Guitar Sharp";
+			this.setGuitarSharp.UseVisualStyleBackColor = true;
+			this.setGuitarSharp.Click += new System.EventHandler(this.SetGuitarSharpClick);
+			// 
+			// setGuitarFlat
+			// 
+			this.setGuitarFlat.Location = new System.Drawing.Point(286, 255);
+			this.setGuitarFlat.Name = "setGuitarFlat";
+			this.setGuitarFlat.Size = new System.Drawing.Size(75, 23);
+			this.setGuitarFlat.TabIndex = 27;
+			this.setGuitarFlat.Text = "Guitar Flat";
+			this.setGuitarFlat.UseVisualStyleBackColor = true;
+			this.setGuitarFlat.Click += new System.EventHandler(this.SetGuitarFlatClick);
+			// 
 			// HotkeyConfig
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(329, 291);
+			this.ClientSize = new System.Drawing.Size(364, 291);
+			this.Controls.Add(this.setGuitarFlat);
+			this.Controls.Add(this.setGuitarSharp);
+			this.Controls.Add(this.setFestive);
+			this.Controls.Add(this.setGuitar);
+			this.Controls.Add(this.setFluteFlat);
+			this.Controls.Add(this.setFluteSharp);
+			this.Controls.Add(this.setFlute);
 			this.Controls.Add(this.setBlank);
 			this.Controls.Add(this.setRepeatEnd);
 			this.Controls.Add(this.setRepeatStart);
@@ -321,5 +405,12 @@ namespace GrowtopiaMusicSimulatorReborn
 		private System.Windows.Forms.Button setRepeatStart;
 		private System.Windows.Forms.Button setRepeatEnd;
 		private System.Windows.Forms.Button setBlank;
+		private System.Windows.Forms.Button setFlute;
+		private System.Windows.Forms.Button setFluteSharp;
+		private System.Windows.Forms.Button setFluteFlat;
+		private System.Windows.Forms.Button setGuitar;
+		private System.Windows.Forms.Button setFestive;
+		private System.Windows.Forms.Button setGuitarSharp;
+		private System.Windows.Forms.Button setGuitarFlat;
 	}
 }

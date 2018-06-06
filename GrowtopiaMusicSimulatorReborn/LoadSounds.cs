@@ -73,13 +73,19 @@ public static class LoadSounds{
 			byte[][] loadedBass = new byte[26][];
 			byte[][] loadedSax = new byte[26][];
 			byte[][] loadedDrum = new byte[7][];
-			byte[][] loadedSpooky = new byte[25][];
+			byte[][] loadedSpooky = new byte[26][];
+			byte[][] loadedFestive = new byte[26][];
+			byte[][] loadedFlute = new byte[26][];
+			byte[][] loadedGuitar = new byte[26][];
 
 			LoadSpecificSounds(ref loadedPiano, "piano");
 			LoadSpecificSounds(ref loadedBass, "bass");
 			LoadSpecificSounds(ref loadedSax, "sax");
 			LoadSpecificSounds(ref loadedSpooky, "spooky");
 			LoadSpecificSounds(ref loadedDrum, "drum");
+			LoadSpecificSounds(ref loadedFestive, "festive");
+			LoadSpecificSounds(ref loadedFlute, "flute");
+			LoadSpecificSounds(ref loadedGuitar, "spanish_guitar");
 
 			ISoundEngine engine = new ISoundEngine ();
 			//ISoundSource source = soundEngine.AddSoundSourceFromMemory(SoundDataArray, "testsound.wav");
@@ -187,6 +193,74 @@ public static class LoadSounds{
 			engine.AddSoundSourceFromMemory(loadedSpooky[22], "spooky_22");
 			engine.AddSoundSourceFromMemory(loadedSpooky[24], "spooky_24");
 
+			engine.AddSoundSourceFromMemory(loadedFestive[1], "festive_1");
+			engine.AddSoundSourceFromMemory(loadedFestive[3], "festive_3");
+			engine.AddSoundSourceFromMemory(loadedFestive[5], "festive_5");
+			engine.AddSoundSourceFromMemory(loadedFestive[6], "festive_6");
+			engine.AddSoundSourceFromMemory(loadedFestive[8], "festive_8");
+			engine.AddSoundSourceFromMemory(loadedFestive[10], "festive_10");
+			engine.AddSoundSourceFromMemory(loadedFestive[12], "festive_12");
+			engine.AddSoundSourceFromMemory(loadedFestive[13], "festive_13");
+			engine.AddSoundSourceFromMemory(loadedFestive[15], "festive_15");
+			engine.AddSoundSourceFromMemory(loadedFestive[17], "festive_17");
+			engine.AddSoundSourceFromMemory(loadedFestive[18], "festive_18");
+			engine.AddSoundSourceFromMemory(loadedFestive[20], "festive_20");
+			engine.AddSoundSourceFromMemory(loadedFestive[22], "festive_22");
+			engine.AddSoundSourceFromMemory(loadedFestive[24], "festive_24");
+			
+						engine.AddSoundSourceFromMemory(loadedFlute[0], "flute_0");
+			engine.AddSoundSourceFromMemory(loadedFlute[1], "flute_1");
+			engine.AddSoundSourceFromMemory(loadedFlute[2], "flute_2");
+			engine.AddSoundSourceFromMemory(loadedFlute[3], "flute_3");
+			engine.AddSoundSourceFromMemory(loadedFlute[4], "flute_4");
+			engine.AddSoundSourceFromMemory(loadedFlute[5], "flute_5");
+			engine.AddSoundSourceFromMemory(loadedFlute[6], "flute_6");
+			engine.AddSoundSourceFromMemory(loadedFlute[7], "flute_7");
+			engine.AddSoundSourceFromMemory(loadedFlute[8], "flute_8");
+			engine.AddSoundSourceFromMemory(loadedFlute[9], "flute_9");
+			engine.AddSoundSourceFromMemory(loadedFlute[10], "flute_10");
+			engine.AddSoundSourceFromMemory(loadedFlute[11], "flute_11");
+			engine.AddSoundSourceFromMemory(loadedFlute[12], "flute_12");
+			engine.AddSoundSourceFromMemory(loadedFlute[13], "flute_13");
+			engine.AddSoundSourceFromMemory(loadedFlute[14], "flute_14");
+			engine.AddSoundSourceFromMemory(loadedFlute[15], "flute_15");
+			engine.AddSoundSourceFromMemory(loadedFlute[16], "flute_16");
+			engine.AddSoundSourceFromMemory(loadedFlute[17], "flute_17");
+			engine.AddSoundSourceFromMemory(loadedFlute[18], "flute_18");
+			engine.AddSoundSourceFromMemory(loadedFlute[19], "flute_19");
+			engine.AddSoundSourceFromMemory(loadedFlute[20], "flute_20");
+			engine.AddSoundSourceFromMemory(loadedFlute[21], "flute_21");
+			engine.AddSoundSourceFromMemory(loadedFlute[22], "flute_22");
+			engine.AddSoundSourceFromMemory(loadedFlute[23], "flute_23");
+			engine.AddSoundSourceFromMemory(loadedFlute[24], "flute_24");
+			engine.AddSoundSourceFromMemory(loadedFlute[25], "flute_25");
+			
+			engine.AddSoundSourceFromMemory(loadedGuitar[0], "spanish_guitar_0");
+			engine.AddSoundSourceFromMemory(loadedGuitar[1], "spanish_guitar_1");
+			engine.AddSoundSourceFromMemory(loadedGuitar[2], "spanish_guitar_2");
+			engine.AddSoundSourceFromMemory(loadedGuitar[3], "spanish_guitar_3");
+			engine.AddSoundSourceFromMemory(loadedGuitar[4], "spanish_guitar_4");
+			engine.AddSoundSourceFromMemory(loadedGuitar[5], "spanish_guitar_5");
+			engine.AddSoundSourceFromMemory(loadedGuitar[6], "spanish_guitar_6");
+			engine.AddSoundSourceFromMemory(loadedGuitar[7], "spanish_guitar_7");
+			engine.AddSoundSourceFromMemory(loadedGuitar[8], "spanish_guitar_8");
+			engine.AddSoundSourceFromMemory(loadedGuitar[9], "spanish_guitar_9");
+			engine.AddSoundSourceFromMemory(loadedGuitar[10], "spanish_guitar_10");
+			engine.AddSoundSourceFromMemory(loadedGuitar[11], "spanish_guitar_11");
+			engine.AddSoundSourceFromMemory(loadedGuitar[12], "spanish_guitar_12");
+			engine.AddSoundSourceFromMemory(loadedGuitar[13], "spanish_guitar_13");
+			engine.AddSoundSourceFromMemory(loadedGuitar[14], "spanish_guitar_14");
+			engine.AddSoundSourceFromMemory(loadedGuitar[15], "spanish_guitar_15");
+			engine.AddSoundSourceFromMemory(loadedGuitar[16], "spanish_guitar_16");
+			engine.AddSoundSourceFromMemory(loadedGuitar[17], "spanish_guitar_17");
+			engine.AddSoundSourceFromMemory(loadedGuitar[18], "spanish_guitar_18");
+			engine.AddSoundSourceFromMemory(loadedGuitar[19], "spanish_guitar_19");
+			engine.AddSoundSourceFromMemory(loadedGuitar[20], "spanish_guitar_20");
+			engine.AddSoundSourceFromMemory(loadedGuitar[21], "spanish_guitar_21");
+			engine.AddSoundSourceFromMemory(loadedGuitar[22], "spanish_guitar_22");
+			engine.AddSoundSourceFromMemory(loadedGuitar[23], "spanish_guitar_23");
+			engine.AddSoundSourceFromMemory(loadedGuitar[24], "spanish_guitar_24");
+			engine.AddSoundSourceFromMemory(loadedGuitar[25], "spanish_guitar_25");
 			return engine;
 		}
 	
