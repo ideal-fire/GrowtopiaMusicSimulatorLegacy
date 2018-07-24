@@ -1,0 +1,14 @@
+4 - Gms0
+4 - bpm
+132 - garbage
+5600 - data
+
+
+2550
+
+I need to store 5600(data)+8(options)
+Really 1400(data)+2(options)
+
+
+Total space - 5740
+Total pixels - 1435

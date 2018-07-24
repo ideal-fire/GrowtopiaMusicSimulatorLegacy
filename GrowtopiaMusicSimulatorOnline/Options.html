@@ -1,0 +1,58 @@
+<center><h2>Growtopia Music Simulator Online</h2>
+<h4>Options</h4>
+<hr />
+
+
+<span style="font-size:20px;">Play a note when it's placed: </span><input style="width: 32px;height: 32px;" type="checkbox" id="playOnPlaceSwitch"><br />
+<span style="font-size:20px;">Minimal settings: </span><input style="width: 32px;height: 32px;" type="checkbox" id="minimalSettingsSwitch"><br />
+<span>Theme (Direct url to image) (Leave blank to use default): </span><input type="text" id="themeBg" />
+<hr />
+<button style="width: 45px;height:45px;" onclick="saveOptionsToKookies()">Save</button><br />
+<button style="width: 45px;height:45px;" onclick="window.location.href='./index.html'"">Not Save</button><br />
+
+</center>
+
+<script type="text/javascript">
+var playOnPlaceSwitch = document.getElementById("playOnPlaceSwitch");
+var minimalSettingsSwitch = document.getElementById("minimalSettingsSwitch");
+var themeBg = document.getElementById("themeBg")
+
+function saveOptionsToKookies(){
+	document.cookie=("playOnPlace="+playOnPlaceSwitch.checked+"; expires=Thu, 18 Dec 2037 12:00:00 UTC");
+	document.cookie=("min="+minimalSettingsSwitch.checked+"; expires=Thu, 18 Dec 2037 12:00:00 UTC");
+	document.cookie=("themeBg="+themeBg.value+"; expires=Thu, 18 Dec 2037 12:00:00 UTC");
+	alert("Saved.\n"+playOnPlaceSwitch.checked+";"+minimalSettingsSwitch.checked+";"+themeBg.value)
+	window.location="./index.html"
+}
+
+// Stolen from http://stackoverflow.com/questions/10730362/get-cookie-by-name
+function getCookie(name) {
+  var value = "; " + document.cookie;
+  var parts = value.split("; " + name + "=");
+  if (parts.length == 2) return parts.pop().split(";").shift();
+}
+
+
+function parseBool(_boolString){
+	if (_boolString.toLowerCase()=="true"){
+		return true;
+	}else{
+		return false;
+	}
+}
+
+// Actually, I don't want this feature when there's only two options.
+function saveOptionsToGet(){
+
+}
+
+var _pop = getCookie("playOnPlace");
+// We can assume the other cookie is null too because you can't set only one in the options menu.
+if (_pop!=null){
+	var _min = getCookie("min");
+	minimalSettingsSwitch.checked = parseBool(_min);
+	playOnPlaceSwitch.checked = parseBool(_pop);
+	themeBg.value = getCookie("themeBg")
+}
+
+</script>

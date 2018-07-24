@@ -1,0 +1,273 @@
+<title>Growtopia Music Simulator Online</title>
+<div class="myhappycanvasandui">
+<canvas id="mainCanvas" width="832" height="448">
+HEY, YOU!
+Your browser sucks so much that it can't even use the canvas element.
+Are you sure you're not on a computer from 17 years ago?
+Because you must be using, by far, the worst internet browser ever made.
+</canvas>
+
+<style type="text/css">
+	.myhappymenubar{
+		background-color: rgb(192,192,192);
+		width: 832;
+	}
+	.myhappycanvasandui{
+		border:1px solid #000000;
+		width: 832;
+	}
+	.goodText{
+		margin-left: 10px;
+		font-size: 25px;
+		vertical-align: top;
+		display: inline;
+	}
+</style>
+
+<script>
+var _fileLoader;
+
+function LoadReborn(){
+	var int8View = new Uint8Array(_fileLoader.result);
+
+	//alert(int8View[0])
+	//alert(int8View[1])
+	if (int8View[1]==71 && int8View[2]==77 && int8View[3]==83 && int8View[4]==114){
+		if (int8View[0]<4){
+			alert("Please load this in Growtopia Music Simulator Re;born and then save it again to update the file format. File format is: "+int8View[0]);
+			return;
+		}
+		if (int8View[0]>5){
+			alert("Unknown Growtopia Music Simulator Re;born format version.")
+			return;
+		}
+	}else{
+		return;
+	}
+
+	if (int8View[7]!=144 || int8View[8]!=01){
+		alert("This song doesn't have a length of 400. Its size will change to the standard Growtopia world size, 400. Only Growtopia Music Simulator Re;born will support music more or less than 400 blocks.")
+	}
+
+
+	// [0] is format version
+	// [1][2][3][4] is GMSr
+	// [5][6] is int16 bpm
+	// [7][8] is int16 map's width. Ignored.
+	// [9] is completely ignored layers var
+	// When loading actual map data, use +10 to skip header.
+	// 0+10 = 10, 1+10 = 11. Etc.
+	
+
+	var mapWidth = 400;
+	var mapHeight=14;
+	var past = 255;
+	var present = 254;
+	var rollValue = 55;
+	var rolling = false;
+	var rollAmount = 0;
+	
+	var currentReadPosition=10;
+	
+	// Zero out map
+	for (var y = 0; y < mapHeight; y++) {
+		for (var x = 0; x < mapWidth; x++) {
+			map[x][y]=0;
+		}
+	}
+
+	for (var y = 0; y < mapHeight; y++) {
+		for (var x = 0; x < mapWidth; x++) {
+			if (!rolling) {
+				if (past == present) {
+					// Checked here for good reasons.
+					rolling = true;
+					rollValue = present;
+					//rollAmount = file.ReadByte ();
+					rollAmount = int8View[currentReadPosition]
+					currentReadPosition++;
+
+					//;console.log("Starting roll with value: "+rollValue+" and amount: "+rollAmount+".");
+					if (rollAmount <= 0) {
+						//console.log ("Ending roll...");
+						past = 255;
+						present = 244;
+						rolling = false;
+						//map[x][y] = file.ReadByte ();
+						map[x][y]=int8View[currentReadPosition]
+						currentReadPosition++;
+
+						past = present;
+						present =  (map[x][y]);
+						//console.log ("Wrote: " + map [x][y] + " and present and past is: " + present + " ; " + past + ".");
+						continue;
+					}
+					map[x][y] = rollValue;
+					rollAmount--;
+					continue;
+				}
+
+				map[x][y]=int8View[currentReadPosition]
+				currentReadPosition++;
+				//alert(x+","+y+" "+map[x][y])
+				//map[x][y] = file.ReadByte ();
+				past = present;
+				present = (map[x][y]);
+				//console.log ("Wrote: " + map [x][y] + " and present and past is: " + present + " ; " + past + ".");
+			} else {
+				if (rollAmount <= 0) {
+					//console.log ("Ending roll...");
+					past = 255;
+					present = 244;
+					rolling = false;
+					map[x][y]=int8View[currentReadPosition]
+					currentReadPosition++;
+					past = present;
+					present =  (map[x][y]);
+					//console.log ("Wrote: " + map [trueX, trueY].ToString () + " and present and past is: " + present.ToString () + " ; " + past.ToString () + ".");
+					continue;
+				}
+				map[x][y] = rollValue;
+				rollAmount--;
+
+			}
+		}
+	}
+	
+	for (var y = 0; y < mapHeight; y++) {
+		for (var x = 0; x < mapWidth; x++) {
+			if (map[x][y]>7){
+				map[x][y]=0
+			}
+		}
+	}
+
+	Redraw();
+	detectMaxX();
+
+	return;
+}
+
+function StartLoadReborn(){
+	_fileLoader.onload = LoadReborn
+	_fileLoader.readAsArrayBuffer(loadSelector.files[0]);
+}
+
+function ProcessLoadedData(){
+	//alert(_fileLoader.error.name)
+
+	if (_fileLoader.result.substring(1,5)=="GMSr"){
+		console.log("Re;born detected.");
+		StartLoadReborn();
+		return;
+	}
+
+	if (_fileLoader.result.substring(0,4)!="GMSO"){
+		console.log("Detected: Possible Original Growtopia Music Simulator. (UNKNOWN)");
+		alert("This is not a Growtopia Music Simulator Online file. I will try and load it as an Original (horrible) Growtopia Music Simulator file.");
+		for (var j=0;j<14;j++){
+			for (var i=0;i<400;i++){
+				map[i][j]=parseInt(_fileLoader.result.substring(2+(j*400+i),2+(j*400+i)+1));
+				if (map[i][j]==8){
+					map[i][j]=0;
+				}
+				// offset by 2
+			}
+		}
+
+	}else{
+		console.log("Growtopia Music Simulator Online file detected.");
+
+		var formatVersion=parseInt(_fileLoader.result.substring(4,5))
+		//alert(formatVersion)
+		bpmMiliseconds = BpmFormula(parseInt(_fileLoader.result.substring(5,8)));
+
+		for (var i=0;i<400;i++){
+			for (var j=0;j<14;j++){
+				map[i][j]=parseInt(_fileLoader.result.substring(8+i*14+j,9+i*14+j));
+			}
+		}
+	}
+
+	_fileLoader.result="";
+	detectMaxX();
+	Redraw();
+}
+
+function LoadSong(){
+	_fileLoader = new FileReader();
+	_fileLoader.onload = ProcessLoadedData;
+	_fileLoader.readAsText(loadSelector.files[0])
+	
+	//_fileLoader.readAsArrayBuffer(loadSelector.files[0]);
+
+	//document.getElementById("saveTextbox").value=document.getElementById("loadSelection").value.replace(/^.*\\/, "").replace(/\.[^/.]+$/, "");
+}
+
+function LoadSelectorOnChange(e){
+	if (confirm("Are you sure you want to load a new song?\nYou'll loose any unsaved song process.")){
+		LoadSong();
+	}
+}
+
+window.onbeforeunload = function(e) {
+  //return "Unsaved changes will be lost.";
+  return 1;
+};
+
+// Disable context menu
+window.oncontextmenu = function (){
+	return false;
+}
+
+</script>
+
+<!-- Loading progress -->
+<div id="loadingStatus">Loading...</div>
+<script>var loadingStatus = document.getElementById("loadingStatus");</script>
+
+<!-- UI -->
+<div class="myhappymenubar">
+<input type="image" id="playButton" src="./Images/Play.png" onclick="StartPlaying(false)" alt="play" /><!--
+--><input type="image" id="noteButton" src="./Images/Piano.png" onclick="SwitchToNextNote(1)" alt="change note" /><!--
+--><input type="image" src="./Images/SaveButton.png" onclick="SaveAndDownload()" alt="Save" /><!--
+--><input type="image" src="./Images/LeftButton.png" onclick="ChangePage(-1)" alt="Left" /><!--
+--><input type="image" src="./Images/RightButton.png" onclick="ChangePage(+1)" alt="Right" /><!--
+--><input type="image" src="./Images/YellowPlay.png" onclick="StartPlaying(true)" alt="RelativePlay" /><!--
+--><input type="image" src="./Images/BpmButton.png" onclick="InputBpm()" alt="Bpm" /><!--
+<input type="image" src="./Images/LoadButton.png" onclick="NotYet()" alt="Load" />
+--><input type="image" src="./Images/LoadButton.png" onclick="document.getElementById('loadSelection').click()" alt="load" /><!--
+--><input type="image" src="./Images/Count.png" onclick="CountSelected()" alt="count" /><!--
+--><span class="goodText" id="pagePosition">Page 1/16</span><span style="margin-left:10px;font-size: 25px;vertical-align: top;">|</span><!--
+--><span class="goodText">Save name:</span><input type="text" style="width: 100px; vertical-align: top;" id="saveTextbox" /><!--
+<span class="goodText">|</span><span class="goodText">Load:</span>--><!--
+--><input style="visibility: hidden; width: 90px; vertical-align: top;" onchange="LoadSelectorOnChange()" id="loadSelection" type="file" />
+</div>
+
+<!-- End everything I'm putting a boarder around -->
+</div>
+
+<script>
+// A reference to the play button in the html
+var playButton = document.getElementById("playButton");
+// A reference to the note button in the html
+var noteButton = document.getElementById("noteButton");
+// A reference to the text that displays your current page.
+var pagePosition = document.getElementById("pagePosition");
+// The selector
+var loadSelector = document.getElementById("loadSelection");
+</script>
+
+<script>loadingStatus.innerHTML="Loading howler.js..."</script>
+<!-- Load howler.js. Must be done before main code. -->
+<script type="text/javascript" src="howler.js"></script>
+
+<script>loadingStatus.innerHTML="Loading sounds..."</script>
+<!-- for big functions and loading sfx -->
+<script type="text/javascript" src="BigFunctions.js"></script>
+
+<script>loadingStatus.innerHTML="Loading happy.js..."</script>
+<!-- Load the main code -->
+<script type="text/javascript" src="happy.js"></script>
+
+<font color="#FFFFFF">Decimals are friends, not numbers.</font>
