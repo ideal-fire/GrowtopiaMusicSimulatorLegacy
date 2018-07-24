@@ -1,4 +1,5 @@
 // happy.js, the main source for Growtopia Music Simulator The Third
+// This file is licensed under CC0 1.0 Universal (https://creativecommons.org/publicdomain/zero/1.0/legalcode.txt)
 ////////////////////////
 /// END STUPID COMMENT AND LOADING INFORMATION LINE
 /// VARIABLES START
